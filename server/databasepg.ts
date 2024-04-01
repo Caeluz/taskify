@@ -28,6 +28,9 @@ const knex = require("knex")({
     database: process.env.DB_NAME || "your_default_database",
   },
   searchPath: ["knex", "public"],
+  migrations: {
+    tableName: "knex_migrations",
+  },
 });
 
 // knex
