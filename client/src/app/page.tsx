@@ -1,50 +1,41 @@
+// @/components/Layout/index.js
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Head from "next/head";
+// import Sidebar from "./Sidebar";
+import Sidebar from "@/components/layout/sidebar";
 
-interface Person {
-  id: number;
-  name: string;
-}
+// import MenuBarMobile from "./MenuBarMobile";
+import MenuBarMobile from "@/components/layout/MenuBarMobile";
 
-export default function Home() {
-  const [message, setMessage] = useState("Loading...");
-  const [people, setPeople] = useState<Person[]>([]);
-  useEffect(() => {
-    fetch("http://localhost:8080/api/home")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.statusText);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setMessage(data.message);
-        setPeople(data.people);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+export default function Layout({
+  pageTitle,
+  children,
+}: {
+  pageTitle: string;
+  children: React.ReactNode;
+}) {
+  // Concatenate page title (if exists) to site title
+  let titleConcat = "Responsive Sidebar Example";
+  if (pageTitle) titleConcat = pageTitle + " | " + titleConcat;
+
+  // Mobile sidebar visibility state
+  const [showSidebar, setShowSidebar] = useState(false);
 
   return (
-    <div>
-      <div>{message}</div>
-      {/* <ul>
-        {people.map((person) => (
-          <li key={person.id}>
-            <Link href={`/person/${person.id}`}>
-              <a>{person.name}</a>
-            </Link>
-          </li>
-        ))}
-      </ul> */}
-      {people.map((person) => (
-        <li key={person.id}>
-          <Link href={`/person/${person.id}`}>{person.name}</Link>
-        </li>
-      ))}
-    </div>
+    <>
+      <Head>
+        <title>{titleConcat}</title>
+      </Head>
+      <div className="min-h-screen">
+        <div className="flex">
+          <MenuBarMobile setter={setShowSidebar} />
+          <Sidebar show={showSidebar} setter={setShowSidebar} />
+          <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
+            {children}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
