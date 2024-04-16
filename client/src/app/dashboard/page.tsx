@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 
 import {
   Card,
@@ -10,6 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 import { FaSearch, FaBell } from "react-icons/fa";
 import { IoIosSchool } from "react-icons/io";
@@ -29,11 +31,13 @@ const Dashboard = () => {
       id: 1,
       name: "School Management System",
       description: "11 Projects",
+      icon: <IoIosSchool />,
     },
     {
       id: 2,
       name: "Local Government Unit",
       description: "11 Projects",
+      icon: <RiGovernmentFill />,
     },
     {
       id: 3,
@@ -60,11 +64,12 @@ const Dashboard = () => {
       id: 2,
       group_id: 1,
       name: "Accounting",
+      daysLeft: 5,
       //   description: "11 Projects",
     },
   ];
 
-  const [activeCard, setActiveCard] = useState(0);
+  const [activeCard, setActiveCard] = useState(-1);
   const [activeProjects, setActiveProjects] = useState<Project[]>([]);
 
   const showProjects = (index: number) => {
@@ -102,7 +107,12 @@ const Dashboard = () => {
             >
               <div className="flex items-center space-x-4 p-6">
                 {/* Icon on the left */}
-                <IoIosSchool className="text-4xl flex-shrink-0" />
+                {/* <IoIosSchool className="text-4xl flex-shrink-0" /> */}
+
+                {group.icon &&
+                  React.cloneElement(group.icon, {
+                    className: "text-4xl flex-shrink-0",
+                  })}
 
                 {/* Text on the right */}
                 <div>
@@ -134,18 +144,22 @@ const Dashboard = () => {
           {activeProjects.map((project, index) => (
             <Card
               key={index}
-              className="max-w-sm  bg-white rounded-xl shadow-lg flex items-center space-x-4"
+              className="max-w-sm  bg-white rounded-xl shadow-lg  "
             >
               <CardHeader>
                 <CardTitle className="text-2xl font-bold">
                   {project.name}
                 </CardTitle>
+                <CardDescription className="text-lg font-medium"></CardDescription>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-lg font-medium">
-                  {/* {project.description} */}
-                </CardDescription>
+                <Progress className="" value={33} />
               </CardContent>
+              <CardFooter>
+                <Badge className="bg-[#eff1f6] text-[#b2bac7]">
+                  {project.daysLeft} days left
+                </Badge>
+              </CardFooter>
             </Card>
           ))}
         </div>
