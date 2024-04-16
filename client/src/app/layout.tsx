@@ -1,5 +1,6 @@
 import "./styles.css";
 import Sidebar from "@/components/layout/sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata = {
   title: "Next.js",
@@ -14,14 +15,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen">
-          <div className="flex">
-            <Sidebar />
-            <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
-              {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen">
+            <div className="flex">
+              <Sidebar />
+              <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
+                {children}
+              </div>
             </div>
           </div>
-        </div>
+        </ThemeProvider>
       </body>
     </html>
   );
