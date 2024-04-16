@@ -38,7 +38,7 @@ const Sidebar2: React.FC = () => {
   return (
     <aside className="w-64 bg-gray-200 p-4">
       {/* Sidebar content */}
-      <h2 className="text-xl font-semibold mb-4">Sidebar</h2>
+      <h2 className="text-xl font-semibold mb-4">Taskify</h2>
       <ul>
         <MenuItem name="Dashboard" route="/dashboard" icon={<MdDashboard />} />
         <MenuItem

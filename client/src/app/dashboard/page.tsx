@@ -29,13 +29,13 @@ const Dashboard = () => {
   const groups = [
     {
       id: 1,
-      name: "School Management System",
+      name: "Client Projects",
       description: "11 Projects",
       icon: <IoIosSchool />,
     },
     {
       id: 2,
-      name: "Local Government Unit",
+      name: "School Projects",
       description: "11 Projects",
       icon: <RiGovernmentFill />,
     },
@@ -55,7 +55,7 @@ const Dashboard = () => {
     {
       id: 1,
       group_id: 1,
-      name: "School Landing Page",
+      name: "Website Landing Page",
       //   description: "11",
       progress: 50,
       daysLeft: 5,
@@ -63,7 +63,7 @@ const Dashboard = () => {
     {
       id: 2,
       group_id: 1,
-      name: "Accounting",
+      name: "CRUD Application",
       daysLeft: 5,
       //   description: "11 Projects",
     },
@@ -83,7 +83,7 @@ const Dashboard = () => {
     <div className="pt-5 pl-10">
       <div className="header flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-semibold">Hello name...</h1>
+          <h1 className="text-4xl font-semibold">Hello user</h1>
           <p className="text-base font-medium pt-3 text-[#a5b3cb]">
             Welcome back
           </p>
@@ -93,9 +93,9 @@ const Dashboard = () => {
           <FaBell size={25} />
         </div>
       </div>
-      {/* Statistics / Groups */}
+      {/*  Groups */}
       <div className="">
-        <h2 className="text-2xl font-bold pt-10">Statistic</h2>
+        <h2 className="text-2xl font-bold pt-10">Groups</h2>
         <div className="flex space-x-4 pt-5 pr-10 overflow-x-auto hide-scrollbar  ">
           {groups.map((group, index) => (
             <Card
@@ -139,7 +139,7 @@ const Dashboard = () => {
 
       {/* Projects */}
       <div className="">
-        <h2 className="text-2xl font-bold pt-10">Project</h2>
+        <h2 className="text-2xl font-bold pt-10">Projects</h2>
         <div className="flex space-x-4 pt-5">
           {activeProjects.map((project, index) => (
             <Card
