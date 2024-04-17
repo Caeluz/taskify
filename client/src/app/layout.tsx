@@ -1,6 +1,8 @@
+import Navbar from "@/components/layout/navbar";
 import "./styles.css";
 import Sidebar from "@/components/layout/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "Next.js",
@@ -22,7 +24,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen">
-            <div className="flex">
+            <Navbar />
+            <div className="flex lg:flex-row">
               <Sidebar />
               <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
                 {children}

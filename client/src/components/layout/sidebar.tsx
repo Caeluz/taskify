@@ -1,13 +1,15 @@
 // Sidebar.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 // Dashboard, Projects, Messages,
 import { MdDashboard } from "react-icons/md";
 import { BiSolidMessageRoundedDots, BiSolidFolderOpen } from "react-icons/bi";
 import { usePathname } from "next/navigation";
+
+import { Button } from "../ui/button";
 
 interface MenuItemProps {
   icon: JSX.Element;
@@ -34,26 +36,44 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, name, route }) => {
   );
 };
 
-const Sidebar2: React.FC = () => {
+const Sidebar: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <aside className="w-64 bg-gray-200 p-4">
-      {/* Sidebar content */}
-      <h2 className="text-xl font-semibold mb-4">Taskify</h2>
-      <ul>
-        <MenuItem name="Dashboard" route="/dashboard" icon={<MdDashboard />} />
-        <MenuItem
-          name="Projects"
-          route="/project"
-          icon={<BiSolidFolderOpen />}
-        />
-        <MenuItem
-          name="Messages"
-          route="/messages"
-          icon={<BiSolidMessageRoundedDots />}
-        />
-      </ul>
-    </aside>
+    // <aside className="w-full bg-[#f8fbff] p-4 md:w-full">
+    <div>
+      {/* <Button
+        className="sm:block lg:hidden"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        Toggle Sidebar
+      </Button> */}
+      <aside
+        className={`lg:w-64 ${isSidebarOpen ? "block" : "hidden"} sm:block`}
+      >
+        {/* Sidebar content */}
+        <h2 className="text-3xl pl-9 font-semibold mb-4 text-[#3b82f6]">
+          Taskify
+        </h2>
+        <ul>
+          <MenuItem
+            name="Dashboard"
+            route="/dashboard"
+            icon={<MdDashboard />}
+          />
+          <MenuItem
+            name="Projects"
+            route="/project"
+            icon={<BiSolidFolderOpen />}
+          />
+          <MenuItem
+            name="Messages"
+            route="/messages"
+            icon={<BiSolidMessageRoundedDots />}
+          />
+        </ul>
+      </aside>
+    </div>
   );
 };
 
-export default Sidebar2;
+export default Sidebar;
