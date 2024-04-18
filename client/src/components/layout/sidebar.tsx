@@ -46,23 +46,19 @@ const Sidebar: React.FC = () => {
     // <aside className="w-full bg-[#f8fbff] p-4 md:w-full">
     <div>
       <aside
-        className={`lg:w-64 border border-gray-100 ${
+        className={`w-41 md:w-50 lg:w-56 border border-gray-100 ${
           isSidebarOpen ? "block" : "hidden"
         } sm:block h-full`}
       >
         {/* Sidebar content */}
         <div className="flex-row">
-          <h2 className="text-3xl pl-20 pt-20 font-semibold mb-4 text-[#3b82f6]">
+          <h2 className="text-3xl text-center pt-5 sm:pt-5 md:pt-5 lg:pt-5 font-semibold mb-4 text-[#3b82f6]">
             Taskify
           </h2>
           {/* <Button onClick={toggleSidebar}>
             <GiHamburgerMenu />
           </Button> */}
         </div>
-
-        <h2 className="text-3xl pl-9 font-semibold mb-4 text-[#3b82f6]">
-          {/* Taskify */}
-        </h2>
         <ul>
           <MenuItem
             name="Dashboard"
