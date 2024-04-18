@@ -11,6 +11,9 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "../ui/button";
 
+import { useSidebarStore } from "@/store/sidebar";
+import { GiHamburgerMenu } from "react-icons/gi";
+
 interface MenuItemProps {
   icon: JSX.Element;
   name: string;
@@ -37,22 +40,28 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, name, route }) => {
 };
 
 const Sidebar: React.FC = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
+  const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
   return (
     // <aside className="w-full bg-[#f8fbff] p-4 md:w-full">
     <div>
-      {/* <Button
-        className="sm:block lg:hidden"
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
-        Toggle Sidebar
-      </Button> */}
       <aside
-        className={`lg:w-64 ${isSidebarOpen ? "block" : "hidden"} sm:block`}
+        className={`lg:w-64 border border-gray-100 ${
+          isSidebarOpen ? "block" : "hidden"
+        } sm:block h-full`}
       >
         {/* Sidebar content */}
+        <div className="flex-row">
+          <h2 className="text-3xl pl-20 pt-20 font-semibold mb-4 text-[#3b82f6]">
+            Taskify
+          </h2>
+          {/* <Button onClick={toggleSidebar}>
+            <GiHamburgerMenu />
+          </Button> */}
+        </div>
+
         <h2 className="text-3xl pl-9 font-semibold mb-4 text-[#3b82f6]">
-          Taskify
+          {/* Taskify */}
         </h2>
         <ul>
           <MenuItem

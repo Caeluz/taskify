@@ -16,17 +16,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="border ">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen">
-            <Navbar />
-            <div className="flex lg:flex-row">
-              <Sidebar />
+          <div className="min-h-screen flex flex-row w-full">
+            <Sidebar />
+            <div className="flex-row flex-grow">
+              <Navbar />
               <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
                 {children}
               </div>

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Calendar } from "@/components/ui/calendar";
 
 import {
   Popover,
@@ -104,7 +104,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="pt-0 pl-10">
+    <div className="pt-0 pl-10 w-full">
       <div className="flex h-screen w-full">
         {/* left */}
         <div className="flex-grow pt-5">
@@ -206,7 +206,7 @@ const Dashboard = () => {
           {/* Tasks Today */}
           <div className="pt-10 pr-10">
             <h2 className="text-2xl font-bold">Tasks Today</h2>
-            <div className="pt-5 flex flex-col">
+            <div className="pt-5 flex flex-col w-3/3">
               {tasks.map((task, index) => (
                 <Card
                   key={index}
@@ -230,7 +230,11 @@ const Dashboard = () => {
 
         {/* Side Progress w/calendar */}
         {/* right */}
-        <div className="flex-shrink pl-5 bg-[#fcfbff]"></div>
+        <div className="flex-shrink pl-15 border border-gray">
+          <div className="pr-20">
+            <Calendar className=" rounded-md-border shadow" />
+          </div>
+        </div>
       </div>
     </div>
 
