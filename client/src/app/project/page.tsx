@@ -1,7 +1,11 @@
-export default function Project() {
+import React from "react";
+
+const Project: React.FC = () => {
   return (
     <div>
       <h1>Projects Page</h1>
     </div>
   );
-}
+};
+
+export default Project;

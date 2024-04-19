@@ -179,7 +179,8 @@ const Dashboard = () => {
                 activeProjects.map((project, index) => (
                   <Card
                     key={index}
-                    className="max-w-sm  bg-white rounded-xl shadow-lg  "
+                    className="max-w-sm  bg-white rounded-xl shadow-lg"
+                    onClick={() => console.log("clicked")}
                   >
                     <CardHeader>
                       <CardTitle className="text-2xl font-bold">
