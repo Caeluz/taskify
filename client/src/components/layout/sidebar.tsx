@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
             <GiHamburgerMenu />
           </Button> */}
         </div>
-        <ul>
+        <ul className="pr-7 pt-7">
           <MenuItem
             name="Dashboard"
             route="/dashboard"

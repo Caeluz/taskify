@@ -23,6 +23,7 @@ import {
 import { FaSearch, FaBell, FaEllipsisH } from "react-icons/fa";
 import { IoIosSchool, IoIosSettings } from "react-icons/io";
 import { RiGovernmentFill } from "react-icons/ri";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type Project = {
   id: number;
@@ -123,52 +124,61 @@ const Dashboard = () => {
           </div>
 
           {/*  Groups */}
-          <div className="pt-10">
+          <div className="pt-10 w-96 lg:w-full">
             <h2 className="text-2xl font-bold">Groups</h2>
-            <div className="flex space-x-4 pt-5 pr-10">
-              {groups.slice(0, 4).map((group, index) => (
-                <Card
-                  key={index}
-                  className={`max-w-sm bg-white rounded-xl flex ${
-                    activeCard === index ? "bg-blue-500" : ""
-                  }`}
-                  onClick={() => showProjects(index)}
-                >
-                  <div className="flex items-center space-x-4 p-6">
-                    {/* Icon on the left */}
-                    {/* <IoIosSchool className="text-4xl flex-shrink-0" /> */}
-
-                    {group.icon &&
-                      React.cloneElement(group.icon, {
-                        className: "text-4xl flex-shrink-0",
-                      })}
-
-                    {/* Text on the right */}
-                    <div>
-                      <CardTitle
-                        className={`text-2xl font-bold ${
-                          activeCard === index ? "text-[#e5e8f7]" : ""
-                        }`}
-                      >
-                        {group.name}
-                      </CardTitle>
-                      <CardDescription
-                        className={`text-lg font-medium" ${
-                          activeCard === index ? "text-[#e5e8f7]" : ""
-                        }`}
-                      >
-                        {group.description}
-                      </CardDescription>
+            {/* <div className="pr-20"> */}
+            {/* <ScrollArea className="w-11/12 pt-5  whitespace-nowrap rounded-md border"> */}
+            <ScrollArea className="w-11/12 pt-5  whitespace-nowrap rounded-md ">
+              <div className="flex space-x-4 pt-5 pr-10 space-y-4 lg:space-y-0 flex-row">
+                {groups.slice(0, 4).map((group, index) => (
+                  <Card
+                    key={group.id}
+                    className={`max-w-sm bg-white rounded-xl shadow-lg flex ${
+                      activeCard === index ? "bg-blue-500" : ""
+                    }`}
+                    onClick={() => showProjects(index)}
+                  >
+                    <div className="p-5 lg:pt-5 lg:flex lg:items-center">
+                      {/* Icon */}
+                      <div className="lg:mr-4 lg:flex-shrink-0 ">
+                        {" "}
+                        {/* Add margin-right for spacing and prevent icon from shrinking */}
+                        {group.icon &&
+                          React.cloneElement(group.icon, {
+                            className: "text-4xl",
+                          })}
+                      </div>
+                      {/* Text */}
+                      <div className="lg:flex-grow pt-10 lg:pt-0">
+                        {" "}
+                        {/* Allow text to grow to fill available space */}
+                        <CardTitle
+                          className={`text-2xl font-bold sm:text-2 ${
+                            activeCard === index ? "text-[#e5e8f7]" : ""
+                          }`}
+                        >
+                          {group.name}
+                        </CardTitle>
+                        <CardDescription
+                          className={`text-lg font-medium ${
+                            activeCard === index ? "text-[#e5e8f7]" : ""
+                          }`}
+                        >
+                          {group.description} pending
+                        </CardDescription>
+                      </div>
                     </div>
+                  </Card>
+                ))}
+                {groups.length >= 4 && (
+                  <div className="flex items-center justify-center p-6 pl-12">
+                    <FaEllipsisH size={25} />
                   </div>
-                </Card>
-              ))}
-              {groups.length >= 4 && (
-                <div className="flex items-center justify-center p-6 pl-12">
-                  <FaEllipsisH size={25} />
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+            {/* </div> */}
           </div>
 
           {/* Projects */}
