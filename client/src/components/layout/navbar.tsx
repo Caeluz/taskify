@@ -20,8 +20,8 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="flex justify-between items-center border">
-      <Button className="lg:hidden" onClick={toggleSidebar}>
-        <GiHamburgerMenu />
+      <Button className="lg:hidden bg-white ml-5" onClick={toggleSidebar}>
+        <GiHamburgerMenu className="text-[#3b82f6]" />
       </Button>
       <h2 className="text-3xl  pl-14 pr-72 font-semibold mb-4 text-[#3b82f6]">
         Test

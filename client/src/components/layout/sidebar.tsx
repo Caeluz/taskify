@@ -1,7 +1,7 @@
 // Sidebar.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 
 // Dashboard, Projects, Messages,
@@ -42,41 +42,64 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, name, route }) => {
 const Sidebar: React.FC = () => {
   const isSidebarOpen = useSidebarStore((state) => state.isSidebarOpen);
   const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
+  const closeSidebar = useSidebarStore((state) => state.closeSidebar);
+
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        closeSidebar();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [sidebarRef, closeSidebar]);
+
   return (
-    // <aside className="w-full bg-[#f8fbff] p-4 md:w-full">
-    <div>
+    <div ref={sidebarRef}>
       <aside
-        className={`w-41 md:w-50 lg:w-56 border border-gray-100 ${
-          isSidebarOpen ? "block" : "hidden"
-        } sm:block h-full`}
+        className={`absolute z-20 w-41 md:static md:w-50 lg:static lg:w-56 border border-gray-100 bg-white transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:translate-x-0 h-full`}
       >
         {/* Sidebar content */}
         <div className="flex-row">
           <h2 className="text-3xl text-center pt-5 sm:pt-5 md:pt-5 lg:pt-5 font-semibold mb-4 text-[#3b82f6]">
             Taskify
           </h2>
-          {/* <Button onClick={toggleSidebar}>
-            <GiHamburgerMenu />
-          </Button> */}
+
+          <ul className="pr-7 pt-7">
+            <MenuItem
+              name="Dashboard"
+              route="/dashboard"
+              icon={<MdDashboard />}
+            />
+            <MenuItem
+              name="Projects"
+              route="/project"
+              icon={<BiSolidFolderOpen />}
+            />
+            <MenuItem
+              name="Messages"
+              route="/messages"
+              icon={<BiSolidMessageRoundedDots />}
+            />
+          </ul>
         </div>
-        <ul className="pr-7 pt-7">
-          <MenuItem
-            name="Dashboard"
-            route="/dashboard"
-            icon={<MdDashboard />}
-          />
-          <MenuItem
-            name="Projects"
-            route="/project"
-            icon={<BiSolidFolderOpen />}
-          />
-          <MenuItem
-            name="Messages"
-            route="/messages"
-            icon={<BiSolidMessageRoundedDots />}
-          />
-        </ul>
       </aside>
+      {isSidebarOpen && (
+        <div
+          onClick={() => toggleSidebar()}
+          className="fixed inset-0 bg-black opacity-50 z-10 md:opacity-0 transition-opacity duration-200 ease-in-out"
+        />
+      )}
     </div>
   );
 };
