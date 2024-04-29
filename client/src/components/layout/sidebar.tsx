@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
   return (
     <div ref={sidebarRef}>
       <aside
-        className={`absolute z-20 w-41 md:static md:w-50 lg:static lg:w-56 border border-gray-100 bg-white transform transition-transform duration-300 ease-in-out ${
+        className={`absolute z-20 w-64 md:w-50 lg:static lg:w-56 border border-gray-100 bg-white transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0 h-full`}
       >
