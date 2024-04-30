@@ -23,7 +23,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-row max-w-full">
+          <div className="min-h-screen flex">
             <Sidebar />
             <div className="flex-row w-full ">
               <Navbar />

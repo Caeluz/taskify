@@ -70,7 +70,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className=" w-full">
+    <div className=" w-full bg-[#f3f4f6]">
       <div className="flex h-screen w-full">
         {/* left */}
         <div className="flex-grow pt-5 ml-5">
@@ -91,7 +91,7 @@ const Dashboard = () => {
           {/* Projects */}
           <div className="pt-10">
             <h2 className="text-xl font-bold">Projects</h2>
-            <ScrollArea className="w-80 whitespace-normal md:w-2/3 rounded-md ">
+            <ScrollArea className="w-80 whitespace-normal sm:w-10/12 md:w-2/3 lg:w-1/2 xl:w-2/3 rounded-md ">
               <div className="flex space-x-4 pt-5">
                 {projects.length > 0 ? (
                   projects.map((project, index) => (
