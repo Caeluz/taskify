@@ -24,6 +24,7 @@ export interface Tasks {
   name: string;
   date: string;
   status: string;
+  priority: string;
 }
 
 const Dashboard = () => {
@@ -59,6 +60,7 @@ const Dashboard = () => {
       name: "Design layout for the landing page",
       date: "2024-3-10",
       status: "ongoing",
+      priority: "low",
     },
     {
       id: 2,
@@ -66,6 +68,7 @@ const Dashboard = () => {
       name: "Layout for the landing page",
       date: "2024-3-10",
       status: "pending",
+      priority: "high",
     },
   ];
 
@@ -136,23 +139,35 @@ const Dashboard = () => {
               {tasks.map((task, index) => (
                 <Card
                   key={index}
-                  className="h-20 bg-white rounded-xl shadow-lg m-2 flex"
+                  className="bg-white rounded-xl shadow-lg m-2 flex"
                 >
-                  <div className="flex flex-col items-start space-y-2 m-2">
-                    <div className="flex justify-between items-center w-full">
-                      <div>
-                        <Badge className="bg-[#eff1f6] text-[#b2bac7] ">
+                  <div className="flex flex-col flex-grow p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Badge className="bg-gray-200 text-gray-600">
                           {task.project}
                         </Badge>
-                        <CardTitle className="text-base font-bold mt-2 mr-2">
-                          {task.name}
-                        </CardTitle>
+                        <Badge
+                          className={`${
+                            task.priority === "high"
+                              ? "bg-red-600 text-white"
+                              : "bg-green-500 text-white"
+                          }`}
+                        >
+                          {task.priority}
+                        </Badge>
+                        <Badge className="bg-gray-200 text-gray-600">
+                          {task.status}
+                        </Badge>
                       </div>
-                      <MdNavigateNext className="text-xl" />
+                      <MdNavigateNext className="text-gray-400 text-xl" />
                     </div>
-                    <CardDescription className="text-lg font-medium">
-                      {/* {task.date} */}
-                    </CardDescription>
+                    <div className="mt-2">
+                      <h4 className="text-lg font-semibold">{task.name}</h4>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {/* {task.date} */}
+                      </p>
+                    </div>
                   </div>
                 </Card>
               ))}
