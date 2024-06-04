@@ -30,13 +30,6 @@ const project: Project = {
   tasks: {
     "to do": [
       {
-        id: 1,
-        project_id: 1,
-        task: "Website Revamp",
-        priority: "low",
-        status: "to do",
-      },
-      {
         id: 2,
         project_id: 1,
         task: "SEO Optimization",

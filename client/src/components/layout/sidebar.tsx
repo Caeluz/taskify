@@ -26,18 +26,20 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, name, route }) => {
 
   // Highlight menu item based on currently displayed route
   const colorClass =
-    pathname === route ? "text-gray-50" : "text-gray-400 hover:text-black";
+    pathname === route
+      ? "text-gray-50 bg-[#3b82f6] rounded-r-lg p-2 font-bold"
+      : "text-gray-400 hover:text-black";
 
   // Highlight menu item based on currently displayed route
   return (
     <Link
       href={route}
-      className={`flex items-center gap-2 hover:text-gray-50  ${colorClass}`}
+      className={`flex items-center gap-2 pl-4 pr-4 hover:text-gray-50 hover:bg-[#3b82f6] rounded-r-lg p-2  ${colorClass}`}
     >
       <div className="text-2xl flex items-center gap-2 [&>*]:mx-auto ">
         {icon}
       </div>
-      <div>{name}</div>
+      <div className="text-[25]">{name}</div>
     </Link>
   );
 };
@@ -67,11 +69,11 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`bg-gray-900 text-gray-400 p-6 pr-10 border-r border-gray-800 md:block  ${
+      className={`bg-white text-gray-400 pr-7 border-r border-[#C4C4C4] md:block  ${
         isSidebarOpen ? "block" : "hidden"
       }`}
     >
-      <div className="flex items-center mb-8">
+      <div className="flex items-center mb-8 p-6">
         <FlagIcon className="h-6 w-6 mr-2" />
         <span className="text-lg font-bold text-[#3b82f6]">Taskify</span>
       </div>
@@ -79,7 +81,7 @@ const Sidebar: React.FC = () => {
         <MenuItem name="Dashboard" route="/dashboard" icon={<RxDashboard />} />
         <MenuItem
           name="Projects"
-          route="/project"
+          route="/projects"
           icon={<BiSolidFolderOpen />}
         />
         <MenuItem name="Tasks" route="/tasks" icon={<RxListBullet />} />
