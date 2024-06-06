@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Settings, Users, ClipboardList, CirclePlus } from "lucide-react";
 
 export default function showProject({ params }: { params: { id: number } }) {
@@ -36,23 +37,428 @@ export default function showProject({ params }: { params: { id: number } }) {
       </div>
 
       <Separator className="bg-[#C4C4C4]" />
-      <div className="p-6">
-        <div className="border rounded-lg w-1/2 p-6">
+      <div className="p-6 flex gap-4 w-full h-[calc(100vh-168px)] overflow-auto">
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
           {/* Header */}
-          <div>Pending 2</div>
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">PENDING (2)</div>
           <Separator className="bg-[#C4C4C4]" />
           {/* Content */}
-          <div className="p-4">
+          <div className="py-4 grid gap-5">
             <Card className="">
               <CardHeader>
-                <Badge className="bg-[#31ff45] text-black w-1/12 rounded-xl text-center">
-                  Low
-                </Badge>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex mb-4"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Creating Index Products Endpoint</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <div className="flex flex-row space-x-[-12px]">
+                  <Avatar className="whitespace-nowrap">
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>A</AvatarFallback>
+                  </Avatar>
+                  <Avatar className="whitespace-nowrap">
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>A</AvatarFallback>
+                  </Avatar>
+                  <Avatar className="whitespace-nowrap">
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>A</AvatarFallback>
+                  </Avatar>
+                </div>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex mb-4"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Creating Index Products Endpoint</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
                 <CardTitle>Card Title</CardTitle>
                 <CardDescription className="">Card Description</CardDescription>
               </CardHeader>
-              <CardFooter className="flex flex-row space-x-4">
-                <div className="whitespace-nowrap">7 members</div>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
+          {/* Header */}
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">PENDING 2</div>
+          <Separator className="bg-[#C4C4C4]" />
+          {/* Content */}
+          <div className="p-4 grid gap-5">
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
+          {/* Header */}
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">PENDING 2</div>
+          <Separator className="bg-[#C4C4C4]" />
+          {/* Content */}
+          <div className="p-4 grid gap-5">
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
+          {/* Header */}
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">PENDING 2</div>
+          <Separator className="bg-[#C4C4C4]" />
+          {/* Content */}
+          <div className="p-4 grid gap-5">
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
+          {/* Header */}
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">PENDING 2</div>
+          <Separator className="bg-[#C4C4C4]" />
+          {/* Content */}
+          <div className="p-4 grid gap-5">
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+
+        <div className="border rounded-lg border-[#D9D9D9] p-6 min-w-96 h-fit">
+          {/* Header */}
+          {/* <div className="border border-ra"></div> */}
+          <div className="text-lg py-4">COMPLETED 2</div>
+          <Separator className="bg-[#C4C4C4]" />
+          {/* Content */}
+          <div className="p-4 grid gap-5">
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
+              </CardFooter>
+            </Card>
+            <Card className="">
+              <CardHeader>
+                <div className="flex justify-left">
+                  <Badge
+                    className=" text-black  rounded-xl justify-center flex"
+                    variant="green"
+                  >
+                    LOW
+                  </Badge>
+                </div>
+                <CardTitle>Card Title</CardTitle>
+                <CardDescription className="">Card Description</CardDescription>
+              </CardHeader>
+              <CardContent>May 23, 2024 - May 30, 2024</CardContent>
+              <CardFooter className="flex flex-row space-x-4 justify-between">
+                <div className="whitespace-nowrap">test</div>
+                <Avatar className="whitespace-nowrap">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
+                  <AvatarFallback>A</AvatarFallback>
+                </Avatar>
               </CardFooter>
             </Card>
           </div>

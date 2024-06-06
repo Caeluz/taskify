@@ -16,18 +16,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="border ">
+      <body className="">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex">
+          <div className="h-dvh flex">
             <Sidebar />
-            <div className="flex-row w-full ">
+            <div className="flex-row w-full overflow-hidden">
               <Navbar />
-              <div className="flex flex-col flex-grow w-full md:w-full min-h-screen ">
+              <div className="flex flex-col w-full md:w-full pa-0">
                 {children}
               </div>
             </div>
