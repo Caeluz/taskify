@@ -88,7 +88,7 @@ export default function Project() {
       </div>
       <div className="grid grid-rows-3 grid-cols-4 gap-4 p-7">
         {Array.from({ length: projectCount }).map((_, index) => (
-          <Link href={`/projects/${index}`} key={index}>
+          <Link href={`/projects/${index}/tasks`} key={index}>
             <Card className="hover:bg-[#3b82f6] hover:text-white">
               <CardHeader>
                 <div className="flex flex-row justify-between">
