@@ -2,7 +2,13 @@
 import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ClipboardList, CirclePlus, Settings, Users } from "lucide-react";
+import {
+  ClipboardList,
+  CirclePlus,
+  Settings,
+  Users,
+  LucideUserPlus,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 
@@ -25,6 +31,37 @@ export default function Layout({
     }),
     [pathname, projectId]
   );
+
+  function renderContent() {
+    if (isCurrentPath("/tasks")) {
+      return (
+        <Button
+          className="bg-[#3b82f6] text-white"
+          // onClick={() => setColumnCount(columnCount + 1)}
+        >
+          <CirclePlus className="w-4 mr-2" />
+          Add Column
+        </Button>
+      );
+    } else if (isCurrentPath("/members")) {
+      // Replace this with whatever you want to render for "/members"
+      return (
+        <Button
+          className="bg-[#3b82f6] text-white"
+          // onClick={() => setColumnCount(columnCount + 1)}
+        >
+          <LucideUserPlus className="w-4 mr-2" />
+          Add Members
+        </Button>
+      );
+    } else if (isCurrentPath("/settings")) {
+      // Replace this with whatever you want to render for "/settings"
+      return <div>Settings content here</div>;
+    } else {
+      // Default case if none of the paths match
+      return null;
+    }
+  }
 
   // Function to determine if the current path matches the tab's path
   const isCurrentPath = (path: string) => {
@@ -72,15 +109,7 @@ export default function Layout({
             </div>
           </Link>
         </div>
-        <Button
-          className="bg-[#3b82f6] text-white"
-          // onClick={() => {
-          //   setColumnCount(columnCount + 1);
-          // }}
-        >
-          <CirclePlus className="w-4 mr-2" />
-          Add Column
-        </Button>
+        {renderContent()}
       </div>
       <Separator className="bg-[#C4C4C4]" />
       {children}
