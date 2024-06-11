@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { LucideUserPlus, Filter, ArrowDownUp } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
+import { columns, Member } from "./columns";
 
 // export default function Members({ id }: { id: string }) {
 export default function Members() {
@@ -13,7 +15,29 @@ export default function Members() {
 
   const pathname = usePathname();
   const id = pathname.split("/")[2];
-  return;
+  return (
+    <div className="p-4">
+      <DataTable
+        columns={columns}
+        data={[
+          {
+            id: "1",
+            name: "John Doe",
+            position: "Back-end",
+            pendingTasks: 20,
+            completedTasks: 20,
+          },
+          {
+            id: "2",
+            name: "Tester",
+            position: "QA",
+            pendingTasks: 1,
+            completedTasks: 1,
+          },
+        ]}
+      />
+    </div>
+  );
 
   return (
     <div className="p-6">

@@ -106,7 +106,7 @@ export default function Project() {
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={(e) => {
-                          console.log("Edit clicked");
+                          console.log(e);
                         }}
                       >
                         Edit
@@ -119,13 +119,15 @@ export default function Project() {
                       >
                         Delete
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          console.log("Team clicked");
-                        }}
-                      >
-                        Team
-                      </DropdownMenuItem>
+                      <Link href={`/projects/${index}/members`}>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            // console.log("Team clicked");
+                          }}
+                        >
+                          Members
+                        </DropdownMenuItem>
+                      </Link>
                       <DropdownMenuItem
                         onClick={(e) => {
                           console.log("Subscription clicked");
