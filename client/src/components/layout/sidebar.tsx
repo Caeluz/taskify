@@ -69,7 +69,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      className={`bg-white text-gray-400 pr-7 border-r border-[#C4C4C4] md:block  ${
+      className={` text-gray-400 pr-7 border-r  md:block  ${
         isSidebarOpen ? "block" : "hidden"
       }`}
     >

@@ -22,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
 import {
   Settings,
   Users,
@@ -45,6 +46,8 @@ import { Input } from "@/components/ui/input";
 import { truncateText } from "@/components/utility/truncate-text";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ComboBox } from "@/components/ui/combo-box";
+import AddTaskDialog from "./addTaskDialog";
 
 export default function ShowProject({ params }: { params: { id: number } }) {
   const [columnCount, setColumnCount] = useState(3);
@@ -57,25 +60,16 @@ export default function ShowProject({ params }: { params: { id: number } }) {
       <div className="p-6 flex gap-4 h-[calc(100vh-168px)] overflow-hidden">
         {Array.from({ length: columnCount }).map((_, i) => (
           <div
-            className="border rounded-lg border-[#D9D9D9] p-6 min-w-80 w-80 h-full overflow-hidden"
+            className="border rounded-lg p-6 min-w-80 w-80 h-full overflow-hidden"
             key={i}
           >
             {/* Header */}
             <div className="flex flex-row justify-between items-center">
               <div className="text-lg py-2">PENDING (2)</div>
-              {/* Add Task/s */}
+
               <div className="flex">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="link">
-                      <CirclePlus />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>Add Task</DialogHeader>
-                    <Input placeholder="Task Name" />
-                  </DialogContent>
-                </Dialog>
+                {/* Add Task/s */}
+                <AddTaskDialog />
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <EllipsisVertical />
