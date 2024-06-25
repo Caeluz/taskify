@@ -35,6 +35,7 @@ export default function Members() {
             completedTasks: 1,
           },
         ]}
+        variant="table"
       />
     </div>
   );

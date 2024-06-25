@@ -37,11 +37,18 @@ import { set } from "date-fns";
 
 export default function Project() {
   const [projectCount, setProjectCount] = useState(6);
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <div>
       <div className="flex flex-row justify-between">
-        <h1 className="p-6">6 Projects</h1>
+        {/* <h1 className="p-6">6 Projects</h1> */}
+        <Input
+          placeholder="Search projects"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="m-5 w-96"
+        />
         <Dialog>
           <DialogTrigger>
             <Button className="m-5" variant="blue">
@@ -87,68 +94,74 @@ export default function Project() {
         </Dialog>
       </div>
       <div className="grid grid-rows-3 grid-cols-4 gap-4 p-7">
-        {Array.from({ length: projectCount }).map((_, index) => (
-          <Link href={`/projects/${index}/tasks`} key={index}>
-            <Card className="hover:bg-[#3b82f6] hover:text-white">
-              <CardHeader>
-                <div className="flex flex-row justify-between">
-                  <CardTitle>Card Title</CardTitle>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Ellipsis />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
+        {Array.from({ length: projectCount })
+          .filter((_, index) => {
+            return searchTerm === "" || index.toString().includes(searchTerm);
+          })
+          .map((_, index) => (
+            <Link href={`/projects/${index}/tasks`} key={index}>
+              <Card className="hover:bg-[#3b82f6] hover:text-white">
+                <CardHeader>
+                  <div className="flex flex-row justify-between">
+                    <CardTitle>Card Title</CardTitle>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Ellipsis />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
                         onClick={(e) => {
-                          console.log(e);
+                          e.stopPropagation();
                         }}
                       >
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setProjectCount(projectCount - 1);
-                        }}
-                        className="text-red-600"
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                      <Link href={`/projects/${index}/members`}>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={(e) => {
-                            // console.log("Team clicked");
+                            console.log(e);
                           }}
                         >
-                          Members
+                          Edit
                         </DropdownMenuItem>
-                      </Link>
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          console.log("Subscription clicked");
-                        }}
-                      >
-                        Subscription
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setProjectCount(projectCount - 1);
+                          }}
+                          className="text-red-600"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                        <Link href={`/projects/${index}/members`}>
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              // console.log("Team clicked");
+                            }}
+                          >
+                            Members
+                          </DropdownMenuItem>
+                        </Link>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            console.log("Subscription clicked");
+                          }}
+                        >
+                          Subscription
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
 
-                  {/* <Button></Button> */}
-                </div>
-                <CardDescription className="">Card Description</CardDescription>
-              </CardHeader>
-              <CardFooter className="flex flex-row space-x-4">
-                <Progress className="" value={33} />
-                <div className="whitespace-nowrap">7 members</div>
-              </CardFooter>
-            </Card>
-          </Link>
-        ))}
+                    {/* <Button></Button> */}
+                  </div>
+                  <CardDescription className="">
+                    Card Description
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter className="flex flex-row space-x-4">
+                  <Progress className="" value={33} />
+                  <div className="whitespace-nowrap">7 members</div>
+                </CardFooter>
+              </Card>
+            </Link>
+          ))}
       </div>
     </div>
   );
