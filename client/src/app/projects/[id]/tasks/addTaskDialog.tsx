@@ -12,6 +12,10 @@ import { CirclePlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ComboBox } from "@/components/ui/combo-box";
+import { DatePicker } from "@/components/ui/date-picker";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+import { Time } from "@/components/ui/time";
+import { TimePicker } from "@/components/ui/time-picker";
 
 export default function AddTaskDialog() {
   return (
@@ -29,6 +33,11 @@ export default function AddTaskDialog() {
           choices={[{ label: "test", value: "test" }]}
           className="w-96"
         />
+        {/* <DatePicker /> */}
+        {/* <DateTimePicker /> */}
+        {/* <Time /> */}
+        <TimePicker />
+        {/* <input type="datetime-local" /> */}
       </DialogContent>
     </Dialog>
   );
