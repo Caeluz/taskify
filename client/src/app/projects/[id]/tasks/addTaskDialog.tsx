@@ -16,6 +16,7 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Time } from "@/components/ui/time";
 import { TimePicker } from "@/components/ui/time-picker";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function AddTaskDialog() {
   return (
@@ -25,19 +26,33 @@ export default function AddTaskDialog() {
           <CirclePlus />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="gap-5">
         <DialogHeader>Create Task</DialogHeader>
         <Input placeholder="Task Name" />
         <Label>Assign To:</Label>
+        <ComboBox choices={[{ label: "test", value: "test" }]} />
+        <div className="flex flex-row items-center overflow-auto space-x-4 py-2">
+          <Label className="whitespace-nowrap">From:</Label>
+          <DatePicker />
+          <Label className="whitespace-nowrap">To:</Label>
+          <DatePicker />
+        </div>
+
+        <Label>Priority:</Label>
         <ComboBox
-          choices={[{ label: "test", value: "test" }]}
-          className="w-96"
+          choices={[
+            { label: "Low", value: "LOW" },
+            { label: "Medium", value: "MEDIUM" },
+            { label: "High", value: "HIGH" },
+          ]}
         />
-        {/* <DatePicker /> */}
-        {/* <DateTimePicker /> */}
-        {/* <Time /> */}
-        <TimePicker />
-        {/* <input type="datetime-local" /> */}
+        <Label htmlFor="description">Description:</Label>
+        <Textarea
+          className="resize-none"
+          placeholder="Type other details"
+          id="description"
+        />
+        <Button>Submit</Button>
       </DialogContent>
     </Dialog>
   );

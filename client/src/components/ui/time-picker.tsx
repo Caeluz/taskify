@@ -29,7 +29,7 @@ export function TimePicker() {
     `${hour}:${minute.toString().padStart(2, "0")} ${period}`;
 
   return (
-    <Popover>
+    <Popover modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -43,8 +43,12 @@ export function TimePicker() {
           <span>{formatTime(selectedTime)}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Time selected={selectedTime} onSelect={setSelectedTime} />
+      <PopoverContent className="w-auto p-0 " align="start">
+        <Time
+          selected={selectedTime}
+          onSelect={setSelectedTime}
+          className="w-auto"
+        />
       </PopoverContent>
     </Popover>
   );

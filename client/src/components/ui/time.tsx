@@ -16,7 +16,7 @@ export interface TimeProps {
 interface SelectedTime {
   hour: number;
   minute: number;
-  period: "AM" | "PM";
+  period: string | "AM" | "PM";
 }
 
 export function Time({ className, selected, onSelect }: TimeProps) {
@@ -33,7 +33,13 @@ export function Time({ className, selected, onSelect }: TimeProps) {
   };
 
   const handleTimeChange = (type: string, value: number | string) => {
-    const newTime = { ...selected, [type]: value };
+    // Provide default values for hour, minute, and period
+    const newTime: SelectedTime = {
+      hour: selected?.hour || 12, // Default to 12 if hour is undefined
+      minute: selected?.minute || 0, // Default to 0 if minute is undefined
+      period: selected?.period || "AM", // Default to "AM" if period is undefined
+      [type]: value,
+    };
     handleTimeSelect(newTime);
   };
 
@@ -44,7 +50,7 @@ export function Time({ className, selected, onSelect }: TimeProps) {
         options.push(
           <div key={`hour-${i}`}>
             <Button
-              variant={selected?.hour === i ? "solid" : "outline"}
+              variant={selected?.hour === i ? "default" : "outline"}
               onClick={() => handleTimeChange("hour", i)}
               className="min-w-12"
             >
@@ -58,7 +64,7 @@ export function Time({ className, selected, onSelect }: TimeProps) {
         options.push(
           <div key={`minute-${i}`} className="w-full">
             <Button
-              variant={selected?.minute === i ? "solid" : "outline"}
+              variant={selected?.minute === i ? "default" : "outline"}
               onClick={() => handleTimeChange("minute", i)}
               className="min-w-12"
             >
@@ -72,7 +78,8 @@ export function Time({ className, selected, onSelect }: TimeProps) {
         options.push(
           <div key={`period-${period}`}>
             <Button
-              variant={selected?.period === period ? "solid" : "outline"}
+              variant={selected?.period === period ? "default" : "outline"}
+              // variant=""
               onClick={() => handleTimeChange("period", period)}
               className="min-w-12"
             >
@@ -88,32 +95,20 @@ export function Time({ className, selected, onSelect }: TimeProps) {
   return (
     <div
       className={cn(
-        "p-3 h-48 border rounded-md grid grid-cols-3 gap-x-2",
+        "p-2 h-48 w-full border rounded-md grid grid-cols-3 gap-x-1",
         className
       )}
     >
       {/* Hours */}
-      <ScrollArea className="flex flex-col items-center">
-        {/* {generateTimeOptions("hour")} */}
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
-        <div>1</div>
+      <ScrollArea className="flex flex-col mx-2 items-center w-full">
+        {generateTimeOptions("hour")}
       </ScrollArea>
       {/* Minutes */}
-      <ScrollArea className="flex flex-col items-center">
+      <ScrollArea className="flex flex-col mx-2 items-center w-full">
         {generateTimeOptions("minute")}
       </ScrollArea>
       {/* AM/PM */}
-      <ScrollArea className="flex flex-col items-center">
+      <ScrollArea className="flex flex-col mx-2 items-center w-full">
         {generateTimeOptions("period")}
       </ScrollArea>
     </div>
