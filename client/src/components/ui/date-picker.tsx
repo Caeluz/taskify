@@ -13,8 +13,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function DatePicker() {
-  const [date, setDate] = React.useState<Date>();
+export function DatePicker({ dateToday }: { dateToday?: boolean }) {
+  const [date, setDate] = React.useState<Date | undefined>(
+    dateToday ? new Date() : undefined
+  );
 
   return (
     <Popover>
@@ -33,9 +35,11 @@ export function DatePicker() {
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
+          captionLayout="dropdown-buttons"
           selected={date}
           onSelect={setDate}
-          initialFocus
+          fromYear={1960}
+          toYear={2030}
         />
       </PopoverContent>
     </Popover>

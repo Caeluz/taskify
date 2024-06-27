@@ -17,6 +17,17 @@ import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Time } from "@/components/ui/time";
 import { TimePicker } from "@/components/ui/time-picker";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+  SelectLabel,
+} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 
 export default function AddTaskDialog() {
   return (
@@ -31,12 +42,15 @@ export default function AddTaskDialog() {
         <Input placeholder="Task Name" />
         <Label>Assign To:</Label>
         <ComboBox choices={[{ label: "test", value: "test" }]} />
-        <div className="flex flex-row items-center overflow-auto space-x-4 py-2">
+        {/* <div className="flex flex-row items-center overflow-auto space-x-4 py-2">
           <Label className="whitespace-nowrap">From:</Label>
-          <DatePicker />
+          <DatePicker dateToday={true} />
           <Label className="whitespace-nowrap">To:</Label>
           <DatePicker />
-        </div>
+        </div> */}
+
+        <Label>Date:</Label>
+        <DatePickerWithRange dateToday={true} />
 
         <Label>Priority:</Label>
         <ComboBox

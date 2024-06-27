@@ -62,33 +62,38 @@ const ComboBox = ({ className, choices }: ComboBoxProps) => {
           </Button>
         </PopoverTrigger>
         <PopoverContent className={`w-full ${className}`} align="end">
-          <div>
-            <input
-              type="text"
+          <Command>
+            <CommandInput
+              // type="text"
               placeholder="Search..."
               className=" h-9 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400"
             />
-          </div>
-          <div className="py-1">
-            {choices.map((choice) => (
-              <button
-                key={choice.value}
-                className={cn(
-                  "flex items-center w-full justify-between px-3 py-2 text-left focus:outline-none"
-                  // value === choice.value && "bg-blue-100"
-                )}
-                onClick={() => {
-                  setValue((currentValue) =>
-                    currentValue === choice.value ? "" : choice.value
-                  );
-                  setOpen(false);
-                }}
-              >
-                {choice.label}
-                {value === choice.value && <CheckIcon className="h-4 w-4" />}
-              </button>
-            ))}
-          </div>
+            <CommandList>
+              <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandGroup className="py-1">
+                {choices.map((choice) => (
+                  <CommandItem
+                    key={choice.value}
+                    className={cn(
+                      "flex items-center w-full justify-between px-3 py-2 text-left focus:outline-none"
+                      // value === choice.value && "bg-blue-100"
+                    )}
+                    onSelect={() => {
+                      setValue((currentValue) =>
+                        currentValue === choice.value ? "" : choice.value
+                      );
+                      setOpen(false);
+                    }}
+                  >
+                    {choice.label}
+                    {value === choice.value && (
+                      <CheckIcon className="h-4 w-4" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
         </PopoverContent>
       </Popover>
     </div>
