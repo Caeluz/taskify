@@ -1,4 +1,4 @@
-import KanbanBoard from "./kanbanBoard";
+import KanbanBoard from "./KanbanBoard";
 
 export default function ShowProject({ params }: { params: { id: number } }) {
   return (
