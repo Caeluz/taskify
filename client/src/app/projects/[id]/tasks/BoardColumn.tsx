@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import { useDndContext, type UniqueIdentifier } from "@dnd-kit/core";
 import { cva } from "class-variance-authority";
 
 import { ComboBox } from "@/components/ui/combo-box";
 import AddTaskDialog from "./AddTaskDialog";
-import TaskCard from "./TaskCard";
+import { CSS } from "@dnd-kit/utilities";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 
 import {
   Dialog,
@@ -39,14 +40,56 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Task, TaskCard } from "./TaskCard";
+import { GripVertical } from "lucide-react";
 
 import { EllipsisVertical } from "lucide-react";
 
-export function BoardColumn({ key }: { key?: number }) {
-  const [columnCount, setColumnCount] = useState(3);
+export interface Column {
+  id: UniqueIdentifier;
+  title: string;
+}
 
-  const isOverlay = undefined;
-  const isDragging = true;
+export type ColumnType = "Column";
+
+export interface ColumnDragData {
+  type: ColumnType;
+  column: Column;
+}
+
+interface BoardColumnProps {
+  column: Column;
+  tasks: Task[];
+  isOverlay?: boolean;
+}
+
+export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
+  const tasksIds = useMemo(() => {
+    return tasks.map((task) => task.id);
+  }, [tasks]);
+
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column.id,
+    data: {
+      type: "Column",
+      column,
+    } satisfies ColumnDragData,
+    attributes: {
+      roleDescription: `Column: ${column.title}`,
+    },
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
 
   const variants = cva(
     "h-[500px] max-h-[500px] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
@@ -62,132 +105,32 @@ export function BoardColumn({ key }: { key?: number }) {
   );
 
   return (
-    // <Card className="p-6 flex gap-4 h-[calc(100vh-168px)] overflow-hidden">
-    //   <div
-    //     className="border rounded-lg p-6 min-w-80 w-80 h-full overflow-hidden"
-    //     key={key}
-    //   >
-    //     {/* Header */}
-    //     <div className="flex flex-row justify-between items-center">
-    //       <div className="text-lg py-2">PENDING (2)</div>
-    //       <div className="flex">
-    //         {/* Add Task/s */}
-    //         <AddTaskDialog />
-    //         <DropdownMenu>
-    //           <DropdownMenuTrigger>
-    //             <EllipsisVertical />
-    //           </DropdownMenuTrigger>
-    //           <DropdownMenuContent>
-    //             <DropdownMenuLabel>Functions</DropdownMenuLabel>
-    //             <DropdownMenuSeparator />
-    //             <DropdownMenuGroup>
-    //               <DropdownMenuItem
-    //                 className="text-red-600"
-    //                 //   onClick={() => {
-    //                 //     setColumnCount(columnCount - 1);
-    //                 //   }}
-    //               >
-    //                 Delete
-    //               </DropdownMenuItem>
-    //             </DropdownMenuGroup>
-    //           </DropdownMenuContent>
-    //         </DropdownMenu>
-    //       </div>
-    //     </div>
-    //     <Separator className="bg-[#C4C4C4]" />
-    //     {/* Content */}
-    //     <ScrollArea className="py-4 h-full">
-    //       {Array.from({ length: 5 }).map((_, i) => (
-    //         <Dialog key={i}>
-    //           <DialogTrigger>
-    //             <TaskCard />
-    //           </DialogTrigger>
-    //           <DialogContent>
-    //             <DialogHeader>
-    //               <DialogTitle>Creating Index Products Endpoint</DialogTitle>
-    //               <DialogDescription>
-    //                 Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed
-    //                 do eiusmod tempor incididunt ut labore et dolore magna
-    //                 aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-    //                 ullamco laboris nisi ut aliquip ex ea commodo
-    //               </DialogDescription>
-    //             </DialogHeader>
-    //             <div>
-    //               <div>
-    //                 {/* Members */}
-    //                 {/* <div className="mb-2">Members</div>
-    //                   <div className="grid grid-cols-3 ">
-    //                     <div className="flex flex-row">
-    //                       <Avatar className="whitespace-nowrap w-6 h-6">
-    //                         <AvatarImage
-    //                           src="https://github.com/shadcn.png"
-    //                           alt="@shadcn"
-    //                         />
-    //                         <AvatarFallback>A</AvatarFallback>
-    //                       </Avatar>
-    //                       <div className="text-sm">- test@gmail.com</div>
-    //                     </div>
-    //                   </div> */}
-    //                 <div>Due Date: </div>
-
-    //                 <Badge>10 days left...</Badge>
-    //               </div>
-    //             </div>
-    //           </DialogContent>
-    //         </Dialog>
-    //       ))}
-    //     </ScrollArea>
-    //   </div>
-    // </Card>
     <Card
+      ref={setNodeRef}
+      style={style}
       className={variants({
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
     >
       <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row space-between items-center">
-        PENDING (2)
+        <Button
+          variant={"ghost"}
+          {...attributes}
+          {...listeners}
+          className=" p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
+        >
+          <span className="sr-only">{`Move column: ${column.title}`}</span>
+          <GripVertical />
+        </Button>
+        <span className="ml-auto"> {column.title}</span>
       </CardHeader>
       <ScrollArea>
         <CardContent className="flex flex-grow flex-col gap-2 p-2">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Dialog key={i}>
-              <DialogTrigger>
-                <TaskCard />
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Creating Index Products Endpoint</DialogTitle>
-                  <DialogDescription>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo
-                  </DialogDescription>
-                </DialogHeader>
-                <div>
-                  <div>
-                    {/* Members */}
-                    {/* <div className="mb-2">Members</div>
-                      <div className="grid grid-cols-3 ">
-                        <div className="flex flex-row">
-                          <Avatar className="whitespace-nowrap w-6 h-6">
-                            <AvatarImage
-                              src="https://github.com/shadcn.png"
-                              alt="@shadcn"
-                            />
-                            <AvatarFallback>A</AvatarFallback>
-                          </Avatar>
-                          <div className="text-sm">- test@gmail.com</div>
-                        </div>
-                      </div> */}
-                    <div>Due Date: </div>
-
-                    <Badge>10 days left...</Badge>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          ))}
+          <SortableContext items={tasksIds}>
+            {tasks.map((task) => (
+              <TaskCard key={task.id} task={task} />
+            ))}
+          </SortableContext>
         </CardContent>
       </ScrollArea>
     </Card>

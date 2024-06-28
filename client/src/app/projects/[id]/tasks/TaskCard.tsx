@@ -9,24 +9,90 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { truncateText } from "@/components/utility/truncate-text";
+import type { UniqueIdentifier } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
+import { ColumnId } from "./KanbanBoard";
+import { cva } from "class-variance-authority";
 
-import { MessageSquareMore, Paperclip } from "lucide-react";
+import { GripVertical, MessageSquareMore, Paperclip } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function TaskCard() {
+export interface Task {
+  id: UniqueIdentifier;
+  columnId: ColumnId;
+  content: string;
+}
+
+interface TaskCardProps {
+  task: Task;
+  isOverlay?: boolean;
+}
+
+export type TaskType = "Task";
+
+export interface TaskDragData {
+  type: TaskType;
+  task: Task;
+}
+
+export function TaskCard({ task, isOverlay }: TaskCardProps) {
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: {
+      type: "Task",
+      task,
+    } satisfies TaskDragData,
+    attributes: {
+      roleDescription: "Task",
+    },
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
+  const variants = cva("", {
+    variants: {
+      dragging: {
+        over: "ring-2 opacity-30",
+        overlay: "ring-2 ring-primary",
+      },
+    },
+  });
+
   return (
-    <Card className="mb-4">
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={variants({
+        dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+      })}
+    >
       <CardHeader className="p-5 space-y-0">
         <div className="flex justify-start">
-          <Badge
-            className="text-black  justify-center mb-4  text-xs "
-            variant="green"
+          <Button
+            variant={"ghost"}
+            {...attributes}
+            {...listeners}
+            className="p-1 text-secondary-foreground/50 -ml-2 h-auto cursor-grab"
           >
+            <span className="sr-only">Move task</span>
+            <GripVertical />
+          </Button>
+          <Badge variant={"outline"} className="ml-auto font-semibold">
             Low
           </Badge>
         </div>
-        <CardTitle className="text-left text-sm">
-          Creating Index Products Endpoint
-        </CardTitle>
+        <CardTitle className="text-left text-sm">{task.content}</CardTitle>
         <CardDescription className="hidden">
           {truncateText(
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
