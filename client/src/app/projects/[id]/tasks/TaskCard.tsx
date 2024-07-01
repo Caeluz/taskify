@@ -18,6 +18,7 @@ import { cva } from "class-variance-authority";
 import { GripVertical, MessageSquareMore, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import TaskCardDialogContent from "./TaskCardDialogContent";
 
 export interface Task {
   id: UniqueIdentifier;
@@ -141,8 +142,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         </Card>
       </DialogTrigger>
       <DialogContent>
-        {/* Your dialog content here */}
-        <p>Task Details or any other content</p>
+        <TaskCardDialogContent />
       </DialogContent>
     </Dialog>
   );
