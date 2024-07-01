@@ -108,7 +108,7 @@ const initialTasks: Task[] = [
   },
 ];
 
-export function KanbanBoard({ params }: { params: { id: number } }) {
+export function KanbanBoard({ params }: { params: { id?: number } }) {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
