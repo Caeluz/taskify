@@ -141,7 +141,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
           </CardFooter>
         </Card>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-w-[900px] max-h-[80vh] overflow-y-auto">
         <TaskCardDialogContent />
       </DialogContent>
     </Dialog>

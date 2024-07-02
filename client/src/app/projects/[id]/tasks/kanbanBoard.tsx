@@ -36,6 +36,10 @@ const defaultCols = [
     id: "done" as const,
     title: "Done",
   },
+  {
+    id: "archived" as const,
+    title: "Archived",
+  },
 ] satisfies Column[];
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
@@ -260,7 +264,8 @@ export function KanbanBoard({ params }: { params: { id?: number } }) {
         </SortableContext>
       </BoardContainer>
 
-      {"document" in window &&
+      {/* {"document" in window && */}
+      {typeof window !== "undefined" &&
         createPortal(
           <DragOverlay>
             {activeColumn && (
