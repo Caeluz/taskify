@@ -8,6 +8,7 @@ import {
   Settings,
   Users,
   LucideUserPlus,
+  FileBarChart,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
@@ -28,6 +29,7 @@ export default function Layout({
       tasks: pathname === `/projects/${projectId}/tasks`,
       members: pathname === `/projects/${projectId}/members`,
       settings: pathname === `/projects/${projectId}/settings`,
+      reports: pathname === `/projects/${projectId}/reports`,
     }),
     [pathname, projectId]
   );
@@ -59,7 +61,7 @@ export default function Layout({
       return <div>Settings content here</div>;
     } else {
       // Default case if none of the paths match
-      return null;
+      return <div></div>;
     }
   }
 
@@ -106,6 +108,18 @@ export default function Layout({
             >
               <Settings />
               <div>Settings</div>
+            </div>
+          </Link>
+          <Link href={`/projects/${projectId}/reports`}>
+            <div
+              className={`flex flex-row space-x-2 cursor-pointer ${
+                isCurrentPath("/reports")
+                  ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
+                  : ""
+              }`}
+            >
+              <FileBarChart />
+              <div>Reports</div>
             </div>
           </Link>
         </div>
