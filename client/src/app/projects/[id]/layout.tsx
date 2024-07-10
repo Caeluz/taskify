@@ -9,6 +9,7 @@ import {
   Users,
   LucideUserPlus,
   FileBarChart,
+  Gauge,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
@@ -70,58 +71,32 @@ export default function Layout({
     return pathname === `/projects/${projectId}${path}`;
   };
 
+  const navLinks = [
+    { path: "/overview", icon: Gauge, label: "Overview" },
+    { path: "/tasks", icon: ClipboardList, label: "Tasks" },
+    { path: "/members", icon: Users, label: "Members" },
+    { path: "/settings", icon: Settings, label: "Settings" },
+    { path: "/reports", icon: FileBarChart, label: "Reports" },
+  ];
+
   return (
     <div>
       <div className="flex flex-row justify-between space-x-4 p-6 text-[#3b82f6] font-medium">
         <div className="flex flex-row space-x-4 items-center">
-          <Link href={`/projects/${projectId}/tasks`}>
-            <div
-              className={`flex flex-row space-x-2 cursor-pointer ${
-                isCurrentPath("/tasks")
-                  ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
-                  : ""
-              }`}
-            >
-              <ClipboardList />
-              <div>Tasks</div>
-            </div>
-          </Link>
-          <Link href={`/projects/${projectId}/members`}>
-            <div
-              className={`flex flex-row space-x-2 cursor-pointer ${
-                isCurrentPath("/members")
-                  ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
-                  : ""
-              }`}
-            >
-              <Users />
-              <div>Members</div>
-            </div>
-          </Link>
-          <Link href={`/projects/${projectId}/settings`}>
-            <div
-              className={`flex flex-row space-x-2 cursor-pointer ${
-                isCurrentPath("/settings")
-                  ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
-                  : ""
-              }`}
-            >
-              <Settings />
-              <div>Settings</div>
-            </div>
-          </Link>
-          <Link href={`/projects/${projectId}/reports`}>
-            <div
-              className={`flex flex-row space-x-2 cursor-pointer ${
-                isCurrentPath("/reports")
-                  ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
-                  : ""
-              }`}
-            >
-              <FileBarChart />
-              <div>Reports</div>
-            </div>
-          </Link>
+          {navLinks.map(({ path, icon: Icon, label }) => (
+            <Link key={path} href={`/projects/${projectId}${path}`}>
+              <div
+                className={`flex flex-row space-x-2 cursor-pointer ${
+                  isCurrentPath(path)
+                    ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
+                    : ""
+                }`}
+              >
+                <Icon />
+                <div>{label}</div>
+              </div>
+            </Link>
+          ))}
         </div>
         {renderContent()}
       </div>

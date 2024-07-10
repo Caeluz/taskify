@@ -19,6 +19,7 @@ import { GripVertical, MessageSquareMore, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import TaskCardDialogContent from "./TaskCardDialogContent";
+import { useEffect } from "react";
 
 export interface Task {
   id: UniqueIdentifier;
@@ -77,12 +78,9 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         <Card
           ref={setNodeRef}
           style={style}
-          className={
-            (variants({
-              dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
-            }),
-            "cursor-pointer hover:shadow-lg transition-shadow duration-200 ease-in-out")
-          }
+          className={`${variants({
+            dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
+          })} cursor-pointer hover:shadow-lg transition-shadow duration-200 ease-in-out`}
         >
           <CardHeader className="p-5 space-y-0">
             <div className="flex justify-start">
