@@ -9,14 +9,16 @@ import { Check } from "lucide-react";
 
 import { StatsCardsContainer } from "./StatsCards";
 import ProgressCard from "./ProgressCard";
+import MembersCard from "./MembersCard";
 
 export default function OverviewPage() {
   return (
     <div>
       <h1 className="pt-4 text-xl text-center">Welcome Back User</h1>
       <StatsCardsContainer />
-      <div className="grid grid-cols-3 px-4">
+      <div className="grid grid-cols-3 px-4 gap-x-4">
         <ProgressCard />
+        <MembersCard />
       </div>
     </div>
   );
