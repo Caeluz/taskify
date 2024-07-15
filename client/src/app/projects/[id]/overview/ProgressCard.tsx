@@ -37,7 +37,7 @@ export default function ProgressCard() {
   }).format(new Date());
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col col-span-1">
       <CardHeader className="items-center pb-0">
         <CardTitle>Project Progress</CardTitle>
         {/* <CardDescription>January - June 2024</CardDescription> */}

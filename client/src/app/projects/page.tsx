@@ -99,7 +99,7 @@ export default function Project() {
             return searchTerm === "" || index.toString().includes(searchTerm);
           })
           .map((_, index) => (
-            <Link href={`/projects/${index}/tasks`} key={index}>
+            <Link href={`/projects/${index}/overview`} key={index}>
               <Card className="hover:bg-[#3b82f6] hover:text-white">
                 <CardHeader>
                   <div className="flex flex-row justify-between">

@@ -24,7 +24,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const chartData = [
+interface Member {
+  member: string;
+  workload: number;
+  fill: string;
+  avatar?: string;
+}
+
+const chartData: Member[] = [
   {
     member: "John",
     workload: 5,
@@ -50,10 +57,10 @@ const chartData = [
     avatar: "https://example.com/david.jpg",
   },
   {
-    member: "other",
-    workload: 1,
+    member: "Unassigned",
+    workload: 6,
     fill: "hsl(var(--chart-5))",
-    avatar: "https://github.com/shadcn.png",
+    // avatar: "https://github.com/shadcn.png",
   },
 ];
 
@@ -75,12 +82,12 @@ export default function MembersCard() {
       : a.member.localeCompare(b.member)
   );
 
-  const handleSort = (value) => {
+  const handleSort = (value: string) => {
     setSortBy(value);
   };
 
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col col-span-1">
       <CardHeader className="items-center">
         <CardTitle>Members</CardTitle>
         <CardDescription>Workload Assigned</CardDescription>
@@ -109,7 +116,8 @@ export default function MembersCard() {
               type="category"
               tickLine={false}
               axisLine={false}
-              tick={CustomYAxisTick}
+              tick={<CustomYAxisTick />}
+              // tick={{ fontSize: 12 }}
             />
             <XAxis dataKey="workload" type="number" hide />
             <ChartTooltip
@@ -143,19 +151,34 @@ export default function MembersCard() {
   );
 }
 
-const CustomYAxisTick = ({ x, y, payload }) => {
-  const member = chartData.find((item) => item.member === payload.value);
+const CustomYAxisTick = ({
+  x,
+  y,
+  payload,
+}: {
+  x?: number;
+  y?: number;
+  payload?: { value: string };
+}) => {
+  const member = chartData.find((item) => item.member === payload?.value) || {
+    member: "",
+    avatar: "",
+  };
+
   return (
     <g transform={`translate(${x},${y})`}>
-      <Avatar className="w-6 h-6 -translate-x-9">
-        {/* <AvatarImage src={member.avatar} alt={member.member} /> */}
-        {/* <AvatarFallback>{member.member[0]}</AvatarFallback> */}
-        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-        <AvatarFallback>A</AvatarFallback>
-      </Avatar>
-      <text x={-15} y={4} textAnchor="end" fill="#666" fontSize={12}>
+      {/* <text x={-15} y={4} textAnchor="end" fill="#000000" fontSize={12}>
         {payload.value}
-      </text>
+      </text> */}
+      <foreignObject x={-100} y={-15} width={100} height={30}>
+        <div className="flex justify-start items-center">
+          <Avatar className="w-6 h-6">
+            <AvatarImage src={member.avatar} alt={member.member} />
+            <AvatarFallback>{member.member[0]}</AvatarFallback>
+          </Avatar>
+          <div className="ml-2 text-xs">{payload?.value}</div>
+        </div>
+      </foreignObject>
     </g>
   );
 };
