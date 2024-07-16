@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 interface Member {
   member: string;
@@ -90,7 +91,13 @@ export default function MembersCard() {
     <Card className="flex flex-col col-span-1">
       <CardHeader className="items-center">
         <CardTitle>Members</CardTitle>
-        <CardDescription>Workload Assigned</CardDescription>
+        <CardDescription>
+          Workload Assigned.{" "}
+          <Link href="/projects/0/members" className="underline">
+            Click
+          </Link>{" "}
+          to view more.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-4">

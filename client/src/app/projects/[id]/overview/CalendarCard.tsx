@@ -7,15 +7,16 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function CalendarCard() {
   return (
-    <Card className="h-full col-span-2">
+    <Card className="h-full col-span-2 justify-end content-end rounded-none border-none shadow-none">
       <CardHeader className="items-center">
         <CardTitle>Calendar</CardTitle>
         <CardDescription>What is on that day? </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-row">
+      <CardContent className="flex flex-col">
         <Calendar
           mode="single"
           captionLayout="dropdown-buttons"
@@ -36,8 +37,17 @@ export default function CalendarCard() {
             cell: "text-center text-sm p-0 relative",
           }}
         />
-        <div className="grid grid-rows-3 gap-y-4">
-          <Card className="w-14">
+
+        <ScrollArea className="flex flex-col mt-4 border h-72">
+          <Card>
+            <div className="flex items-center space-x-4 rounded-md border w-full h-full p-4">
+              <div className="flex-1 space-y-1">
+                <p className="text-sm font-semibold leading-none">Task 1</p>
+                <p className="text-sm text-muted-foreground">Lorem Ipsum</p>
+              </div>
+            </div>
+          </Card>
+          <Card>
             <CardHeader>
               <CardTitle>Test</CardTitle>
             </CardHeader>
@@ -51,7 +61,7 @@ export default function CalendarCard() {
 
             <CardContent>Test</CardContent>
           </Card>
-        </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
