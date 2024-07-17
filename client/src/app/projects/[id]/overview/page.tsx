@@ -19,14 +19,13 @@ export default function OverviewPage() {
         <h1 className="pt-4 pl-4 text-xl font-semibold">Project Name</h1>
         <div>
           <StatsCardsContainer />
-          <div className="grid grid-cols-4 px-4 gap-x-4">
+          <div className="grid grid-cols-3 px-4 gap-x-4">
             <ProgressCard />
             <MembersCard />
           </div>
         </div>
       </div>
       <CalendarCard />
-
     </div>
   );
 }

@@ -82,13 +82,13 @@ export default function ProgressCard() {
                         >
                           {chartData[0].value.toLocaleString()} %
                         </tspan>
-                        {/* <tspan
+                        <tspan
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
+                          y={(viewBox.cy || 0) + 26}
                           className="fill-muted-foreground"
                         >
-                          %
-                        </tspan> */}
+                          Completed
+                        </tspan>
                       </text>
                     );
                   }

@@ -124,7 +124,10 @@ export default function MembersCard() {
               tickLine={false}
               axisLine={false}
               tick={<CustomYAxisTick />}
+              // height={50}
+              // width={80}
               // tick={{ fontSize: 12 }}
+              minTickGap={2}
             />
             <XAxis dataKey="workload" type="number" hide />
             <ChartTooltip
