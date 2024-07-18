@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Smile } from "lucide-react";
 
 interface Task {
   title: string;
@@ -58,8 +59,22 @@ const calendarData: Data[] = [
   },
 ];
 
+const hasTasks = (date: Date, calendarData: Data[]) => {
+  // Add one day from the date
+  const adjustedDate = new Date(date);
+  adjustedDate.setDate(date.getDate() + 1);
+
+  const targetDate = adjustedDate.toISOString().split("T")[0];
+
+  return calendarData.some(
+    (entry) => new Date(entry.date).toISOString().split("T")[0] === targetDate
+  );
+};
+
 export default function CalendarCard() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
 
   // Filter tasks based on the selected date
   const filteredTasks =
@@ -93,6 +108,12 @@ export default function CalendarCard() {
           fromYear={1960}
           toYear={2030}
           className="flex flex-col justify-center rounded-md border shadow"
+          modifiers={{
+            hasTasks: (date) => hasTasks(date, calendarData),
+          }}
+          modifiersClassNames={{
+            hasTasks: "calendarTasks",
+          }}
           classNames={{
             months:
               "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
@@ -101,18 +122,30 @@ export default function CalendarCard() {
             table: "w-full h-full border-collapse space-y-1",
             head_row: "",
             row: "w-full mt-2",
-            // day_selected: "bg-primary text-primary-foreground",
-            // cell: "text-center text-sm p-0 relative",
           }}
         />
         <ScrollArea className="flex flex-col mt-4 h-80">
-          {filteredTasks.map((task, index) => (
-            <TasksCard
-              key={index}
-              title={task.title}
-              description={task.description}
-            />
-          ))}
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task, index) => (
+              <TasksCard
+                key={index}
+                title={task.title}
+                description={task.description}
+              />
+            ))
+          ) : (
+            <div className="text-center mt-4">
+              <div className="flex justify-center">
+                <Smile />
+              </div>
+              <p className="text-lg font-semibold text-primary mt-2">
+                All caught up!
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Enjoy your free time.
+              </p>
+            </div>
+          )}
         </ScrollArea>
       </CardContent>
     </Card>

@@ -81,6 +81,19 @@
 
     --bar-background: 217, 33%, 17%;
   }
+
+  .calendarTasks::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 3px;
+    left: 50%; /* Center horizontally relative to the day element */
+    transform: translateX(-50%); /* Ensures precise centering */
+    width: 5px;
+    height: 5px;
+    background-color: currentColor; /* Inherits the text color */
+    border-radius: 50%;
+  }
 }
 
 @layer base {
