@@ -11,6 +11,7 @@ import { StatsCardsContainer } from "./StatsCards";
 import ProgressCard from "./ProgressCard";
 import MembersCard from "./MembersCard";
 import CalendarCard from "./CalendarCard";
+import TaskStatusDistributionCard from "./TaskStatusDistributionCard";
 
 export default function OverviewPage() {
   return (
@@ -22,6 +23,7 @@ export default function OverviewPage() {
           <div className="grid grid-cols-3 px-4 gap-x-4">
             <ProgressCard />
             <MembersCard />
+            <TaskStatusDistributionCard />
           </div>
         </div>
       </div>
