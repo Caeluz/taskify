@@ -24,11 +24,13 @@ interface MenuItemProps {
 const MenuItem: React.FC<MenuItemProps> = ({ icon, name, route }) => {
   const pathname = usePathname();
 
+  // Check if the current route is active
+  const activePathname = pathname.startsWith(route);
+
   // Highlight menu item based on currently displayed route
-  const colorClass =
-    pathname === route
-      ? "text-gray-50 bg-[#3b82f6] rounded-r-lg p-2 font-bold"
-      : "text-gray-400 hover:text-black";
+  const colorClass = activePathname
+    ? "text-gray-50 bg-[#3b82f6] rounded-r-lg p-2 font-bold"
+    : "text-gray-400 hover:text-black";
 
   // Highlight menu item based on currently displayed route
   return (
