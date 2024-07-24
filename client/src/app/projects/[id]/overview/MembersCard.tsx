@@ -144,12 +144,12 @@ export default function MembersCard() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="justify-between">
-        <div>
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="flex items-center gap-2 font-medium leading-none">
           Total Workload:{" "}
           {sortedData.reduce((sum, item) => sum + item.workload, 0)}
         </div>
-        <div>
+        <div className="leading-none text-muted-foreground">
           Average:{" "}
           {(
             sortedData.reduce((sum, item) => sum + item.workload, 0) /

@@ -96,8 +96,8 @@ export default function CalendarCard() {
   return (
     <Card className="h-full col-span-2 justify-end content-end rounded-none border-none shadow-none">
       <CardHeader className="items-center">
-        <CardTitle>Calendar</CardTitle>
-        <CardDescription>What is on that day? </CardDescription>
+        <CardTitle>Team Calendar</CardTitle>
+        <CardDescription>Show all the team tasks </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col">
         <Calendar
@@ -142,7 +142,7 @@ export default function CalendarCard() {
                 All caught up!
               </p>
               <p className="text-sm text-muted-foreground">
-                Enjoy your free time.
+                No tasks for the selected date
               </p>
             </div>
           )}
