@@ -50,7 +50,7 @@ export default function Project() {
           className="m-5 w-96"
         />
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger asChild>
             <Button className="m-5" variant="blue">
               <Plus className="mr-3 w-5 h-5" />
               <div className="text-base">Create Project</div>
