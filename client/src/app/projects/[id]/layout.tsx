@@ -36,6 +36,16 @@ export default function Layout({
   );
 
   function renderContent() {
+    // if (isCurrentPath("/overview")) {
+    //   return (
+    //     <Button
+    //       className="bg-[#3b82f6] text-white"
+    //       // onClick={() => setColumnCount(columnCount + 1)}
+    //     >
+    //       <CirclePlus className="w-4 mr-2" />
+    //       Customize
+    //     </Button>
+    //   );
     if (isCurrentPath("/tasks")) {
       return (
         <Button
