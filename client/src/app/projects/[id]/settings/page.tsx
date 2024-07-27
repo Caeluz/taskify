@@ -1,17 +1,26 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Pencil } from "lucide-react";
+import ProjectInformationSection from "./ProjectInformationSection";
+
+export interface ButtonIconProps {
+  icon: JSX.Element;
+  onClick: () => void;
+}
+
+function ButtonIcon({ icon, onClick }: ButtonIconProps) {
+  return (
+    <Button variant="ghost" size="icon" onClick={onClick}>
+      {icon}
+    </Button>
+  );
+}
 
 export default function Settings() {
   return (
     <div className="flex flex-col p-4">
-      <h1 className="text-2xl font-semibold flex flex-row gap-4 items-center">
-        <span>Project Name</span>
-        <Button variant="ghost" size="icon">
-          <Pencil />
-        </Button>
-      </h1>
+      <ProjectInformationSection ButtonIcon={ButtonIcon} />
       <Separator className="my-4" />
 
       {/* Public or private */}
