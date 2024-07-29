@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import ProjectInformationSection from "./ProjectInformationSection";
+import { Input } from "@/components/ui/input";
 
 export interface ButtonIconProps {
   icon: JSX.Element;
@@ -37,9 +38,9 @@ export default function Settings() {
           Share this link with your team to invite them to the project
         </p>
         <div className="flex flex-row gap-4 items-center mt-2">
-          <input
+          <Input
             type="text"
-            className="input"
+            className="w-64"
             value="https://example.com/invite"
             readOnly
           />
@@ -56,6 +57,12 @@ export default function Settings() {
         className="flex-grow my-2 border-red-500 font-semibold"
       >
         Make the Project Public?
+      </Button>
+      <Button
+        variant="outline"
+        className="flex-grow my-2 border-red-500 font-semibold"
+      >
+        Archive Project
       </Button>
       <Button variant="destructive" className="flex-grow my-2 font-semibold">
         Delete Project
