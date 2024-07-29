@@ -66,7 +66,7 @@ export const DatePickerWithRange: React.FC<DatePickerWithRangeProps> = ({
             onSelect={setDate}
             numberOfMonths={2}
             fromYear={1960}
-            toYear={2030}
+            toYear={new Date().getFullYear() + 5}
           />
         </PopoverContent>
       </Popover>

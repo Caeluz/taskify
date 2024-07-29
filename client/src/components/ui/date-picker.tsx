@@ -39,7 +39,7 @@ export function DatePicker({ dateToday }: { dateToday?: boolean }) {
           selected={date}
           onSelect={setDate}
           fromYear={1960}
-          toYear={2030}
+          toYear={new Date().getFullYear() + 5}
         />
       </PopoverContent>
     </Popover>
