@@ -5,10 +5,27 @@ import { Pencil, X, Check, Save } from "lucide-react";
 import { ButtonIconProps } from "./page";
 import { Label } from "@/components/ui/label";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
+import { ComboBox } from "@/components/ui/combo-box";
+import ComboBoxMultiSelect from "@/components/ui/combo-box-multi-select";
 
 interface ProjectInformationSectionProps {
   ButtonIcon: React.ComponentType<ButtonIconProps>;
 }
+
+const status = [
+  {
+    value: "active",
+    label: "Active",
+  },
+  {
+    value: "onHold",
+    label: "On Hold",
+  },
+  {
+    value: "completed",
+    label: "Completed",
+  },
+];
 
 export default function ProjectInformationSection({
   ButtonIcon,
@@ -37,6 +54,21 @@ export default function ProjectInformationSection({
               }}
             />
           </div>
+        </div>
+        <div>
+          <span className="space-y-2">
+            <Label
+              htmlFor="projectedFinish"
+              className="text-base font-semibold"
+            >
+              Status
+            </Label>
+            <ComboBox
+              choices={status}
+              className="w-60 items-center"
+              multiple={true}
+            />
+          </span>
         </div>
         <div>
           <span className="space-y-2">
