@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import ProjectInformationSection from "./ProjectInformationSection";
 import { Input } from "@/components/ui/input";
+import NotificationSection from "./NotificationSection";
 
 export interface ButtonIconProps {
   icon: JSX.Element;
@@ -25,10 +25,9 @@ export default function Settings() {
       <Separator className="my-4" />
 
       {/* Public or private */}
-      <div className="flex flex-row gap-4 items-center">
-        <p className="text-lg font-semibold">Public</p>
-        <Switch id="" />
-      </div>
+
+
+      <NotificationSection />
 
       <Separator className="my-4" />
       {/* Invite link */}
