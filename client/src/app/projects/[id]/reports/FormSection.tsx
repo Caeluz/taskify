@@ -64,7 +64,7 @@ export default function FormSection() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 flex-1">
       <h1 className="text-xl">Personal Information</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 ">
