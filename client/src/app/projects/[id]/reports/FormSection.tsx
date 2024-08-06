@@ -1,4 +1,5 @@
 "use client";
+import { useFormData } from "@/components/utility/FormDataContext";
 import {
   Form,
   FormControl,
@@ -45,12 +46,27 @@ const semester = [
   { label: "Second Semester", value: "secondSemester" },
 ];
 
+interface FormSectionProps {
+  onSubmit: (data: any) => void;
+}
+
+export interface formDataProps {
+  schoolYearStart: number;
+  schoolYearEnd: number;
+  schoolSemester: string;
+  username: string;
+  department: string;
+  position: string;
+  team: string;
+}
+
 export default function FormSection() {
+  const { setFormData } = useFormData();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       schoolYearStart: 2000,
-      schoolYearEnd: 2000,
+      schoolYearEnd: 2001,
       schoolSemester: undefined,
       username: "",
       department: "",
@@ -59,15 +75,15 @@ export default function FormSection() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   console.log(values);
+  // }
 
   return (
     <div className="p-4 flex-1">
       <h1 className="text-xl">Personal Information</h1>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 ">
+        <form onSubmit={form.handleSubmit(setFormData)} className="space-y-2 ">
           <div className="grid grid-cols-2 gap-x-4">
             <FormField
               control={form.control}
