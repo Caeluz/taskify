@@ -86,8 +86,8 @@ const Sidebar: React.FC = () => {
           route="/projects"
           icon={<BiSolidFolderOpen />}
         />
-        <MenuItem name="Tasks" route="/tasks" icon={<RxListBullet />} />
-        <MenuItem name="Messages" route="/messages" icon={<RxChatBubble />} />
+        {/* <MenuItem name="Tasks" route="/tasks" icon={<RxListBullet />} /> */}
+        {/* <MenuItem name="Messages" route="/messages" icon={<RxChatBubble />} /> */}
       </nav>
     </div>
   );
