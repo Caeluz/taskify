@@ -18,6 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 
 import { FaSearch, FaBell } from "react-icons/fa";
 import { MdNavigateNext } from "react-icons/md";
+import UnderConstruction from "@/components/layout/UnderConstruction";
 
 export interface Tasks {
   id: number;
@@ -72,7 +73,7 @@ const Dashboard = () => {
       priority: "high",
     },
   ];
-
+  return <UnderConstruction />;
   return (
     // Main wrapper
     <div className=" flex h-screen w-screen overflow-y-scroll overflow-x-hidden lg:w-full md:lg-full ">
