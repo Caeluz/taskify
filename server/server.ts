@@ -1,38 +1,31 @@
-import exp from "constants";
+// Import dependencies
+import knex from "knex";
 import express from "express";
-const { Pool } = require("pg");
+import { pool } from "./database/PostgreDatabase";
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const app = express();
 const cors = require("cors");
+
+// Initialize Express app
+const app = express();
 const PORT = 8081;
 
-// Postgre SQL
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "postgres",
-  password: "admin123",
-});
-
-export { pool };
-
-// Users
-const usersRouter = require("./src/routes/UserRoutes");
-// import usersRouter from "./src/users/routes";
-
+// Middleware setup
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));
 
+// Import and use routes
+const usersRouter = require("./src/routes/UserRoutes");
+app.use("/api/users", usersRouter);
+
+// Define routes
 app.get("/", async (req, res) => {
   if (pool) {
     console.log("Connected to the database");
   }
 });
-
-app.use("/api/users", usersRouter);
 
 app.get("/api/home", (req, res) => {
   res.json({
@@ -44,8 +37,9 @@ app.get("/api/home", (req, res) => {
   });
 });
 
-// app.use(usersRouter);
-
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+export { app };
