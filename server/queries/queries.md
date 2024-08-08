@@ -1,5 +1,11 @@
 ## SQL Queries
 
+### Check if the database exists
+
+```sql
+SELECT 1 FROM pg_database WHERE datname = 'node_postgres';
+```
+
 ### Check if the `users` Table Exists
 
 ```sql

@@ -5,10 +5,11 @@
   "main": "server.ts",
   "scripts": {
     "build": "npx tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-2": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "dev": "nodemon server",
-    "dev-test": "node server --watch"
+    "dev-test": "node server --watch",
+    "test": "jest"
   },
   "author": "Caeluz",
   "license": "ISC",
@@ -16,12 +17,14 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.12.2",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-rate-limit": "^7.4.0",
     "helmet": "^7.1.0",
     "pg": "^8.11.4",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "knex": "^3.1.0",
