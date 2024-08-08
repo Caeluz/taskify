@@ -2,13 +2,17 @@
 import { pool } from "../../database/PostgreDatabase";
 import { Request, Response } from "express";
 import { hashText } from "../utils/HashText";
-import { z } from "zod";
 import { CreateUserRequest } from "../requests/UserRequest";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
     // const users = await db.select("*").from("users");
-    const result = await pool.query("SELECT * FROM users");
+    // When getting all the columns from the table, you can use the following query
+    // const result = await pool.query("SELECT * FROM users");
+
+    // When getting specific columns from the table, you can use the following query
+    const result = await pool.query("SELECT id, username, email FROM users");
+
     const users = result.rows;
     res.json({ users });
   } catch (error) {
@@ -20,9 +24,8 @@ export const getUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: CreateUserRequest, res: Response) => {
   const { username, email, password } = req.body;
 
-  const $hashPassword = hashText(password);
-
   try {
+    const { salt, hashedPassword } = hashText(password);
     // Check if username or email already exists
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE username = $1 OR email = $2",
@@ -34,8 +37,8 @@ export const createUser = async (req: CreateUserRequest, res: Response) => {
     }
 
     const result = await pool.query(
-      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
-      [username, email, $hashPassword]
+      "INSERT INTO users (username, email, password, salt) VALUES ($1, $2, $3, $4)",
+      [username, email, hashedPassword, salt]
     );
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {

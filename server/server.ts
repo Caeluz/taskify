@@ -18,7 +18,9 @@ app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));
 
 // Import and use routes
 const usersRouter = require("./src/routes/UserRoutes");
+const authRouter = require("./src/routes/AuthRoutes");
 app.use("/api/users", usersRouter);
+app.use("/api/auth", authRouter);
 
 // Define routes
 app.get("/", async (req, res) => {
