@@ -6,11 +6,15 @@ const express = require("express");
 const router = express.Router();
 const controller = require("./../controllers/UserController");
 
+const sutandoController = require("./../controllers/Sutando/UserController");
+
 router
-  .get("/", authenticateToken, controller.getUsers)
-  .post("/", validateData(createUserSchema), controller.createUser)
-  .get("/:id", controller.getUserById)
-  .put("/:id", validateData(updateUserSchema), controller.updateUser)
-  .delete("/:id", controller.deleteUser);
+  // .get("/", authenticateToken, controller.getUsers)
+  .get("/", authenticateToken, sutandoController.getUsers)
+  .post("/", validateData(createUserSchema), sutandoController.createUser)
+  // .post("/", validateData(createUserSchema), sutandoController.createUser)
+  .get("/:id", sutandoController.getUserById)
+  .put("/:id", validateData(updateUserSchema), sutandoController.updateUser)
+  .delete("/:id", sutandoController.deleteUser);
 
 module.exports = router;
