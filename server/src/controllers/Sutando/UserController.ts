@@ -62,6 +62,8 @@ export const getUserById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await User.query().find(id);
+    // get user with projects
+    // const user = await User.query().with("projects").find(id);
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
