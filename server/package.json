@@ -9,7 +9,8 @@
     "start": "node server",
     "dev": "nodemon server",
     "dev-test": "node server --watch",
-    "test": "jest"
+    "test": "jest",
+    "migrate:fresh": "sutando migrate:rollback && sutando migrate:run"
   },
   "author": "Caeluz",
   "license": "ISC",
