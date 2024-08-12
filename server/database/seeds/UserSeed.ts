@@ -1,16 +1,26 @@
-import { Knex } from "knex";
+import { User } from "./../../src/models/User";
+import { sutando } from "sutando";
 
-export async function seed(knex: Knex): Promise<void> {
-  // Deletes ALL existing entries
-  await knex("users").del();
+import { hashText } from "../../src/utils/HashText";
 
-  // Inserts seed entries
-  await knex("users").insert([
-    {
-      id: 1,
-      username: "rowValue1",
-      email: "test@gmail.com",
-      password: "rowValue1",
-    },
-  ]);
-}
+const userData = [
+  {
+    username: "admin",
+    email: "admin@gmail.com",
+    password: "tester",
+  },
+];
+
+const UserSeed = async () => {
+  for (let i of userData) {
+    const { salt, hashedPassword } = hashText(i.password);
+    const user = new User({
+      username: i.username,
+      password: hashedPassword,
+      salt: salt,
+    });
+    await user.save();
+  }
+};
+
+export default UserSeed;

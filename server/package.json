@@ -10,7 +10,9 @@
     "dev": "nodemon server",
     "dev-test": "node server --watch",
     "test": "jest",
-    "migrate:fresh": "sutando migrate:rollback && sutando migrate:run"
+    "migrate:fresh": "sutando migrate:rollback && sutando migrate:run",
+    "seed": "ts-node database/seeds/DatabaseSeed.ts",
+    "migrate:fresh-seed": "sutando migrate:rollback && sutando migrate:run && ts-node database/seeds/DatabaseSeed.ts"
   },
   "author": "Caeluz",
   "license": "ISC",
