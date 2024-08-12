@@ -1,18 +1,26 @@
+import { authenticateToken } from "./../middleware/authMiddleware";
+import express from "express";
 import { validateData } from "../middleware/validatorMiddleware";
-import { authenticateToken } from "../middleware/authMiddleware";
 import { createUserSchema, updateUserSchema } from "../schemas/UserSchema";
+import { createUserProjectSchema } from "../schemas/UserProjectSchema";
+import * as projectController from "../controllers/Sutando/ProjectController";
 
-const express = require("express");
-const router = express.Router();
-const controller = require("./../controllers/Sutando/ProjectController");
+const projectRouter = express.Router();
 
-router
-  // .get("/", authenticateToken, controller.getUsers)
-  .get("/", controller.getProjects)
-  .post("/", validateData(createUserSchema), controller.createProject);
-// .post("/", validateData(createUserSchema), sutandoController.createUser)
-// .get("/:id", controller.getUserById)
-// .put("/:id", validateData(updateUserSchema), controller.updateUser)
-// .delete("/:id", controller.deleteUser);
+// Project routes
+projectRouter
+  .get("/projects", authenticateToken, projectController.getProjects)
+  .post("/", validateData(createUserSchema), projectController.createProject);
 
-module.exports = router;
+// User project routes
+projectRouter.use("/users", authenticateToken);
+projectRouter
+  .get("/users/:userId/projects", projectController.getUserProjects)
+  .post(
+    "/users/:userId/projects",
+    validateData(createUserProjectSchema),
+    projectController.createUserProject
+  )
+  .delete("/users/:userId/projects/:projectId", projectController.deleteUserProject);
+
+export default projectRouter;

@@ -22,10 +22,11 @@ app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));
 // Import and use routes
 const usersRouter = require("./src/routes/UserRoutes");
 const authRouter = require("./src/routes/AuthRoutes");
-const projectRouter = require("./src/routes/ProjectRoutes");
+// const projectRouter = require("./src/routes/ProjectRoutes");
+import projectRouter from "./src/routes/ProjectRoutes";
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/projects", projectRouter);
+app.use("/api", projectRouter);
 
 require("dotenv").config();
 import { sutando } from "sutando";
