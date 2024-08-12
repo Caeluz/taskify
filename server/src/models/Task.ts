@@ -10,6 +10,7 @@ export class Task extends Model {
   name!: string;
   description!: string;
   priority!: string;
+  status!: string;
   // Members
   start_date!: string;
   due_date!: string;

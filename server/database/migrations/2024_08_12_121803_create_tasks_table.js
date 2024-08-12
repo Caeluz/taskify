@@ -15,6 +15,7 @@ module.exports = class extends Migration {
       table.string("name");
       table.string("description").nullable();
       table.enum("priority", ["low", "medium", "high"]);
+      table.string("status");
       table.dateTime("start_date");
       table.dateTime("due_date");
       table.timestamps();

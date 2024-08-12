@@ -24,9 +24,12 @@ const usersRouter = require("./src/routes/UserRoutes");
 const authRouter = require("./src/routes/AuthRoutes");
 // const projectRouter = require("./src/routes/ProjectRoutes");
 import projectRouter from "./src/routes/ProjectRoutes";
+import taskRouter from "./src/routes/TaskRouter";
+
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api", projectRouter);
+app.use("/api/", taskRouter);
 
 require("dotenv").config();
 import { sutando } from "sutando";
