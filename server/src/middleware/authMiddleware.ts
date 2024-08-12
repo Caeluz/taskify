@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "default"; // Use a strong secret k
 // Function to generate a token
 export function generateToken(user: any) {
   return jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
-    expiresIn: "1h",
+    expiresIn: "1d",
   });
 }
 
@@ -27,8 +27,21 @@ export function verifyToken(token: any) {
   });
 }
 
+declare module "express-serve-static-core" {
+  interface Request {
+    // user?: {
+    //   id: number | undefined | string;
+    //   username: string;
+    //   iat: number;
+    //   exp: number;
+    // };
+    user?: any;
+  }
+}
+
 export const authenticateToken = async (
-  req: Request & { user: any },
+  // req: Request & { user: any},
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
