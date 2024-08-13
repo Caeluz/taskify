@@ -10,9 +10,8 @@ const sutandoController = require("./../controllers/Sutando/UserController");
 
 router
   // .get("/", authenticateToken, controller.getUsers)
-  .get("/",  sutandoController.getUsers)
+  .get("/", sutandoController.getUsers)
   .post("/", validateData(createUserSchema), sutandoController.createUser)
-  // .post("/", validateData(createUserSchema), sutandoController.createUser)
   .get("/:id", sutandoController.getUserById)
   .put("/:id", validateData(updateUserSchema), sutandoController.updateUser)
   .delete("/:id", sutandoController.deleteUser);
