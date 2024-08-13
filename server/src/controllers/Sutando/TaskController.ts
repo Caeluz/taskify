@@ -21,12 +21,15 @@ export const getProjectTasks = async (req: Request, res: Response) => {
 
 export const createProjectTask = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const { name, description, priority, status, startDate, dueDate } = req.body;
+  const { name, description, priority, status, startDate, dueDate, members } =
+    req.body;
   try {
     const project = await Project.query().find(projectId);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
+
+    console.log(members[0]?.id);
 
     const task = await Task.query().create({
       project_id: projectId,
