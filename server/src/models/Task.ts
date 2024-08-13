@@ -1,5 +1,7 @@
 import { sutando, Model } from "sutando";
 import { Project } from "./Project";
+import { TaskMember } from "./TaskMember";
+import { ProjectMember } from "./ProjectMember";
 
 export class Task extends Model {
   table = "tasks";
@@ -20,4 +22,18 @@ export class Task extends Model {
   relationProject() {
     return this.belongsTo(Project, "project_id", "id");
   }
+
+  // Many to many
+  relationProjectMembers() {
+    return this.belongsToMany(
+      ProjectMember,
+      "task_members",
+      "task_id",
+      "project_member_id"
+    );
+  }
+
+  // relationTaskMembers() {
+  //   return this.hasMany(TaskMember);
+  // }
 }

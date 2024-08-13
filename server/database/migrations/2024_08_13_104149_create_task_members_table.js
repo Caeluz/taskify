@@ -5,11 +5,11 @@ module.exports = class extends Migration {
    * Run the migrations.
    */
   async up(schema) {
-    await schema.createTable("task_assignments", (table) => {
+    await schema.createTable("task_members", (table) => {
       table.increments("id");
       table.integer("task_id").unsigned().references("id").inTable("tasks");
       table
-        .integer("project_members_id")
+        .integer("project_member_id")
         .unsigned()
         .references("id")
         .inTable("project_members");
@@ -22,6 +22,6 @@ module.exports = class extends Migration {
    * Reverse the migrations.
    */
   async down(schema) {
-    await schema.dropTableIfExists("task_assignments");
+    await schema.dropTableIfExists("task_members");
   }
 };
