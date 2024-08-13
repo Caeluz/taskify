@@ -12,6 +12,7 @@ const userData = [
 ];
 
 const UserSeed = async () => {
+  console.log("Starting user seeding...");
   for (let i of userData) {
     const { salt, hashedPassword } = hashText(i.password);
     const user = new User({
@@ -21,6 +22,7 @@ const UserSeed = async () => {
     });
     await user.save();
   }
+  console.log("User seeding completed.");
 };
 
 export default UserSeed;

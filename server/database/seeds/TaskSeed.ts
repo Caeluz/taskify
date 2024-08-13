@@ -18,6 +18,7 @@ const taskData = [
 ];
 
 const TaskSeed = async () => {
+  console.log("Starting task seeding...");
   for (let i of taskData) {
     const task = new Task({
       project_id: i.project_id,
@@ -30,6 +31,7 @@ const TaskSeed = async () => {
     });
     await task.save();
   }
+  console.log("Task seeding completed.");
 };
 
 export default TaskSeed;

@@ -10,6 +10,7 @@ const projectData = [
 ];
 
 const ProjectSeed = async () => {
+  console.log("Starting Project seeding...");
   for (let i of projectData) {
     const project = new Project({
       name: i.name,
@@ -19,6 +20,7 @@ const ProjectSeed = async () => {
     });
     await project.save();
   }
+  console.log("Project seeding completed.");
 };
 
 
