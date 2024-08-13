@@ -9,7 +9,7 @@ const SECRET_KEY = process.env.JWT_SECRET || "default"; // Use a strong secret k
 // Function to generate a token
 export function generateToken(user: any) {
   return jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
-    expiresIn: "1d",
+    expiresIn: "7d",
   });
 }
 
