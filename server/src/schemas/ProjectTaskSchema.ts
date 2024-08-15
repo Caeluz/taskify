@@ -14,8 +14,8 @@ export const createProjectTaskSchema = {
           id: z.number().int().positive(),
           // name: z.string().min(1, "Name cannot be empty"),
         })
-      )
-      .min(1, "At least one member is required"),
+      ),
+      // .min(1, "At least one member is required"),
     startDate: dateStringToDate,
     dueDate: dateStringToDate,
   }),
