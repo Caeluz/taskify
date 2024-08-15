@@ -10,12 +10,12 @@ export class TaskMember extends Model {
   task_id!: number;
   project_member_id!: number;
 
-  relationTasks() {
-    // return this.belongsTo(Task);
-    return this.belongsToMany(Task, "task_members");
-  }
+  // relationTasks() {
+  //   // return this.belongsTo(Task);
+  //   return this.belongsToMany(Task, "task_members");
+  // }
 
-  relationProjectMember() {
-    return this.belongsTo(ProjectMember);
-  }
+  // relationProjectMember() {
+  //   return this.belongsTo(ProjectMember);
+  // }
 }

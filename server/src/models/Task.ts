@@ -19,6 +19,10 @@ export class Task extends Model {
   created_at!: string;
   updated_at!: string;
 
+
+  projectMembers!: ProjectMember[];
+  project!: Project;
+
   relationProject() {
     return this.belongsTo(Project, "project_id", "id");
   }

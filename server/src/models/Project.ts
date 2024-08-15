@@ -11,9 +11,16 @@ export class Project extends Model {
   user_id!: number;
   name!: string;
   status!: string;
+  progress!: number;
   description!: string;
   created_at!: string;
   updated_at!: string;
+
+  // Others
+  tasks_count!: string;
+
+  // Relation
+  tasks!: Task[];
 
   relationUser() {
     return this.belongsTo(User, "user_id", "id");

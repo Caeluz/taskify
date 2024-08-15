@@ -6,6 +6,7 @@ export class User extends Model {
   table = "users";
   primaryKey = "id";
   protected timestamps: boolean = true;
+  hidden = ["password", "salt", "created_at", "updated_at"];
 
   id!: number;
   username!: string;

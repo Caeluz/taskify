@@ -17,6 +17,7 @@ export class ProjectMember extends Model {
 
   // Relationships - to fix typescript
   user!: User;
+  tasks!: Task[];
 
   relationUser() {
     return this.belongsTo(User, "user_id", "id");
@@ -32,6 +33,11 @@ export class ProjectMember extends Model {
 
   // Many to many
   relationTasks() {
-    return this.belongsToMany(Task);
+    return this.belongsToMany(
+      Task,
+      "task_members",
+      "project_member_id",
+      "task_id"
+    ).withPivot(["id"]);
   }
 }
