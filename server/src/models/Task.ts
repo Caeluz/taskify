@@ -19,6 +19,7 @@ export class Task extends Model {
   created_at!: string;
   updated_at!: string;
 
+  project_members_count!: number | string;
 
   projectMembers!: ProjectMember[];
   project!: Project;

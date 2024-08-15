@@ -6,6 +6,8 @@ import { User } from "../../models/User";
 import { Project } from "../../models/Project";
 import { sutandoConnection } from "../../../database/SutandoPGDatabase";
 import { Task } from "../../models/Task";
+import { startOfWeek, endOfWeek, eachDayOfInterval, format } from "date-fns";
+import { TaskMember } from "../../models/TaskMember";
 sutandoConnection;
 
 export const getOverview = async (req: Request, res: Response) => {
@@ -34,9 +36,8 @@ export const getOverview = async (req: Request, res: Response) => {
         overDue: overDueTasks,
       },
       projectProgress: project.progress,
-      membersWorkload: {
-        test: await getMembersWorkload(projectId),
-      },
+      membersWorkload: await getMembersWorkload(projectId),
+      taskStatusDistribution: await getTaskStatusDistribution(projectId),
     };
 
     return res.status(200).json({ message: "Success", data: projectData });
@@ -73,11 +74,48 @@ const getTasks = async (projectId: string) => {
 };
 
 const getMembersWorkload = async (projectId: string) => {
+  // Fetch project members with their tasks and user details
   const projectMembers = await ProjectMember.query()
     .where("project_id", projectId)
-    .with("tasks")
+    .with("tasks", "user")
     .get();
 
+  /*
+    Unassigned
+    1. Get all tasks for the project
+    2. Filter tasks that have no projectMembers
+    3. Count the tasks
+
+    Tasks and projectMembers have a many-to-many relationship 
+  */
+
+  const allTasks = await Task.query()
+    .where("project_id", projectId)
+    .withCount("projectMembers")
+    .get();
+
+
+  const unassignedTasks = allTasks.filter(
+    (task) => task.project_members_count == 0
+  );
+
+const unassignedTaskCountByStatus = allTasks.reduce((acc: any, task: Task) => {
+  if (!acc[task.status]) {
+    acc[task.status] = 0;
+  }
+  if (task.project_members_count === "0") {
+    if (!acc["unassigned"]) {
+      acc["unassigned"] = 0;
+    }
+    acc["unassigned"]++;
+  }
+  acc[task.status]++;
+  return acc;
+}, {});
+
+return unassignedTaskCountByStatus;
+
+  // Calculate workload for each member
   const membersWorkload = projectMembers.map((member) => {
     const taskCountByStatus = member.tasks.reduce((acc: any, task: any) => {
       if (!acc[task.status]) {
@@ -89,13 +127,51 @@ const getMembersWorkload = async (projectId: string) => {
 
     return {
       memberId: member.id,
+      memberName: member.user?.username,
       taskCountByStatus,
     };
   });
 
+  // Include unassigned tasks count in the result
   return membersWorkload;
+  // unassignedTaskCountByStatus,
 };
 
 const getTaskStatusDistribution = async (projectId: string) => {
-  const task = await Task.query().where('project_id', projectId)
+  // Get the start and end of the current week (Monday to Sunday)
+  const start = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const end = endOfWeek(new Date(), { weekStartsOn: 6 });
+
+  // Fetch tasks for the given project within the current week
+  const tasks = await Task.query()
+    .where("project_id", projectId)
+    .where("created_at", ">=", start)
+    .where("created_at", "<=", end)
+    .get();
+
+  // Initialize the result object
+  const result: Record<
+    string,
+    { completed: number; toDo: number; inProgress: number }
+  > = {};
+
+  // Initialize the result object with days of the week
+  eachDayOfInterval({ start, end }).forEach((date) => {
+    const day = format(date, "EEEE"); // Get the day name (e.g., Monday)
+    result[day] = { completed: 0, toDo: 0, inProgress: 0 };
+  });
+
+  // Group tasks by their status and the day of the week
+  tasks.map((task: Task) => {
+    const day = format(new Date(task.created_at), "EEEE"); // Get the day name (e.g., Monday)
+    if (task.status === "completed") {
+      result[day].completed += 1;
+    } else if (task.status === "to-do") {
+      result[day].toDo += 1;
+    } else if (task.status === "in-progress") {
+      result[day].inProgress += 1;
+    }
+  });
+
+  return result;
 };
