@@ -36,6 +36,18 @@ export const createProjectMember = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   const { userId, role } = req.body;
   try {
+    // Check if the user is already a member of the project
+    const existingMember = await ProjectMember.query()
+      .where({ project_id: projectId, user_id: userId })
+      .first();
+
+    if (existingMember) {
+      return res
+        .status(400)
+        .json({ error: "User is already a member of this project" });
+    }
+
+    // Create the new project member
     const projectMember = await ProjectMember.query().create({
       project_id: projectId,
       user_id: userId,
