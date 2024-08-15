@@ -3,7 +3,9 @@ import knex from "knex";
 import express from "express";
 import sutandoDB from "./database/SutandoPGDatabase";
 import { User } from "./src/models/User";
-
+require("dotenv").config();
+import { sutando } from "sutando";
+import projectDashboardRouter from "./src/routes/ProjectDashboardRoutes";
 // Import middleware
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
@@ -32,9 +34,7 @@ app.use("/api/auth", authRouter);
 app.use("/api", projectRouter);
 app.use("/api", taskRouter);
 app.use("/api", projectMemberRouter);
-
-require("dotenv").config();
-import { sutando } from "sutando";
+app.use("/api", projectDashboardRouter);
 
 sutando.addConnection({
   client: "pg",
