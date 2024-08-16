@@ -94,34 +94,47 @@ const getMembersWorkload = async (projectId: string) => {
     .withCount("projectMembers")
     .get();
 
-
   const unassignedTasks = allTasks.filter(
     (task) => task.project_members_count == 0
   );
 
-const unassignedTaskCountByStatus = allTasks.reduce((acc: any, task: Task) => {
-  if (!acc[task.status]) {
-    acc[task.status] = 0;
-  }
-  if (task.project_members_count === "0") {
-    if (!acc["unassigned"]) {
-      acc["unassigned"] = 0;
-    }
-    acc["unassigned"]++;
-  }
-  acc[task.status]++;
-  return acc;
-}, {});
+  const unassignedTaskCountByStatus = allTasks.reduce(
+    (acc: any, task: Task) => {
+      if (!acc[task.status]) {
+        acc[task.status] = 0;
+      }
+      if (task.project_members_count === "0") {
+        if (!acc["unassigned"]) {
+          acc["unassigned"] = 0;
+        }
+        acc["unassigned"]++;
+      }
+      acc[task.status]++;
+      return acc;
+    },
+    {}
+  );
 
-return unassignedTaskCountByStatus;
+  // Just return the unassigned tasks count
+  const unassignedTaskCount = allTasks.reduce((acc: any, task: Task) => {
+    if (task.project_members_count === "0") {
+      acc = 0;
+
+      acc++;
+    }
+
+    return acc;
+  }, {});
 
   // Calculate workload for each member
   const membersWorkload = projectMembers.map((member) => {
+    let totalTaskCount = 0;
     const taskCountByStatus = member.tasks.reduce((acc: any, task: any) => {
       if (!acc[task.status]) {
         acc[task.status] = 0;
       }
       acc[task.status]++;
+      totalTaskCount++;
       return acc;
     }, {});
 
@@ -129,12 +142,20 @@ return unassignedTaskCountByStatus;
       memberId: member.id,
       memberName: member.user?.username,
       taskCountByStatus,
+      totalTaskCount,
+      // unassignedTaskCount,
     };
   });
 
-  // Include unassigned tasks count in the result
+  membersWorkload.push({
+    memberId: -1,
+    memberName: "Unassigned",
+    taskCountByStatus: unassignedTaskCountByStatus,
+    totalTaskCount: unassignedTaskCount,
+    // unassignedTaskCount,
+  });
+
   return membersWorkload;
-  // unassignedTaskCountByStatus,
 };
 
 const getTaskStatusDistribution = async (projectId: string) => {
@@ -174,4 +195,46 @@ const getTaskStatusDistribution = async (projectId: string) => {
   });
 
   return result;
+};
+
+export const getOverviewCalendar = async (req: Request, res: Response) => {
+  const { projectId } = req.params;
+  const { date } = req.query;
+
+  try {
+    const project = await Project.query().find(projectId);
+    // Check if the project exists
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Get the tasks for the project
+    const tasks = await Task.query().where("project_id", projectId).get();
+
+    // Initialize the result object
+    const result: Record<string, any[]> = {};
+
+    // Group tasks by the day they were created
+    tasks.map((task: Task) => {
+      const day = format(new Date(task.due_date), "yyyy-MM-dd");
+      if (!result[day]) {
+        result[day] = [];
+      }
+      result[day].push(task);
+    });
+
+    // If a date is provided, filter the result to only include tasks for that date
+    if (date) {
+      const formattedDate = format(new Date(date as string), "yyyy-MM-dd");
+      return res.status(200).json({
+        message: "Success",
+        data: result[formattedDate] || [],
+      });
+    }
+
+    return res.status(200).json({ message: "Success", data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };

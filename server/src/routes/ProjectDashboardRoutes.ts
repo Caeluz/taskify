@@ -11,5 +11,9 @@ projectDashboardRouter.get(
   "/projects/:projectId/overview",
   ProjectDashboardController.getOverview
 );
+projectDashboardRouter.get(
+  "/projects/:projectId/overview/calendar", 
+  ProjectDashboardController.getOverviewCalendar
+);
 
 export default projectDashboardRouter;
