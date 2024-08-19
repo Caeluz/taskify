@@ -1,5 +1,5 @@
 import Navbar from "@/components/layout/navbar";
-import "./styles.css";
+import "../styles.css";
 import Sidebar from "@/components/layout/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";

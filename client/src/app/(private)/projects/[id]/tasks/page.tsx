@@ -1,4 +1,4 @@
-import { KanbanBoard } from "./KanbanBoard.tsx";
+import { KanbanBoard } from "./KanbanBoard";
 
 export default function ShowProject({ params }: { params: { id: number } }) {
   return (

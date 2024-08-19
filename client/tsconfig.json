@@ -28,7 +28,7 @@
     ".next/types/**/*.ts",
     "src/app/layout.tsx.example",
     "src/app/not-found.tsx",
-    "src/app/projects/[id]/tasks/KanbanBoard.tsx"
+    "src/app/(private)/projects/[id]/tasks/KanbanBoard.tsx"
   ],
   "exclude": ["node_modules"]
 }
