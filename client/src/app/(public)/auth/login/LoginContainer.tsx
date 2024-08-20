@@ -45,8 +45,25 @@ export default function LoginContainer() {
 
   // Api Call
   async function onSubmit(data: z.infer<typeof loginSchema>) {
-    // setFormData(data);
-    
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    // const response = await fetch(`${apiUrl}/api/auth/login`, {
+    const response = await fetch(`/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: data.usernameOrEmail,
+        password: data.password,
+      }),
+    });
+    if (response.ok) {
+      const user = await response.json();
+      console.log(user);
+    } else {
+      const error = await response.json();
+      console.log(error);
+    }
   }
 
   return (
