@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,6 +38,20 @@ import { set } from "date-fns";
 export default function Project() {
   const [projectCount, setProjectCount] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
+  const [projects, setProjects] = useState([]);
+
+ useEffect(() => {
+   const fetchProjects = async () => {
+     try {
+       const response = await axios.get("/api/projects");
+       setProjects(response.data);
+     } catch (error) {
+       console.error("Error fetching projects:", error);
+     }
+   };
+
+   fetchProjects();
+ }, []);
 
   return (
     <div>

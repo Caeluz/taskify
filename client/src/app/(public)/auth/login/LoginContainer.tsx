@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,15 +32,20 @@ const loginSchema = z.object({
     z.string().email("Invalid email address"),
   ]),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  backend: z.string().optional(),
 });
 
 export default function LoginContainer() {
   const { setFormData } = useFormData();
+  const [backendError, setBackendError] = useState<string | null>(null);
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       usernameOrEmail: "",
       password: "",
+      backend: "",
     },
   });
 
@@ -57,11 +63,22 @@ export default function LoginContainer() {
         password: data.password,
       }),
     });
+
+    console.log(response.ok);
+
     if (response.ok) {
-      const user = await response.json();
-      console.log(user);
+      router.push("/projects");
+
+      const user = response.json();
+      console.log("Login successful:", user);
+      // Redirect to projects page
     } else {
       const error = await response.json();
+      setBackendError(error.message || "Login failed");
+      form.setError("backend", {
+        type: "manual",
+        message: error.message || "Login failed",
+      });
       console.log(error);
     }
   }
@@ -108,6 +125,23 @@ export default function LoginContainer() {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="backend"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl> */}
                     <FormMessage />
                   </FormItem>
                 )}

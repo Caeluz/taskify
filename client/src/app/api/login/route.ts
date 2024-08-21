@@ -5,9 +5,7 @@ import { cookies } from "next/headers";
 export async function POST(req: Request, res: NextApiResponse) {
   try {
     const cookieStore = cookies();
-    // console.log(req.json());
     const body = await req.json();
-    console.log(body);
     // const token = cookieStore.get("token");
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
     const response = await fetch(`${apiUrl}/api/auth/login`, {
