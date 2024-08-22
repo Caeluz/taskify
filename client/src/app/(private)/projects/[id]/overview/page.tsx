@@ -27,10 +27,9 @@ interface ProjectOverview {
   members: number[];
 }
 
-export default function OverviewPage() {
+export default function OverviewPage({ params }: { params: { id: number } }) {
   const [projectOverview, setProjectOverview] = useState<any>();
-  const path = usePathname();
-  const projectId = Number(path.split("/")[2]);
+  const projectId = params.id;
 
   useEffect(() => {
     fetchProjectOverview(projectId)
