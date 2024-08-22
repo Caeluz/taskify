@@ -170,27 +170,26 @@ const getTaskStatusDistribution = async (projectId: string) => {
     .where("created_at", "<=", end)
     .get();
 
-  // Initialize the result object
-  const result: Record<
-    string,
-    { completed: number; toDo: number; inProgress: number }
-  > = {};
-
-  // Initialize the result object with days of the week
-  eachDayOfInterval({ start, end }).forEach((date) => {
-    const day = format(date, "EEEE"); // Get the day name (e.g., Monday)
-    result[day] = { completed: 0, toDo: 0, inProgress: 0 };
-  });
+  // Initialize the result array with days of the week
+  const result = eachDayOfInterval({ start, end }).map((date) => ({
+    day: format(date, "EEEE"), // Get the day name (e.g., Monday)
+    completed: 0,
+    toDo: 0,
+    inProgress: 0,
+  }));
 
   // Group tasks by their status and the day of the week
   tasks.map((task: Task) => {
     const day = format(new Date(task.created_at), "EEEE"); // Get the day name (e.g., Monday)
-    if (task.status === "completed") {
-      result[day].completed += 1;
-    } else if (task.status === "to-do") {
-      result[day].toDo += 1;
-    } else if (task.status === "in-progress") {
-      result[day].inProgress += 1;
+    const dayResult = result.find((r) => r.day === day);
+    if (dayResult) {
+      if (task.status === "completed") {
+        dayResult.completed += 1;
+      } else if (task.status === "to-do") {
+        dayResult.toDo += 1;
+      } else if (task.status === "in-progress") {
+        dayResult.inProgress += 1;
+      }
     }
   });
 
