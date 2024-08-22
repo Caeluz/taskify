@@ -10,7 +10,7 @@ export const getProjects = async (req: Request, res: Response) => {
   try {
     const Projects = await Project.query().all();
 
-    res.json({ Projects });
+    res.json({ message: "Success", data: Projects });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
