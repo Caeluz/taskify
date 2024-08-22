@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -24,49 +24,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { useProjectOverviewData } from "@/components/utility/ProjectDashboardDataContext";
 
 interface Member {
-  member: string;
-  workload: number;
-  fill: string;
+  memberId: number;
+  memberName: string;
+  totalTaskCount: number;
+  fill?: string;
   avatar?: string;
 }
 
-const chartData: Member[] = [
-  {
-    member: "John",
-    workload: 5,
-    fill: "hsl(var(--chart-1))",
-    avatar: "https://example.com/john.jpg",
-  },
-  {
-    member: "Jane",
-    workload: 4,
-    fill: "hsl(var(--chart-2))",
-    avatar: "https://example.com/jane.jpg",
-  },
-  {
-    member: "El",
-    workload: 3,
-    fill: "hsl(var(--chart-3))",
-    avatar: "https://example.com/el.jpg",
-  },
-  {
-    member: "David",
-    workload: 2,
-    fill: "hsl(var(--chart-4))",
-    avatar: "https://example.com/david.jpg",
-  },
-  {
-    member: "Unassigned",
-    workload: 6,
-    fill: "hsl(var(--chart-5))",
-    // avatar: "https://github.com/shadcn.png",
-  },
-];
-
 const chartConfig = {
-  workload: { label: "Workload" },
+  totalTaskCount: { label: "Workload" },
   John: { label: "John", color: "hsl(var(--chart-1))" },
   Jane: { label: "Jane", color: "hsl(var(--chart-2))" },
   El: { label: "El", color: "hsl(var(--chart-3))" },
@@ -75,15 +44,20 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function MembersCard() {
-  const [sortBy, setSortBy] = useState("workload");
+  const { projectOverview } = useProjectOverviewData();
 
-  const sortedData = [...chartData].sort((a, b) =>
-    sortBy === "workload"
-      ? b.workload - a.workload
-      : a.member.localeCompare(b.member)
+  const [sortBy, setSortBy] = useState("totalTaskCount");
+
+  const membersWorkload: Member[] = projectOverview?.membersWorkload || [];
+
+  const sortedData = [...membersWorkload].sort((a, b) =>
+    sortBy === "totalTaskCount"
+      ? b.totalTaskCount - a.totalTaskCount
+      : a.memberName.localeCompare(b.memberName)
   );
 
   const handleSort = (value: string) => {
+    console.log("Sorting by:", value);
     setSortBy(value);
   };
 
@@ -101,13 +75,13 @@ export default function MembersCard() {
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <Select onValueChange={handleSort} defaultValue="workload">
+          <Select onValueChange={handleSort} defaultValue="totalTaskCount">
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="workload">Sort by Workload</SelectItem>
-              <SelectItem value="name">Sort by Name</SelectItem>
+              <SelectItem value="totalTaskCount">Sort by Workload</SelectItem>
+              <SelectItem value="memberName">Sort by Name</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -119,23 +93,20 @@ export default function MembersCard() {
             margin={{ left: 80, right: 20, top: 10, bottom: 10 }}
           >
             <YAxis
-              dataKey="member"
+              dataKey="memberName"
               type="category"
               tickLine={false}
               axisLine={false}
-              tick={<CustomYAxisTick />}
-              // height={50}
-              // width={80}
-              // tick={{ fontSize: 12 }}
+              tick={<CustomYAxisTick membersWorkload={membersWorkload} />}
               minTickGap={2}
             />
-            <XAxis dataKey="workload" type="number" hide />
+            <XAxis dataKey="totalTaskCount" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
             <Bar
-              dataKey="workload"
+              dataKey="totalTaskCount"
               background={{ fill: "hsl(var(--bar-background))", radius: 10 }}
               layout="vertical"
               radius={10}
@@ -147,12 +118,12 @@ export default function MembersCard() {
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none">
           Total Workload:{" "}
-          {sortedData.reduce((sum, item) => sum + item.workload, 0)}
+          {sortedData.reduce((sum, item) => sum + item.totalTaskCount, 0)}
         </div>
         <div className="leading-none text-muted-foreground">
           Average:{" "}
           {(
-            sortedData.reduce((sum, item) => sum + item.workload, 0) /
+            sortedData.reduce((sum, item) => sum + item.totalTaskCount, 0) /
             sortedData.length
           ).toFixed(2)}
         </div>
@@ -165,26 +136,27 @@ const CustomYAxisTick = ({
   x,
   y,
   payload,
+  membersWorkload,
 }: {
   x?: number;
   y?: number;
   payload?: { value: string };
+  membersWorkload: Member[];
 }) => {
-  const member = chartData.find((item) => item.member === payload?.value) || {
-    member: "",
+  const member = membersWorkload.find(
+    (item) => item.memberName === payload?.value
+  ) || {
+    memberName: "",
     avatar: "",
   };
 
   return (
     <g transform={`translate(${x},${y})`}>
-      {/* <text x={-15} y={4} textAnchor="end" fill="#000000" fontSize={12}>
-        {payload.value}
-      </text> */}
       <foreignObject x={-100} y={-15} width={100} height={30}>
         <div className="flex justify-start items-center">
           <Avatar className="w-6 h-6">
-            <AvatarImage src={member.avatar} alt={member.member} />
-            <AvatarFallback>{member.member[0]}</AvatarFallback>
+            <AvatarImage src={member.avatar} alt={member.memberName} />
+            <AvatarFallback>{member.memberName[0]}</AvatarFallback>
           </Avatar>
           <div className="ml-2 text-xs">{payload?.value}</div>
         </div>

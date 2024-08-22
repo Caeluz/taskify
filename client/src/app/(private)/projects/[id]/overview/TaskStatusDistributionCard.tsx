@@ -20,16 +20,17 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Check } from "lucide-react";
+import { useProjectOverviewData } from "@/components/utility/ProjectDashboardDataContext";
 
-const chartData = [
-  { day: "Monday", completed: 0, inProgress: 0, toDo: 5 },
-  { day: "Tuesday", completed: 0, inProgress: 1, toDo: 0 },
-  { day: "Wednesday", completed: 0, inProgress: 2, toDo: 0 },
-  { day: "Thursday", completed: 0, inProgress: 2, toDo: 0 },
-  { day: "Friday", completed: 5, inProgress: 0, toDo: 0 },
-  //   { day: "Saturday", completed: 5, inProgress: 5, toDo: 3 },
-  //   { day: "Sunday", completed: 5, inProgress: 5, toDo: 3 },
-];
+// const chartData = [
+//   { day: "Monday", completed: 0, inProgress: 0, toDo: 5 },
+//   { day: "Tuesday", completed: 0, inProgress: 1, toDo: 0 },
+//   { day: "Wednesday", completed: 0, inProgress: 2, toDo: 0 },
+//   { day: "Thursday", completed: 0, inProgress: 2, toDo: 0 },
+//   { day: "Friday", completed: 5, inProgress: 0, toDo: 0 },
+//   //   { day: "Saturday", completed: 5, inProgress: 5, toDo: 3 },
+//   //   { day: "Sunday", completed: 5, inProgress: 5, toDo: 3 },
+// ];
 
 const chartConfig = {
   completed: {
@@ -47,6 +48,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function TaskStatusDistributionCard() {
+  const { projectOverview } = useProjectOverviewData();
+
+  const taskStatusDistribution = projectOverview?.taskStatusDistribution;
+
   const monthToday = new Intl.DateTimeFormat("en-us", {
     month: "long",
     year: "numeric",
@@ -60,7 +65,7 @@ export default function TaskStatusDistributionCard() {
       </CardHeader>
       <CardContent className="flex-grow">
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={taskStatusDistribution}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="day"
