@@ -2,11 +2,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { cookies } from "next/headers";
 
-import { Project } from "../page";
+// import { Project } from "../page";
 
-export default async function fetchProjects(): Promise<{
+export default async function fetchProjectOverview(projectId: number): Promise<{
   message: string;
-  data: Project[];
+  data: any;
 }> {
   // req: NextApiRequest,
   // res: NextApiResponse
@@ -19,17 +19,21 @@ export default async function fetchProjects(): Promise<{
   }
 
   try {
-    const response = await fetch("http://localhost:8081/api/projects", {
-      headers: {
-        Authorization: `Bearer ${token?.value}`,
-      },
-    });
+    const response = await fetch(
+      `http://localhost:8081/api/projects/${projectId}/overview`,
+      {
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error fetching projects");
     }
 
     const data = await response.json();
+    console.log(data);
 
     // res.status(200).json(data);
     // return data;

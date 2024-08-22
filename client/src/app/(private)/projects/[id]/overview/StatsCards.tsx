@@ -4,13 +4,14 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card";
+import { useProjectOverviewData } from "@/components/utility/ProjectDashboardDataContext";
 
 import { Check, NotebookPen, TrafficCone, CircleAlert } from "lucide-react";
 
 export interface StatsCardProps {
   icon: React.ElementType;
   title: string;
-  description: string;
+  description: string | number;
   color?: string;
 }
 
@@ -39,32 +40,40 @@ export function StatsCard({
 }
 
 export function StatsCardsContainer() {
+  const { projectOverview } = useProjectOverviewData();
+
+  const tasks = projectOverview?.tasks;
+
   return (
     <div className="p-4 grid grid-cols-4 gap-x-4">
-      <StatsCard
-        icon={NotebookPen}
-        title="Total Tasks"
-        description="20"
-        color="#3b82f6"
-      />
-      <StatsCard
-        icon={Check}
-        title="Completed"
-        description="10"
-         color="#34d399"
-      />
-      <StatsCard
-        icon={TrafficCone}
-        title="In Progress"
-        description="5"
-        color="#e7763b"
-      />
-      <StatsCard
-        icon={CircleAlert}
-        title="Overdue"
-        description="5"
-        color="#f87171"
-      />
+      {tasks && (
+        <>
+          <StatsCard
+            icon={NotebookPen}
+            title="Total Tasks"
+            description={tasks.totalTasks}
+            color="#3b82f6"
+          />
+          <StatsCard
+            icon={Check}
+            title="Completed"
+            description={tasks.completed}
+            color="#34d399"
+          />
+          <StatsCard
+            icon={TrafficCone}
+            title="In Progress"
+            description={tasks.inProgress}
+            color="#e7763b"
+          />
+          <StatsCard
+            icon={CircleAlert}
+            title="Overdue"
+            description={tasks.overDue}
+            color="#f87171"
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -16,9 +16,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-const chartData = [
-  { name: "progress", value: 40, fill: "var(--color-progress)" },
-];
+import { useProjectOverviewData } from "@/components/utility/ProjectDashboardDataContext";
+
 const chartConfig = {
   value: {
     label: "Value",
@@ -31,6 +30,16 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function ProgressCard() {
+  const { projectOverview } = useProjectOverviewData();
+
+  console.log(projectOverview?.projectProgress);
+
+  const progress = projectOverview?.projectProgress || 0;
+
+  const chartData = [
+    { name: "progress", value: progress, fill: "var(--color-progress)" },
+  ];
+
   const formattedDate = new Intl.DateTimeFormat("en-us", {
     month: "long",
     year: "numeric",

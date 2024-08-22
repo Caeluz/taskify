@@ -34,24 +34,30 @@ import { Plus, Ellipsis } from "lucide-react";
 
 import Link from "next/link";
 import { set } from "date-fns";
+import fetchProjects from "./api/projects";
+
+export interface Project {
+  id: number;
+  name: string;
+  progress: number;
+  status: string;
+  description: string;
+  members: number[];
+}
 
 export default function Project() {
   const [projectCount, setProjectCount] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
- useEffect(() => {
-   const fetchProjects = async () => {
-     try {
-       const response = await axios.get("/api/projects");
-       setProjects(response.data);
-     } catch (error) {
-       console.error("Error fetching projects:", error);
-     }
-   };
+  // console log the type of projects
 
-   fetchProjects();
- }, []);
+  useEffect(() => {
+    fetchProjects().then((response) => {
+      console.log(response);
+      setProjects(response.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -107,17 +113,21 @@ export default function Project() {
           </DialogContent>
         </Dialog>
       </div>
+
       <div className="grid grid-rows-3 grid-cols-4 gap-4 p-7">
-        {Array.from({ length: projectCount })
-          .filter((_, index) => {
-            return searchTerm === "" || index.toString().includes(searchTerm);
+        {projects
+          .filter((project) => {
+            return (
+              searchTerm === "" ||
+              project.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
           })
-          .map((_, index) => (
-            <Link href={`/projects/${index}/overview`} key={index}>
+          .map((project) => (
+            <Link href={`/projects/${project.id}/overview`} key={project.id}>
               <Card className="hover:bg-[#3b82f6] hover:text-white">
                 <CardHeader>
                   <div className="flex flex-row justify-between">
-                    <CardTitle>Card Title</CardTitle>
+                    <CardTitle>{project.name}</CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
                         <Ellipsis />
@@ -144,7 +154,7 @@ export default function Project() {
                         >
                           Delete
                         </DropdownMenuItem>
-                        <Link href={`/projects/${index}/members`}>
+                        <Link href={`/projects/${project.id}/members`}>
                           <DropdownMenuItem
                             onClick={(e) => {
                               // console.log("Team clicked");
@@ -162,16 +172,14 @@ export default function Project() {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    {/* <Button></Button> */}
                   </div>
-                  <CardDescription className="">
-                    Card Description
-                  </CardDescription>
+                  <CardDescription>{project.description}</CardDescription>
                 </CardHeader>
                 <CardFooter className="flex flex-row space-x-4">
-                  <Progress className="" value={33} />
-                  <div className="whitespace-nowrap">7 members</div>
+                  <Progress className="" value={project.progress} />
+                  {/* <div className="whitespace-nowrap">
+                  {project.members.length} members
+                </div> */}
                 </CardFooter>
               </Card>
             </Link>

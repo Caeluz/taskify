@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -12,21 +13,54 @@ import ProgressCard from "./ProgressCard";
 import MembersCard from "./MembersCard";
 import CalendarCard from "./CalendarCard";
 import TaskStatusDistributionCard from "./TaskStatusDistributionCard";
+import { useEffect, useState } from "react";
+import fetchProjectOverview from "./api/projectOverview";
+import { usePathname } from "next/navigation";
+import { ProjectOverviewProvider } from "@/components/utility/ProjectDashboardDataContext";
+
+interface ProjectOverview {
+  id: number;
+  name: string;
+  progress: number;
+  status: string;
+  description: string;
+  members: number[];
+}
 
 export default function OverviewPage() {
+  const [projectOverview, setProjectOverview] = useState<any>();
+  const path = usePathname();
+  const projectId = Number(path.split("/")[2]);
+
+  useEffect(() => {
+    fetchProjectOverview(projectId)
+      .then((response) => {
+        console.log(response);
+        setProjectOverview(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [projectId]);
+
   return (
     <div className="flex flex-row justify-between">
-      <div className="flex-grow">
-        <h1 className="pt-4 pl-4 text-xl font-semibold">Project Name</h1>
-        <div>
-          <StatsCardsContainer />
-          <div className="grid grid-cols-3 px-4 gap-x-4">
-            <ProgressCard />
-            <MembersCard />
-            <TaskStatusDistributionCard />
+      <ProjectOverviewProvider
+        projectOverview={projectOverview}
+        setProjectOverview={setProjectOverview}
+      >
+        <div className="flex-grow">
+          <h1 className="pt-4 pl-4 text-xl font-semibold">Project Name</h1>
+          <div>
+            <StatsCardsContainer />
+            <div className="grid grid-cols-3 px-4 gap-x-4">
+              <ProgressCard />
+              <MembersCard />
+              <TaskStatusDistributionCard />
+            </div>
           </div>
         </div>
-      </div>
+      </ProjectOverviewProvider>
       <CalendarCard />
     </div>
   );
