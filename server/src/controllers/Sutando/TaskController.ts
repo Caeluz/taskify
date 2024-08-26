@@ -12,6 +12,18 @@ export const getProjectTasks = async (req: Request, res: Response) => {
       .where("project_id", projectId)
       .get();
 
+    // const data = projectTasks.map((task: any) => {
+    //   return {
+    //     id: task.id,
+    //     content: task.name,
+    //     description: task.description,
+    //     priority: task.priority,
+    //     columnId: task.status,
+    //     startDate: task.start_date,
+    //     dueDate: task.due_date,
+    //   };
+    // });
+
     return res.status(200).json({
       message: "Successfully retrieved project's tasks",
       data: projectTasks,
