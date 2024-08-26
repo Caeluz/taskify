@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { BoardColumn, BoardContainer } from "./BoardColumn";
@@ -22,6 +22,7 @@ import { type Task, TaskCard } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
+import fetchProjectTasks from "./api/tasks";
 
 const defaultCols = [
   {
@@ -112,7 +113,7 @@ const initialTasks: Task[] = [
   },
 ];
 
-export function KanbanBoard({ params }: { params: { id?: number } }) {
+export function KanbanBoard({ params }: { params: { id: number } }) {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
@@ -123,12 +124,26 @@ export function KanbanBoard({ params }: { params: { id?: number } }) {
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
+  // Call the api to get the tasks for the project
+  useEffect(() => {
+    fetchProjectTasks(params.id)
+      .then((response) => {
+        console.log(response);
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [params.id]);
+
+  console.log(tasks);
+
   const sensors = useSensors(
     useSensor(MouseSensor),
-    useSensor(TouchSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: coordinateGetter,
-    })
+    useSensor(TouchSensor)
+    // useSensor(KeyboardSensor, {
+    //   coordinateGetter: coordinateGetter,
+    // })
   );
 
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
