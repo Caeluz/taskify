@@ -20,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,6 +38,7 @@ const loginSchema = z.object({
 
 export default function LoginContainer() {
   const { setFormData } = useFormData();
+  const { toast } = useToast();
   const [backendError, setBackendError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -67,7 +69,17 @@ export default function LoginContainer() {
     console.log(response.ok);
 
     if (response.ok) {
-      router.push("/projects");
+      // Toast
+      toast({
+        title: "Login successful",
+        description: "You have successfully logged in",
+      });
+
+      setTimeout(() => {
+        router.push("/projects");
+      }, 2000);
+
+      // router.push("/projects");
 
       const user = response.json();
       console.log("Login successful:", user);

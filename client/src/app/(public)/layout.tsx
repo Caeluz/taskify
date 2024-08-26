@@ -1,6 +1,7 @@
 // import "../styles.css";
-import '@/app/styles.css'
+import "@/app/styles.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   title: "test",
@@ -22,6 +23,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div>{children}</div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

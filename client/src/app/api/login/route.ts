@@ -8,7 +8,7 @@ export async function POST(req: Request, res: NextApiResponse) {
     const body = await req.json();
     // const token = cookieStore.get("token");
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-    const response = await fetch(`${apiUrl}/api/auth/login`, {
+    const response = await fetch(`${apiUrl}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,8 @@ export async function POST(req: Request, res: NextApiResponse) {
     });
 
     if (!response.ok) {
-      throw new Error("Authentication failed");
+      const errorData = await response.json();
+      throw new Error(errorData.error || response.statusText);
     }
 
     const data = await response.json();
@@ -40,10 +41,9 @@ export async function POST(req: Request, res: NextApiResponse) {
       { message: "Authentication successful" },
       { status: 200 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    // return new Response("Authentication failed", { status: 401 });
-    return Response.json({ message: "Authentication failed" }, { status: 401 });
+    return Response.json({ message: error.message }, { status: 401 });
   }
 }
 
