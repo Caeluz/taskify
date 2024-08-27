@@ -22,94 +22,104 @@ import { type Task, TaskCard } from "./TaskCard";
 import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
-import fetchProjectTasks from "./api/tasks";
+import fetchProjectTasks, { updateTaskStatus } from "./api/tasks";
 
 const defaultCols = [
   {
-    id: "todo" as const,
+    // id: 1 as const,
+    id: "ToDo" as const,
+    name: 1,
     title: "Todo",
   },
   {
-    id: "in-progress" as const,
+    // id: 2 as const,
+    id: "InProgress" as const,
+    name: 2,
     title: "In progress",
   },
   {
-    id: "done" as const,
+    // id: 3 as const,
+    id: "Done" as const,
+    name: 2,
     title: "Done",
   },
-  {
-    id: "archived" as const,
-    title: "Archived",
-  },
+  // {
+  //   id: "archived" as const,
+  //   title: "Archived",
+  // },
 ] satisfies Column[];
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
+export type ColumnName = (typeof defaultCols)[number]["name"];
 
 const initialTasks: Task[] = [
   {
-    id: "task1",
-    columnId: "done",
-    content: "Project initiation and planning",
+    id: "1",
+    project_id: 1,
+    name: "Task 1",
+    description: "Description 1",
+    priority: "high",
+    task_status_id: 1,
+    start_date: "2021-08-01",
+    due_date: "2021-08-10",
+    created_at: "2021-08-01",
+    updated_at: "2021-08-01",
+    taskStatus: {
+      id: 1,
+      name: "ToDo",
+      hex_color: "#FF0000",
+    },
   },
   {
-    id: "task2",
-    columnId: "done",
-    content: "Gather requirements from stakeholders",
+    id: "2",
+    project_id: 1,
+    name: "Task 2",
+    description: "Description 2",
+    priority: "medium",
+    task_status_id: 2,
+    start_date: "2021-08-01",
+    due_date: "2021-08-10",
+    created_at: "2021-08-01",
+    updated_at: "2021-08-01",
+    taskStatus: {
+      id: 2,
+      name: "InProgress",
+      hex_color: "#00FF00",
+    },
   },
   {
-    id: "task3",
-    columnId: "done",
-    content: "Create wireframes and mockups",
+    id: "3",
+    project_id: 1,
+    name: "Task 3",
+    description: "Description 3",
+    priority: "low",
+    task_status_id: 3,
+    start_date: "2021-08-01",
+    due_date: "2021-08-10",
+    created_at: "2021-08-01",
+    updated_at: "2021-08-01",
+    taskStatus: {
+      id: 3,
+      name: "done",
+      hex_color: "#0000FF",
+    },
   },
   {
-    id: "task4",
-    columnId: "in-progress",
-    content: "Develop homepage layout",
-  },
-  {
-    id: "task5",
-    columnId: "in-progress",
-    content: "Design color scheme and typography",
-  },
-  {
-    id: "task6",
-    columnId: "todo",
-    content: "Implement user authentication",
-  },
-  {
-    id: "task7",
-    columnId: "todo",
-    content: "Build contact us page",
-  },
-  {
-    id: "task8",
-    columnId: "todo",
-    content: "Create product catalog",
-  },
-  {
-    id: "task9",
-    columnId: "todo",
-    content: "Develop about us page",
-  },
-  {
-    id: "task10",
-    columnId: "todo",
-    content: "Optimize website for mobile devices",
-  },
-  {
-    id: "task11",
-    columnId: "todo",
-    content: "Integrate payment gateway",
-  },
-  {
-    id: "task12",
-    columnId: "todo",
-    content: "Perform testing and bug fixing",
-  },
-  {
-    id: "task13",
-    columnId: "todo",
-    content: "Launch website and deploy to server",
+    id: "4",
+    project_id: 1,
+    name: "Task 4",
+    description: "Description 4",
+    priority: "high",
+    task_status_id: 4,
+    start_date: "2021-08-01",
+    due_date: "2021-08-10",
+    created_at: "2021-08-01",
+    updated_at: "2021-08-01",
+    taskStatus: {
+      id: 4,
+      name: "archived",
+      hex_color: "#FFFF00",
+    },
   },
 ];
 
@@ -136,7 +146,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       });
   }, [params.id]);
 
-  console.log(tasks);
+  // console.log(tasks);
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -157,111 +167,103 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     };
   }
 
-  const announcements: Announcements = {
-    onDragStart({ active }) {
-      if (!hasDraggableData(active)) return;
-      if (active.data.current?.type === "Column") {
-        const startColumnIdx = columnsId.findIndex((id) => id === active.id);
-        const startColumn = columns[startColumnIdx];
-        return `Picked up Column ${startColumn?.title} at position: ${
-          startColumnIdx + 1
-        } of ${columnsId.length}`;
-      } else if (active.data.current?.type === "Task") {
-        pickedUpTaskColumn.current = active.data.current.task.columnId;
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
-          active.id,
-          pickedUpTaskColumn.current
-        );
-        return `Picked up Task ${
-          active.data.current.task.content
-        } at position: ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
-      }
-    },
-    onDragOver({ active, over }) {
-      if (!hasDraggableData(active) || !hasDraggableData(over)) return;
+  // const announcements: Announcements = {
+  //   onDragStart({ active }) {
+  //     if (!hasDraggableData(active)) return;
+  //     if (active.data.current?.type === "Column") {
+  //       const startColumnIdx = columnsId.findIndex((id) => id === active.id);
+  //       const startColumn = columns[startColumnIdx];
+  //       return `Picked up Column ${startColumn?.title} at position: ${
+  //         startColumnIdx + 1
+  //       } of ${columnsId.length}`;
+  //     } else if (active.data.current?.type === "Task") {
+  //       pickedUpTaskColumn.current = active.data.current.task.columnId;
+  //       const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+  //         active.id,
+  //         pickedUpTaskColumn.current
+  //       );
+  //       return `Picked up Task ${
+  //         active.data.current.task.content
+  //       } at position: ${taskPosition + 1} of ${
+  //         tasksInColumn.length
+  //       } in column ${column?.title}`;
+  //     }
+  //   },
+  //   onDragOver({ active, over }) {
+  //     if (!hasDraggableData(active) || !hasDraggableData(over)) return;
 
-      if (
-        active.data.current?.type === "Column" &&
-        over.data.current?.type === "Column"
-      ) {
-        const overColumnIdx = columnsId.findIndex((id) => id === over.id);
-        return `Column ${active.data.current.column.title} was moved over ${
-          over.data.current.column.title
-        } at position ${overColumnIdx + 1} of ${columnsId.length}`;
-      } else if (
-        active.data.current?.type === "Task" &&
-        over.data.current?.type === "Task"
-      ) {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
-          over.id,
-          over.data.current.task.columnId
-        );
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
-          return `Task ${
-            active.data.current.task.content
-          } was moved over column ${column?.title} in position ${
-            taskPosition + 1
-          } of ${tasksInColumn.length}`;
-        }
-        return `Task was moved over position ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
-      }
-    },
-    onDragEnd({ active, over }) {
-      if (!hasDraggableData(active) || !hasDraggableData(over)) {
-        pickedUpTaskColumn.current = null;
-        return;
-      }
-      if (
-        active.data.current?.type === "Column" &&
-        over.data.current?.type === "Column"
-      ) {
-        const overColumnPosition = columnsId.findIndex((id) => id === over.id);
+  //     if (
+  //       active.data.current?.type === "Column" &&
+  //       over.data.current?.type === "Column"
+  //     ) {
+  //       const overColumnIdx = columnsId.findIndex((id) => id === over.id);
+  //       return `Column ${active.data.current.column.title} was moved over ${
+  //         over.data.current.column.title
+  //       } at position ${overColumnIdx + 1} of ${columnsId.length}`;
+  //     } else if (
+  //       active.data.current?.type === "Task" &&
+  //       over.data.current?.type === "Task"
+  //     ) {
+  //       const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+  //         over.id,
+  //         over.data.current.task.columnId
+  //       );
+  //       if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+  //         return `Task ${
+  //           active.data.current.task.content
+  //         } was moved over column ${column?.title} in position ${
+  //           taskPosition + 1
+  //         } of ${tasksInColumn.length}`;
+  //       }
+  //       return `Task was moved over position ${taskPosition + 1} of ${
+  //         tasksInColumn.length
+  //       } in column ${column?.title}`;
+  //     }
+  //   },
+  //   onDragEnd({ active, over }) {
+  //     if (!hasDraggableData(active) || !hasDraggableData(over)) {
+  //       pickedUpTaskColumn.current = null;
+  //       return;
+  //     }
+  //     if (
+  //       active.data.current?.type === "Column" &&
+  //       over.data.current?.type === "Column"
+  //     ) {
+  //       const overColumnPosition = columnsId.findIndex((id) => id === over.id);
 
-        return `Column ${
-          active.data.current.column.title
-        } was dropped into position ${overColumnPosition + 1} of ${
-          columnsId.length
-        }`;
-      } else if (
-        active.data.current?.type === "Task" &&
-        over.data.current?.type === "Task"
-      ) {
-        const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
-          over.id,
-          over.data.current.task.columnId
-        );
-        if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
-          return `Task was dropped into column ${column?.title} in position ${
-            taskPosition + 1
-          } of ${tasksInColumn.length}`;
-        }
-        return `Task was dropped into position ${taskPosition + 1} of ${
-          tasksInColumn.length
-        } in column ${column?.title}`;
-      }
-      pickedUpTaskColumn.current = null;
-    },
-    onDragCancel({ active }) {
-      pickedUpTaskColumn.current = null;
-      if (!hasDraggableData(active)) return;
-      return `Dragging ${active.data.current?.type} cancelled.`;
-    },
-  };
+  //       return `Column ${
+  //         active.data.current.column.title
+  //       } was dropped into position ${overColumnPosition + 1} of ${
+  //         columnsId.length
+  //       }`;
+  //     } else if (
+  //       active.data.current?.type === "Task" &&
+  //       over.data.current?.type === "Task"
+  //     ) {
+  //       const { tasksInColumn, taskPosition, column } = getDraggingTaskData(
+  //         over.id,
+  //         over.data.current.task.columnId
+  //       );
+  //       if (over.data.current.task.columnId !== pickedUpTaskColumn.current) {
+  //         return `Task was dropped into column ${column?.title} in position ${
+  //           taskPosition + 1
+  //         } of ${tasksInColumn.length}`;
+  //       }
+  //       return `Task was dropped into position ${taskPosition + 1} of ${
+  //         tasksInColumn.length
+  //       } in column ${column?.title}`;
+  //     }
+  //     pickedUpTaskColumn.current = null;
+  //   },
+  //   onDragCancel({ active }) {
+  //     pickedUpTaskColumn.current = null;
+  //     if (!hasDraggableData(active)) return;
+  //     return `Dragging ${active.data.current?.type} cancelled.`;
+  //   },
+  // };
 
   return (
-    // <div className="p-6 flex gap-4 h-[calc(100vh-168px)] overflow-hidden">
-    //   {Array.from({ length: columnCount }).map((_, i) => (
-    //   ))}
-    // </div>
-
     <DndContext
-      accessibility={{
-        announcements,
-      }}
       sensors={sensors}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
@@ -273,13 +275,12 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
             <BoardColumn
               key={col.id}
               column={col}
-              tasks={tasks.filter((task) => task.columnId === col.id)}
+              tasks={tasks.filter((task) => task.taskStatus?.name === col.id)}
             />
           ))}
         </SortableContext>
       </BoardContainer>
 
-      {/* {"document" in window && */}
       {typeof window !== "undefined" &&
         createPortal(
           <DragOverlay>
@@ -288,7 +289,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
                 isOverlay
                 column={activeColumn}
                 tasks={tasks.filter(
-                  (task) => task.columnId === activeColumn.id
+                  (task) => task.taskStatus.name === activeColumn.id
                 )}
               />
             )}
@@ -297,10 +298,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
           document.body
         )}
     </DndContext>
-
-    // <BoardContainer>
-    //   <BoardColumn />
-    // </BoardContainer>
   );
 
   function onDragStart(event: DragStartEvent) {
@@ -351,6 +348,8 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
     const activeId = active.id;
     const overId = over.id;
+    // get the overName
+    const overName = over.data.current;
 
     if (activeId === overId) return;
 
@@ -361,10 +360,11 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
     const isActiveATask = activeData?.type === "Task";
     const isOverATask = overData?.type === "Task";
+    const isOverAColumn = overData?.type === "Column";
 
     if (!isActiveATask) return;
 
-    // Im dropping a Task over another Task
+    // I'm dropping a Task over another Task
     if (isActiveATask && isOverATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
@@ -374,25 +374,39 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
         if (
           activeTask &&
           overTask &&
-          activeTask.columnId !== overTask.columnId
+          activeTask.taskStatus.name !== overTask.taskStatus.name
         ) {
-          activeTask.columnId = overTask.columnId;
+          activeTask.taskStatus.name = overTask.taskStatus.name;
+          // updateTaskStatus(
+          //   params.id,
+          //   activeTask.id,
+          //   activeTask.taskStatus.id
+          // ).catch((error) =>
+          //   console.error("Error updating task status:", error)
+          // );
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
-
         return arrayMove(tasks, activeIndex, overIndex);
       });
     }
 
-    const isOverAColumn = overData?.type === "Column";
-
-    // Im dropping a Task over a column
+    // I'm dropping a Task over a column
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const activeTask = tasks[activeIndex];
         if (activeTask) {
-          activeTask.columnId = overId as ColumnId;
+          activeTask.taskStatus.name = overId as ColumnId;
+          activeTask.taskStatus.id = overId;
+          // console.log(activeTask.taskStatus.id);
+          updateTaskStatus(
+            params.id,
+            activeTask.id,
+            // activeTask.taskStatus.id
+            overId
+          ).catch((error) =>
+            console.error("Error updating task status:", error)
+          );
           return arrayMove(tasks, activeIndex, activeIndex);
         }
         return tasks;

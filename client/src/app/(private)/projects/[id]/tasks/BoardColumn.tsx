@@ -48,6 +48,7 @@ import { EllipsisVertical } from "lucide-react";
 
 export interface Column {
   id: UniqueIdentifier;
+  name: UniqueIdentifier;
   title: string;
 }
 

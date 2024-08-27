@@ -23,8 +23,22 @@ import { useEffect } from "react";
 
 export interface Task {
   id: UniqueIdentifier;
-  columnId: ColumnId;
-  content: string;
+  project_id: number;
+  name: string;
+  description: string;
+  priority: string;
+  task_status_id: number;
+  start_date: string;
+  due_date: string;
+  created_at: string;
+  updated_at: string;
+  taskStatus: TaskStatus;
+}
+
+interface TaskStatus {
+  id: number | string;
+  name: string;
+  hex_color: string;
 }
 
 interface TaskCardProps {
@@ -97,7 +111,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
                 Low
               </Badge>
             </div>
-            <CardTitle className="text-left text-sm">{task.content}</CardTitle>
+            <CardTitle className="text-left text-sm">{task.name}</CardTitle>
             <CardDescription className="hidden">
               {truncateText(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
