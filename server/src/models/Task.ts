@@ -2,6 +2,7 @@ import { sutando, Model } from "sutando";
 import { Project } from "./Project";
 import { TaskMember } from "./TaskMember";
 import { ProjectMember } from "./ProjectMember";
+import { TaskStatus } from "./TaskStatus";
 
 export class Task extends Model {
   table = "tasks";
@@ -12,7 +13,8 @@ export class Task extends Model {
   name!: string;
   description!: string;
   priority!: string;
-  status!: string;
+  // status!: string;
+  task_status_id!: number;
   // Members
   start_date!: string;
   due_date!: string;
@@ -23,9 +25,14 @@ export class Task extends Model {
 
   projectMembers!: ProjectMember[];
   project!: Project;
+  status!: TaskStatus;
 
   relationProject() {
     return this.belongsTo(Project, "project_id", "id");
+  }
+
+  relationTaskStatus() {
+    return this.belongsTo(TaskStatus, "status_id", "id");
   }
 
   // Many to many

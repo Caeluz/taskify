@@ -6,6 +6,7 @@ import ProjectSeed from "./ProjectSeed";
 import TaskSeed from "./TaskSeed";
 import UserSeed from "./UserSeed";
 import ProjectMemberSeed from "./ProjectMemberSeed";
+import TaskStatusSeed from "./TaskStatusSeed";
 
 sutandoConnection;
 
@@ -16,6 +17,7 @@ const main = async () => {
     await UserSeed();
     await ProjectSeed();
     await ProjectMemberSeed();
+    await TaskStatusSeed();
     await TaskSeed();
 
     console.log("Finish seeding...");

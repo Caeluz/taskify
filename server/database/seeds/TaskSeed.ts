@@ -11,7 +11,8 @@ const taskData = [
     name: "Web APIs",
     description: "Simple web Crud functionality",
     priority: "low",
-    status: "ongoing",
+    // status: "ongoing",
+    task_status_id: 2, // Id from task_statuses
     start_date: date.toISOString(),
     due_date: dateOne.toISOString(),
   },
@@ -25,7 +26,8 @@ const TaskSeed = async () => {
       name: i.name,
       description: i.description,
       priority: i.priority,
-      status: i.status,
+      // status: i.status,
+      task_status_id: i.task_status_id,
       start_date: i.start_date,
       due_date: i.due_date,
     });

@@ -79,7 +79,8 @@ export const getProjectTask = async (req: Request, res: Response) => {
       .where("project_id", projectId)
       .with(
         "projectMembers.user:id,username,email",
-        "projectMembers:user_id,id,role"
+        "projectMembers:user_id,id,role",
+        "status:id,name"
       )
       .find(taskId);
 

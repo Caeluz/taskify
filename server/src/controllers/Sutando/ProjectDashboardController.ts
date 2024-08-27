@@ -8,6 +8,7 @@ import { sutandoConnection } from "../../../database/SutandoPGDatabase";
 import { Task } from "../../models/Task";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from "date-fns";
 import { TaskMember } from "../../models/TaskMember";
+import { TaskStatus } from "../../models/TaskStatus";
 sutandoConnection;
 
 export const getOverview = async (req: Request, res: Response) => {
@@ -48,19 +49,24 @@ export const getOverview = async (req: Request, res: Response) => {
 };
 
 const getTasks = async (projectId: string) => {
+  // Define constants for task status IDs
+  const STATUS_COMPLETED = 3;
+  const STATUS_IN_PROGRESS = 2;
+  const STATUS_TO_DO = 1;
+
   const completedTasksPromise = Task.query()
     .where("project_id", projectId)
-    .where("status", "completed")
+    .where("task_status_id", STATUS_COMPLETED)
     .count();
 
   const inProgressTasksPromise = Task.query()
     .where("project_id", projectId)
-    .where("status", "in-progress")
+    .where("task_status_id", STATUS_IN_PROGRESS)
     .count();
 
   const overDueTasksPromise = Task.query()
     .where("project_id", projectId)
-    .where("status", "!=", "completed")
+    .where("task_status_id", "!=", STATUS_COMPLETED)
     .where("due_date", "<", new Date())
     .count();
 
@@ -98,10 +104,13 @@ const getMembersWorkload = async (projectId: string) => {
     (task) => task.project_members_count == 0
   );
 
+  // Convert task_status_id column to status
+  // const taskStatuses = await Task.query().get();
+
   const unassignedTaskCountByStatus = allTasks.reduce(
     (acc: any, task: Task) => {
-      if (!acc[task.status]) {
-        acc[task.status] = 0;
+      if (!acc[task.task_status_id]) {
+        acc[task.task_status_id] = 0;
       }
       if (task.project_members_count === "0") {
         if (!acc["unassigned"]) {
@@ -109,7 +118,7 @@ const getMembersWorkload = async (projectId: string) => {
         }
         acc["unassigned"]++;
       }
-      acc[task.status]++;
+      acc[task.task_status_id]++;
       return acc;
     },
     {}
@@ -178,17 +187,23 @@ const getTaskStatusDistribution = async (projectId: string) => {
     inProgress: 0,
   }));
 
-  // Group tasks by their status and the day of the week
+  // const taskStatus = await TaskStatus
+
+  const STATUS_COMPLETED = 3;
+  const STATUS_IN_PROGRESS = 2;
+  const STATUS_TO_DO = 1;
+
   tasks.map((task: Task) => {
     const day = format(new Date(task.created_at), "EEEE"); // Get the day name (e.g., Monday)
     const dayResult = result.find((r) => r.day === day);
     if (dayResult) {
-      if (task.status === "completed") {
+      // Increment the appropriate status count
+      if (task.task_status_id === STATUS_COMPLETED) {
         dayResult.completed += 1;
-      } else if (task.status === "to-do") {
-        dayResult.toDo += 1;
-      } else if (task.status === "in-progress") {
+      } else if (task.task_status_id === STATUS_IN_PROGRESS) {
         dayResult.inProgress += 1;
+      } else if (task.task_status_id === STATUS_TO_DO) {
+        dayResult.toDo += 1;
       }
     }
   });
