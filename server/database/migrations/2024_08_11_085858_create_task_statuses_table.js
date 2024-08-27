@@ -8,6 +8,7 @@ module.exports = class extends Migration {
     await schema.createTable("task_statuses", (table) => {
       table.increments("id");
       table.string("name");
+      table.string("hex_color", 9);
       table.timestamps();
     });
   }

@@ -4,12 +4,14 @@ import { Task } from "../../models/Task";
 import { Project } from "../../models/Project";
 import { TaskMember } from "../../models/TaskMember";
 import { ProjectMember } from "../../models/ProjectMember";
+import { TaskStatus } from "../../models/TaskStatus";
 
 export const getProjectTasks = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   try {
     const projectTasks = await Task.query()
       .where("project_id", projectId)
+      .with("taskStatus")
       .get();
 
     // const data = projectTasks.map((task: any) => {
@@ -35,8 +37,15 @@ export const getProjectTasks = async (req: Request, res: Response) => {
 
 export const createProjectTask = async (req: Request, res: Response) => {
   const { projectId } = req.params;
-  const { name, description, priority, status, startDate, dueDate, members } =
-    req.body;
+  const {
+    name,
+    description,
+    priority,
+    taskStatusId,
+    startDate,
+    dueDate,
+    members,
+  } = req.body;
   try {
     const project = await Project.query().find(projectId);
     if (!project) {
@@ -48,7 +57,7 @@ export const createProjectTask = async (req: Request, res: Response) => {
       name: name,
       description: description,
       priority: priority,
-      status: status,
+      task_status_id: taskStatusId,
       start_date: startDate,
       due_date: dueDate,
     });
@@ -80,7 +89,7 @@ export const getProjectTask = async (req: Request, res: Response) => {
       .with(
         "projectMembers.user:id,username,email",
         "projectMembers:user_id,id,role",
-        "status:id,name"
+        "taskStatus:id,name as status"
       )
       .find(taskId);
 
@@ -93,7 +102,7 @@ export const getProjectTask = async (req: Request, res: Response) => {
       name: projectTask.name,
       description: projectTask.description,
       priority: projectTask.priority,
-      status: projectTask.status,
+      status: projectTask.taskStatus,
       startDate: projectTask.start_date,
       dueDate: projectTask.due_date,
       members: projectTask.projectMembers.map((member) => ({
@@ -114,7 +123,8 @@ export const getProjectTask = async (req: Request, res: Response) => {
 
 export const updateProjectTask = async (req: Request, res: Response) => {
   const { projectId, taskId } = req.params;
-  const { name, description, priority, status, startDate, dueDate } = req.body;
+  const { name, description, priority, taskStatusId, startDate, dueDate } =
+    req.body;
 
   try {
     const projectTask = await Task.query()
@@ -130,7 +140,7 @@ export const updateProjectTask = async (req: Request, res: Response) => {
       name,
       description,
       priority,
-      status,
+      task_status_id: taskStatusId,
       start_date: startDate,
       due_date: dueDate,
     });
@@ -158,6 +168,36 @@ export const deleteProjectTask = async (req: Request, res: Response) => {
     return res
       .status(200)
       .json({ message: "Successfully deleted project's task" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateTaskStatus = async (req: Request, res: Response) => {
+  const { projectId, taskId } = req.params;
+  const { taskStatusId } = req.body;
+
+  try {
+    const task = await Task.query().where("project_id", projectId).find(taskId);
+
+    const taskStatus = await TaskStatus.query().find(taskStatusId);
+
+    if (!taskStatus) {
+      return res.status(404).json({ message: "Task status not found" });
+    }
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    task.update({
+      task_status_id: taskStatusId,
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Successfully updated task status" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });

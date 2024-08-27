@@ -5,6 +5,7 @@ import { validateData } from "../middleware/validatorMiddleware";
 import {
   createProjectTaskSchema,
   updateProjectTaskSchema,
+  updateTaskStatusSchema,
 } from "../schemas/ProjectTaskSchema";
 
 const taskRouter = express.Router();
@@ -26,6 +27,12 @@ taskRouter
   .delete(
     "/projects/:projectId/tasks/:taskId",
     taskController.deleteProjectTask
+  )
+  // Update task status
+  .put(
+    "/projects/:projectId/tasks/:taskId/status",
+    validateData(updateTaskStatusSchema),
+    taskController.updateTaskStatus
   );
 
 export default taskRouter;

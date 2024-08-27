@@ -9,14 +9,17 @@ const taskStatusData = [
   {
     id: 1,
     name: "ToDo",
+    hex_color: "#FF0000",
   },
   {
     id: 2,
     name: "InProgress",
+    hex_color: "#00FF00",
   },
   {
     id: 3,
     name: "Done",
+    hex_color: "#0000FF",
   },
 ];
 
@@ -26,6 +29,7 @@ const TaskStatusSeed = async () => {
     const taskStatus = new TaskStatus({
       id: i.id,
       name: i.name,
+      hex_color: i.hex_color,
       // created_at: date,
       // updated_at: date,
     });

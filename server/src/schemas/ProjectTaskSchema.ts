@@ -7,15 +7,15 @@ export const createProjectTaskSchema = {
     name: z.string(),
     description: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
-    status: z.string(),
-    members: z
-      .array(
-        z.object({
-          id: z.number().int().positive(),
-          // name: z.string().min(1, "Name cannot be empty"),
-        })
-      ),
-      // .min(1, "At least one member is required"),
+    // status: z.string(),
+    taskStatusId: z.number().int().positive(),
+    members: z.array(
+      z.object({
+        id: z.number().int().positive(),
+        // name: z.string().min(1, "Name cannot be empty"),
+      })
+    ),
+    // .min(1, "At least one member is required"),
     startDate: dateStringToDate,
     dueDate: dateStringToDate,
   }),
@@ -29,11 +29,22 @@ export const updateProjectTaskSchema = {
     name: z.string(),
     description: z.string().optional(),
     priority: z.enum(["low", "medium", "high"]),
-    status: z.string(),
+    // status: z.string(),
+    taskStatusId: z.number().int().positive(),
     startDate: dateStringToDate,
     dueDate: dateStringToDate,
   }),
   params: z.object({
     projectId: z.string().regex(/^\d+$/).transform(Number),
+  }),
+};
+
+export const updateTaskStatusSchema = {
+  body: z.object({
+    taskStatusId: z.number().int()
+  }),
+  params: z.object({
+    projectId: z.string().regex(/^\d+$/).transform(Number),
+    taskId: z.string().regex(/^\d+$/).transform(Number),
   }),
 };

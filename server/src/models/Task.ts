@@ -25,14 +25,15 @@ export class Task extends Model {
 
   projectMembers!: ProjectMember[];
   project!: Project;
-  status!: TaskStatus;
+  taskStatus!: TaskStatus;
+  // taskStatus!: TaskStatus;
 
   relationProject() {
     return this.belongsTo(Project, "project_id", "id");
   }
 
   relationTaskStatus() {
-    return this.belongsTo(TaskStatus, "status_id", "id");
+    return this.belongsTo(TaskStatus);
   }
 
   // Many to many
