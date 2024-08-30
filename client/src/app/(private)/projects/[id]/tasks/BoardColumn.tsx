@@ -78,7 +78,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     transition,
     isDragging,
   } = useSortable({
-    id: column.id,
+    id: column.name,
     data: {
       type: "Column",
       column,

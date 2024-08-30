@@ -26,21 +26,21 @@ import fetchProjectTasks, { updateTaskStatus } from "./api/tasks";
 
 const defaultCols = [
   {
-    id: 1 as const,
-    // id: "ToDo" as const,
-    name: "ToDo",
+    // id: 1 as const,
+    id: "ToDo" as const,
+    name: 1,
     title: "Todo",
   },
   {
-    id: 2 as const,
-    // id: "InProgress" as const,
-    name: "InProgress",
+    // id: 2 as const,
+    id: "InProgress" as const,
+    name: 2,
     title: "In progress",
   },
   {
-    id: 3 as const,
-    // id: "Done" as const,
-    name: "Done",
+    // id: 3 as const,
+    id: "Done" as const,
+    name: 2,
     title: "Done",
   },
   // {
@@ -100,7 +100,7 @@ const initialTasks: Task[] = [
     updated_at: "2021-08-01",
     taskStatus: {
       id: 3,
-      name: "done",
+      name: "Done",
       hex_color: "#0000FF",
     },
   },
@@ -135,16 +135,16 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   // Call the api to get the tasks for the project
-  useEffect(() => {
-    fetchProjectTasks(params.id)
-      .then((response) => {
-        console.log(response);
-        setTasks(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [params.id]);
+  // useEffect(() => {
+  //   fetchProjectTasks(params.id)
+  //     .then((response) => {
+  //       console.log(response);
+  //       setTasks(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, [params.id]);
 
   // console.log(tasks);
 
@@ -156,16 +156,16 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     // })
   );
 
-  // function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
-  //   const tasksInColumn = tasks.filter((task) => task.columnId === columnId);
-  //   const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
-  //   const column = columns.find((col) => col.id === columnId);
-  //   return {
-  //     tasksInColumn,
-  //     taskPosition,
-  //     column,
-  //   };
-  // }
+  function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
+    const tasksInColumn = tasks.filter((task) => task.columnId === columnId);
+    const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
+    const column = columns.find((col) => col.id === columnId);
+    return {
+      tasksInColumn,
+      taskPosition,
+      column,
+    };
+  }
 
   // const announcements: Announcements = {
   //   onDragStart({ active }) {
@@ -275,7 +275,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
             <BoardColumn
               key={col.id}
               column={col}
-              tasks={tasks.filter((task) => task.taskStatus?.name === col.name)}
+              tasks={tasks.filter((task) => task.taskStatus?.name === col.id)}
             />
           ))}
         </SortableContext>
@@ -289,7 +289,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
                 isOverlay
                 column={activeColumn}
                 tasks={tasks.filter(
-                  (task) => task.taskStatus.name === activeColumn.name
+                  (task) => task.taskStatus.name === activeColumn.id
                 )}
               />
             )}
@@ -334,11 +334,9 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     if (!isActiveAColumn) return;
 
     setColumns((columns) => {
-      const activeColumnIndex = columns.findIndex(
-        (col) => col.name === activeId
-      );
+      const activeColumnIndex = columns.findIndex((col) => col.id === activeId);
 
-      const overColumnIndex = columns.findIndex((col) => col.name === overId);
+      const overColumnIndex = columns.findIndex((col) => col.id === overId);
 
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
@@ -351,9 +349,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     const activeId = active.id;
     const overId = over.id;
     // get the overName
-    console.log(over);
-
-    console.log("overId", overId);
+    const overName = over.data.current;
 
     if (activeId === overId) return;
 
@@ -361,8 +357,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
     const activeData = active.data.current;
     const overData = over.data.current;
-
-    console.log(overId);
 
     const isActiveATask = activeData?.type === "Task";
     const isOverATask = overData?.type === "Task";
@@ -383,14 +377,13 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
           activeTask.taskStatus.name !== overTask.taskStatus.name
         ) {
           activeTask.taskStatus.name = overTask.taskStatus.name;
-          activeTask.taskStatus.id = overTask.taskStatus.id;
-          updateTaskStatus(
-            params.id,
-            activeTask.id,
-            activeTask.taskStatus.id
-          ).catch((error) =>
-            console.error("Error updating task status:", error)
-          );
+          // updateTaskStatus(
+          //   params.id,
+          //   activeTask.id,
+          //   activeTask.taskStatus.id
+          // ).catch((error) =>
+          //   console.error("Error updating task status:", error)
+          // );
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
         return arrayMove(tasks, activeIndex, overIndex);
@@ -398,49 +391,24 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     }
 
     // I'm dropping a Task over a column
-    // if (isActiveATask && isOverAColumn) {
-    //   setTasks((tasks) => {
-    //     const activeIndex = tasks.findIndex((t) => t.id === activeId);
-    //     const activeTask = tasks[activeIndex];
-    //     if (activeTask) {
-    //       console.log(overId);
-    //       // activeTask.taskStatus.name = overId as ColumnName;
-    //       activeTask.taskStatus.name = overId;
-    //       // activeTask.taskStatus.id = overId as ColumnId;
-    //       console.log(activeTask.taskStatus.id);
-    //       console.log(activeTask.taskStatus.name);
-    //       console.log(overId);
-    //       // activeTask.taskStatus.name = overId as ColumnName;
-
-    //       // activeTask.taskStatus.id = overId as ColumnId;
-    //       updateTaskStatus(
-    //         params.id,
-    //         activeTask.id,
-    //         activeTask.taskStatus.id
-    //         // overId
-    //       ).catch((error) =>
-    //         console.error("Error updating task status:", error)
-    //       );
-    //       return arrayMove(tasks, activeIndex, activeIndex);
-    //     }
-    //     return tasks;
-    //   });
-    // }
-
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const activeTask = tasks[activeIndex];
         if (activeTask) {
-          const columnId = columns.find((col) => col.name === overId)?.id;
-          if (columnId) {
-            activeTask.taskStatus.name = overId as ColumnName;
-            activeTask.taskStatus.id = columnId;
-            updateTaskStatus(params.id, activeTask.id, columnId).catch(
-              (error) => console.error("Error updating task status:", error)
-            );
-            return arrayMove(tasks, activeIndex, activeIndex);
-          }
+          activeTask.taskStatus.name = overId as ColumnId;
+          console.log(activeTask.taskStatus.name);
+          // activeTask.taskStatus.id = overId;
+          // console.log(activeTask.taskStatus.id);
+          // updateTaskStatus(
+          //   params.id,
+          //   activeTask.id,
+          //   activeTask.taskStatus.id
+          //   overId
+          // ).catch((error) =>
+          //   console.error("Error updating task status:", error)
+          // );
+          return arrayMove(tasks, activeIndex, activeIndex);
         }
         return tasks;
       });

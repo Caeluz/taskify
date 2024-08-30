@@ -35,7 +35,7 @@ export default async function fetchProjectTasks(projectId: number): Promise<{
 export async function updateTaskStatus(
   projectId: number,
   taskId: number | string,
-  taskStatusId: number
+  taskStatusId: number | string
 ): Promise<{ message: string; data: any }> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
