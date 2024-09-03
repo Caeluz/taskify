@@ -146,8 +146,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       });
   }, [params.id]);
 
-  // console.log(tasks);
-
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor)
@@ -324,14 +322,28 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     const activeId = active.id;
     const overId = over.id;
 
+    console.log("active", active);
+    console.log("over", over);
+
+    // console.log("Active ID:", activeId);
+    // console.log("Over ID:", overId);
+
     if (!hasDraggableData(active)) return;
 
     const activeData = active.data.current;
 
-    if (activeId === overId) return;
+    if (activeId === overId) {
+      console.log("Active ID and Over ID are the same");
+      return;
+    } else {
+      console.log("Active ID and Over ID are different");
+    }
 
     const isActiveAColumn = activeData?.type === "Column";
-    if (!isActiveAColumn) return;
+    const isActiveATask = activeData?.type === "Task";
+    // if (!isActiveAColumn) return;
+
+    // console.log("isActiveAtask", isActiveATask);
 
     setColumns((columns) => {
       const activeColumnIndex = columns.findIndex(
@@ -350,12 +362,11 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
     const activeId = active.id;
     const overId = over.id;
-    // get the overName
-    console.log(over);
-
-    console.log("overId", overId);
 
     if (activeId === overId) return;
+
+    // console.log("onDragOver active:", active);
+    // console.log("onDragOver over:", over);
 
     if (!hasDraggableData(active) || !hasDraggableData(over)) return;
 
@@ -397,36 +408,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       });
     }
 
-    // I'm dropping a Task over a column
-    // if (isActiveATask && isOverAColumn) {
-    //   setTasks((tasks) => {
-    //     const activeIndex = tasks.findIndex((t) => t.id === activeId);
-    //     const activeTask = tasks[activeIndex];
-    //     if (activeTask) {
-    //       console.log(overId);
-    //       // activeTask.taskStatus.name = overId as ColumnName;
-    //       activeTask.taskStatus.name = overId;
-    //       // activeTask.taskStatus.id = overId as ColumnId;
-    //       console.log(activeTask.taskStatus.id);
-    //       console.log(activeTask.taskStatus.name);
-    //       console.log(overId);
-    //       // activeTask.taskStatus.name = overId as ColumnName;
-
-    //       // activeTask.taskStatus.id = overId as ColumnId;
-    //       updateTaskStatus(
-    //         params.id,
-    //         activeTask.id,
-    //         activeTask.taskStatus.id
-    //         // overId
-    //       ).catch((error) =>
-    //         console.error("Error updating task status:", error)
-    //       );
-    //       return arrayMove(tasks, activeIndex, activeIndex);
-    //     }
-    //     return tasks;
-    //   });
-    // }
-
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
@@ -436,9 +417,9 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
           if (columnId) {
             activeTask.taskStatus.name = overId as ColumnName;
             activeTask.taskStatus.id = columnId;
-            updateTaskStatus(params.id, activeTask.id, columnId).catch(
-              (error) => console.error("Error updating task status:", error)
-            );
+            // updateTaskStatus(params.id, activeTask.id, columnId).catch(
+            //   (error) => console.error("Error updating task status:", error)
+            // );
             return arrayMove(tasks, activeIndex, activeIndex);
           }
         }
