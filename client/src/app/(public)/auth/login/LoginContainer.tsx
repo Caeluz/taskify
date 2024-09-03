@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import {
   Card,
   CardContent,
@@ -40,6 +41,7 @@ export default function LoginContainer() {
   const { setFormData } = useFormData();
   const { toast } = useToast();
   const [backendError, setBackendError] = useState<string | null>(null);
+  const [disableButton, setDisableButton] = useState<boolean>(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -52,48 +54,48 @@ export default function LoginContainer() {
   });
 
   // Api Call
-  async function onSubmit(data: z.infer<typeof loginSchema>) {
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-    // const response = await fetch(`${apiUrl}/api/auth/login`, {
-    const response = await fetch(`/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.usernameOrEmail,
-        password: data.password,
-      }),
+async function onSubmit(data: z.infer<typeof loginSchema>) {
+  setDisableButton(true); // Disable the button when the login process starts
+
+  const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  const response = await fetch(`/api/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: data.usernameOrEmail,
+      password: data.password,
+    }),
+  });
+
+  console.log(response.ok);
+
+  if (response.ok) {
+    // Toast
+    toast({
+      title: "Login successful",
+      description: "You have successfully logged in",
     });
 
-    console.log(response.ok);
+    setTimeout(() => {
+      router.push("/projects");
+    }, 2000);
 
-    if (response.ok) {
-      // Toast
-      toast({
-        title: "Login successful",
-        description: "You have successfully logged in",
-      });
-
-      setTimeout(() => {
-        router.push("/projects");
-      }, 2000);
-
-      // router.push("/projects");
-
-      const user = response.json();
-      console.log("Login successful:", user);
-      // Redirect to projects page
-    } else {
-      const error = await response.json();
-      setBackendError(error.message || "Login failed");
-      form.setError("backend", {
-        type: "manual",
-        message: error.message || "Login failed",
-      });
-      console.log(error);
-    }
+    const user = await response.json();
+    console.log("Login successful:", user);
+  } else {
+    const error = await response.json();
+    setBackendError(error.message || "Login failed");
+    form.setError("backend", {
+      type: "manual",
+      message: error.message || "Login failed",
+    });
+    console.log(error);
   }
+
+  setDisableButton(false); // Re-enable the button after the login process completes
+}
 
   return (
     <Card>
@@ -170,9 +172,16 @@ export default function LoginContainer() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between flex-col">
-            <Button className="w-full" type="submit">
-              Sign In
-            </Button>
+            {disableButton ? (
+              <Button disabled className="w-full">
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </Button>
+            ) : (
+              <Button className="w-full" type="submit">
+                Sign In
+              </Button>
+            )}
             <Button
               variant="link"
               size="sm"
