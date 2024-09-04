@@ -68,7 +68,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
       task,
     } satisfies TaskDragData,
     attributes: {
-      roleDescription: "Task",
+      roleDescription: `Task Card: ${task.name}`,
     },
   });
 
