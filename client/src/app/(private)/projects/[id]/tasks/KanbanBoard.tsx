@@ -296,13 +296,13 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
         ) {
           activeTask.taskStatus.name = overTask.taskStatus.name;
           activeTask.taskStatus.id = overTask.taskStatus.id;
-          updateTaskStatus(
-            params.id,
-            activeTask.id,
-            activeTask.taskStatus.id
-          ).catch((error) =>
-            console.error("Error updating task status:", error)
-          );
+          // updateTaskStatus(
+          //   params.id,
+          //   activeTask.id,
+          //   activeTask.taskStatus.id
+          // ).catch((error) =>
+          //   console.error("Error updating task status:", error)
+          // );
           return arrayMove(tasks, activeIndex, overIndex - 1);
         }
         return arrayMove(tasks, activeIndex, overIndex);

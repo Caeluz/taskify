@@ -2,6 +2,7 @@ import { sutando, Model } from "sutando";
 import { User } from "./User";
 import { Task } from "./Task";
 import { ProjectMember } from "./ProjectMember";
+import { ProjectColumn } from "./ProjectColumn";
 
 export class Project extends Model {
   table = "projects";
@@ -24,6 +25,10 @@ export class Project extends Model {
 
   relationUser() {
     return this.belongsTo(User, "user_id", "id");
+  }
+
+  relationProjectColumns() {
+    return this.hasMany(ProjectColumn, "project_id", "id");
   }
 
   relationProjectMembers() {

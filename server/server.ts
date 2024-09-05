@@ -1,7 +1,7 @@
 // Import dependencies
 import knex from "knex";
 import express from "express";
-import sutandoDB from "./database/SutandoPGDatabase";
+import { sutandoDB } from "./database/SutandoPGDatabase";
 import { User } from "./src/models/User";
 require("dotenv").config();
 import { sutando } from "sutando";
@@ -28,6 +28,7 @@ const authRouter = require("./src/routes/AuthRoutes");
 import projectRouter from "./src/routes/ProjectRoutes";
 import taskRouter from "./src/routes/TaskRouter";
 import projectMemberRouter from "./src/routes/ProjectMemberRoutes";
+import projectColumnRouter from "./src/routes/ProjectColumnRoutes";
 
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
@@ -35,6 +36,7 @@ app.use("/api", projectRouter);
 app.use("/api", taskRouter);
 app.use("/api", projectMemberRouter);
 app.use("/api", projectDashboardRouter);
+app.use("/api", projectColumnRouter);
 
 sutando.addConnection({
   client: "pg",

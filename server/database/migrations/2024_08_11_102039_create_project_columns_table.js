@@ -5,34 +5,27 @@ module.exports = class extends Migration {
    * Run the migrations.
    */
   async up(schema) {
-    await schema.createTable("tasks", (table) => {
+    await schema.createTable("project_columns", (table) => {
       table.increments("id");
       table
         .integer("project_id")
         .unsigned()
         .references("id")
         .inTable("projects");
-      table.string("name");
-      table
-        .integer("project_column_id")
-        .unsigned()
-        .references("id")
-        .inTable("project_columns");
-      table.string("description").nullable();
-      table.enum("priority", ["low", "medium", "high"]);
-      // table.string("status");
+      // table.string("name");
       table
         .integer("task_status_id")
         .unsigned()
         .references("id")
         .inTable("task_statuses");
-      table.dateTime("start_date");
-      table.dateTime("due_date");
-      // table.dateTime("completed_at").nullable();
       table.integer("position");
       table.timestamps();
 
-      // table.unique(["task_status_id", "position"]);
+      // Add unique constraint to ensure no duplicate task statuses per project
+      table.unique(["project_id", "task_status_id"]);
+
+      // position is unique per project
+      // table.unique(["project_id", "position"]);
     });
   }
 
@@ -40,6 +33,6 @@ module.exports = class extends Migration {
    * Reverse the migrations.
    */
   async down(schema) {
-    await schema.dropTableIfExists("tasks");
+    await schema.dropTableIfExists("project_columns");
   }
 };
