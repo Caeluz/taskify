@@ -13,6 +13,7 @@ projectRouter.get("/projects", projectController.getProjects);
 // User project routes
 projectRouter
   .get("/users/:userId/projects", projectController.getUserProjects)
+  .get("/users/:userId/projects/:projectId", projectController.getUserProject)
   .post(
     "/users/:userId/projects",
     validateData(createUserProjectSchema),

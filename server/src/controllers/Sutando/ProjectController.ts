@@ -42,6 +42,30 @@ export const getUserProjects = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserProject = async (req: Request, res: Response) => {
+  const { userId, projectId } = req.params;
+
+  try {
+    const userProject = await Project.query()
+      .where("user_id", userId)
+      .find(projectId);
+
+    if (!userProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const userProjectData = {
+      id: userProject.id,
+      name: userProject.name,
+      
+    };
+
+    return res.status(200).json({ message: "Success", data: userProjectData });
+  } catch (error) {
+    return res.status(500).json({ error: error });
+  }
+};
+
 export const createUserProject = async (req: Request, res: Response) => {
   const userId = parseInt(req.params.userId, 10);
   console.log(req.user);
