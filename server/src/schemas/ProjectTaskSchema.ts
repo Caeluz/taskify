@@ -48,3 +48,14 @@ export const updateTaskStatusSchema = {
     taskId: z.string().regex(/^\d+$/).transform(Number),
   }),
 };
+
+export const updateTaskStatusAndPositionSchema = {
+  body: z.object({
+    taskStatusId: z.number().int(),
+    position: z.number().int(),
+  }),
+  params: z.object({
+    projectId: z.string().regex(/^\d+$/).transform(Number),
+    taskId: z.string().regex(/^\d+$/).transform(Number),
+  }),
+};

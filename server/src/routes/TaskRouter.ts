@@ -33,6 +33,11 @@ taskRouter
     "/projects/:projectId/tasks/:taskId/status",
     validateData(updateTaskStatusSchema),
     taskController.updateTaskStatus
+  )
+  .put(
+    "/projects/:projectId/tasks/:taskId/status-position",
+    validateData(updateTaskStatusSchema),
+    taskController.updateTaskStatusAndPosition
   );
 
 export default taskRouter;

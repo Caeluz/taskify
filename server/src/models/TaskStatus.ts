@@ -1,3 +1,4 @@
+import { ProjectColumn } from "./ProjectColumn";
 import { sutando, Model } from "sutando";
 import { Task } from "./Task";
 
@@ -12,5 +13,9 @@ export class TaskStatus extends Model {
 
   relationTasks() {
     return this.hasMany(Task);
+  }
+
+  relationProjectColumns() {
+    return this.hasMany(ProjectColumn);
   }
 }

@@ -3,6 +3,7 @@ import { Project } from "./Project";
 import { TaskMember } from "./TaskMember";
 import { ProjectMember } from "./ProjectMember";
 import { TaskStatus } from "./TaskStatus";
+import { ProjectColumn } from "./ProjectColumn";
 
 export class Task extends Model {
   table = "tasks";
@@ -10,6 +11,7 @@ export class Task extends Model {
 
   id!: number;
   project_id!: number;
+  project_column_id!: number;
   name!: string;
   description!: string;
   priority!: string;
@@ -18,6 +20,7 @@ export class Task extends Model {
   // Members
   start_date!: string;
   due_date!: string;
+  position!: number;
   created_at!: string;
   updated_at!: string;
 
@@ -30,6 +33,10 @@ export class Task extends Model {
 
   relationProject() {
     return this.belongsTo(Project, "project_id", "id");
+  }
+
+  relationProjectColumn() {
+    return this.belongsTo(ProjectColumn, "project_column_id", "id");
   }
 
   relationTaskStatus() {
