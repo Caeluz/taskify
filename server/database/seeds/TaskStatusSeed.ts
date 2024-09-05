@@ -21,6 +21,11 @@ const taskStatusData = [
     name: "Done",
     hex_color: "#0000FF",
   },
+  {
+    id: 4,
+    name: "Review",
+    hex_color: "#FFFF00",
+  },
 ];
 
 const TaskStatusSeed = async () => {

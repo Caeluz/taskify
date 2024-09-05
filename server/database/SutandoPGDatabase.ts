@@ -12,7 +12,4 @@ export const sutandoConnection = sutando.addConnection({
   },
 });
 
-const sutandoDB = sutando.connection();
-
-export default sutandoDB;
-
+export const sutandoDB = sutando.connection();
