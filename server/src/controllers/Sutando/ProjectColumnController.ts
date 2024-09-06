@@ -16,6 +16,7 @@ export const getProjectColumns = async (req: Request, res: Response) => {
   try {
     const projectColumns = await ProjectColumn.query()
       .where("project_id", projectId)
+      .with("taskStatus")
       .get();
 
     return res.status(200).json({ message: "success", data: projectColumns });

@@ -35,7 +35,7 @@ export interface Task {
   taskStatus: TaskStatus;
 }
 
-interface TaskStatus {
+export interface TaskStatus {
   id: number | string;
   name: string;
   hex_color: string;

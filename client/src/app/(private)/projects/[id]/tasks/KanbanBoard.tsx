@@ -23,34 +23,41 @@ import type { Column } from "./BoardColumn";
 import { hasDraggableData } from "./utils";
 import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 import fetchProjectTasks, { updateTaskStatus } from "./api/tasks";
+import { fetchColumns, updateColumnPosition } from "./api/columns";
 
 const defaultCols = [
   {
     id: 1 as const,
     // id: "ToDo" as const,
-    name: "ToDo",
-    title: "Todo",
+    position: 1,
+    taskStatus: {
+      id: 1,
+      name: "toDo",
+      hex_color: "#FF0000",
+    },
   },
   {
     id: 2 as const,
-    // id: "InProgress" as const,
-    name: "InProgress",
-    title: "In progress",
+    position: 2,
+    taskStatus: {
+      id: 2,
+      name: "InProgress",
+      hex_color: "#00FF00",
+    },
   },
   {
     id: 3 as const,
-    // id: "Done" as const,
-    name: "Done",
-    title: "Done",
+    position: 3,
+    taskStatus: {
+      id: 3,
+      name: "Done",
+      hex_color: "#0000FF",
+    },
   },
-  // {
-  //   id: "archived" as const,
-  //   title: "Archived",
-  // },
 ] satisfies Column[];
 
 export type ColumnId = (typeof defaultCols)[number]["id"];
-export type ColumnName = (typeof defaultCols)[number]["name"];
+export type ColumnName = (typeof defaultCols)[number]["taskStatus"]["name"];
 
 const initialTasks: Task[] = [
   {
@@ -127,6 +134,16 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+  const columnsPosition = useMemo(
+    () => columns.map((col) => col.position),
+    [columns]
+  );
+  const columnsName = useMemo(
+    () => columns.map((col) => col.taskStatus.name),
+    [columns]
+  );
+
+  console.log(columnsPosition);
 
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
@@ -146,6 +163,18 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       });
   }, [params.id]);
 
+  // useEffect for fetching columns
+  useEffect(() => {
+    fetchColumns(params.id)
+      .then((response) => {
+        console.log(response);
+        setColumns(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [params.id]);
+
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor)
@@ -153,6 +182,11 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     //   coordinateGetter: coordinateGetter,
     // })
   );
+
+  // Sort columns by position before rendering
+  const sortedColumns = useMemo(() => {
+    return [...columns].sort((a, b) => a.position - b.position);
+  }, [columns]);
 
   return (
     <DndContext
@@ -165,9 +199,11 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
         <SortableContext items={columnsId}>
           {columns.map((col) => (
             <BoardColumn
-              key={col.id}
+              key={col.position}
               column={col}
-              tasks={tasks.filter((task) => task.taskStatus?.name === col.name)}
+              tasks={tasks.filter(
+                (task) => task.taskStatus?.name === col.taskStatus.name
+              )}
             />
           ))}
         </SortableContext>
@@ -181,7 +217,8 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
                 isOverlay
                 column={activeColumn}
                 tasks={tasks.filter(
-                  (task) => task.taskStatus.name === activeColumn.name
+                  (task) =>
+                    task.taskStatus.name === activeColumn.taskStatus.name
                 )}
               />
             )}
@@ -216,6 +253,8 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     const activeId = active.id;
     const overId = over.id;
 
+    console.log(active);
+
     console.log("onDragEnd active", active);
     console.log("onDragEnd over", over);
 
@@ -223,15 +262,19 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     // console.log("Over ID:", overId);
 
     if (!hasDraggableData(active)) return;
-
-    // Update the task status when the task is dropped in a different column
-    updateTaskStatus(
-      params.id,
-      over.id,
-      over?.data?.current?.task.taskStatus.id
-    ).catch((error) => console.error("Error updating task status:", error));
-
     const activeData = active.data.current;
+
+    const isActiveAColumn = activeData?.type === "Column";
+    const isActiveATask = activeData?.type === "Task";
+
+    if (isActiveATask) {
+      // Update the task status when the task is dropped in a different column
+      updateTaskStatus(
+        params.id,
+        over.id,
+        over?.data?.current?.task?.taskStatus.id
+      ).catch((error) => console.error("Error updating task status:", error));
+    }
 
     if (activeId === overId) {
       console.log("Active ID and Over ID are the same");
@@ -240,19 +283,23 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       console.log("Active ID and Over ID are different");
     }
 
-    const isActiveAColumn = activeData?.type === "Column";
-    const isActiveATask = activeData?.type === "Task";
-    // if (!isActiveAColumn) return;
-
-    // console.log("isActiveAtask", isActiveATask);
-
     setColumns((columns) => {
       const activeColumnIndex = columns.findIndex(
-        (col) => col.name === activeId
+        (col) => col.taskStatus.name === activeId
       );
 
-      const overColumnIndex = columns.findIndex((col) => col.name === overId);
+      const overColumnIndex = columns.findIndex(
+        (col) => col.taskStatus.name === overId
+      );
 
+      console.log("Active Column Index:", activeColumnIndex);
+      console.log("Over Column Index:", overColumnIndex);
+
+      updateColumnPosition(
+        params.id,
+        active?.data?.current?.column.id,
+        overColumnIndex + 1
+      );
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
   }
@@ -315,7 +362,9 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
         const activeTask = tasks[activeIndex];
         if (activeTask) {
-          const columnId = columns.find((col) => col.name === overId)?.id;
+          const columnId = columns.find(
+            (col) => col.taskStatus.name === overId
+          )?.id;
           if (columnId) {
             activeTask.taskStatus.name = overId as ColumnName;
             activeTask.taskStatus.id = columnId;

@@ -45,11 +45,18 @@ import { Task, TaskCard } from "./TaskCard";
 import { Ellipsis, GripVertical } from "lucide-react";
 
 import { EllipsisVertical } from "lucide-react";
+import { TaskStatus } from "./TaskCard";
+
+// export interface Column {
+//   id: UniqueIdentifier;
+//   name: UniqueIdentifier;
+//   title: string;
+// }
 
 export interface Column {
   id: UniqueIdentifier;
-  name: UniqueIdentifier;
-  title: string;
+  position: number;
+  taskStatus: TaskStatus;
 }
 
 export type ColumnType = "Column";
@@ -78,13 +85,13 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
     transition,
     isDragging,
   } = useSortable({
-    id: column.name,
+    id: column.taskStatus.name,
     data: {
       type: "Column",
       column,
     } satisfies ColumnDragData,
     attributes: {
-      roleDescription: `Column: ${column.title}`,
+      roleDescription: `Column: ${column.taskStatus.name}`,
     },
   });
 
@@ -123,10 +130,10 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
             {...listeners}
             className="p-1 text-primary/50 -ml-2 h-auto cursor-grab relative"
           >
-            <span className="sr-only">{`Move column: ${column.title}`}</span>
+            <span className="sr-only">{`Move column: ${column.taskStatus.name}`}</span>
             <GripVertical />
           </Button>
-          <span className="ml-2">{column.title}</span>
+          <span className="ml-2">{column.taskStatus.name}</span>
         </div>
 
         <DropdownMenu>
