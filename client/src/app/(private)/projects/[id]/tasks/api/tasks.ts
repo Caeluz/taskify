@@ -75,3 +75,51 @@ export async function updateTaskStatus(
     throw new Error(`Error updating task status: ${error.message}`);
   }
 }
+
+export async function updateTaskStatusAndPosition(
+  projectId: number,
+  taskId: number | string,
+  taskStatusId: number | string,
+  position: number | string
+): Promise<{ message: string; data: any }> {
+  // console.log(1);
+  // console.log(projectId, taskId, taskStatusId, position);
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+    // console.log(projectId, taskId, taskStatusId, position);
+    if (!token?.value) {
+      throw new Error("Unauthorized");
+    }
+    const response = await fetch(
+      `${apiUrl}/projects/${projectId}/tasks/${taskId}/status-position`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.value}`,
+        },
+        body: JSON.stringify({
+          taskStatusId,
+          position,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || response.statusText);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(
+      `Error updating task status and position: ${error.message}`
+    );
+  }
+}
+
+// export async function 

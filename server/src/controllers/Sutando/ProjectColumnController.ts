@@ -16,6 +16,7 @@ export const getProjectColumns = async (req: Request, res: Response) => {
   try {
     const projectColumns = await ProjectColumn.query()
       .where("project_id", projectId)
+      .orderBy("position")
       .with("taskStatus")
       .get();
 

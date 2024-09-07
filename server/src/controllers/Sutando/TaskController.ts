@@ -15,6 +15,8 @@ export const getProjectTasks = async (req: Request, res: Response) => {
   try {
     const projectTasks = await Task.query()
       .where("project_id", projectId)
+      .orderBy("task_status_id", "asc")
+      .orderBy("position", "asc")
       .with("taskStatus")
       .get();
 
@@ -238,11 +240,11 @@ export const updateTaskStatusAndPosition = async (
       const currentPosition = currentTask.position;
 
       // if same
-      if (currentStatusId === taskStatusId && currentPosition === position) {
-        return res.status(200).json({
-          message: "Task status and position are the same. No changes made",
-        });
-      }
+      // if (currentStatusId === taskStatusId && currentPosition === position) {
+      //   return res.status(200).json({
+      //     message: "Task status and position are the same. No changes made",
+      //   });
+      // }
 
       // Step 2: If the status (column) is changing, adjust positions in both old and new columns
       if (currentStatusId !== taskStatusId) {
@@ -305,8 +307,16 @@ export const updateTaskStatusAndPosition = async (
     return res
       .status(200)
       .json({ message: "Task status and position updated successfully" });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    return res.status(500).json({ error: error });
+    if (error.message === "Task not found") {
+      return res.status(404).json({ message: error.message });
+    } else if (
+      error.message === "Task status and position are the same. No changes made"
+    ) {
+      return res.status(200).json({ message: error.message });
+    } else {
+      return res.status(500).json({ error: error.message });
+    }
   }
 };
