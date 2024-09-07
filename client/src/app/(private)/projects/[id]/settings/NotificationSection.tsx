@@ -1,5 +1,4 @@
 import { Switch } from "@/components/ui/switch";
-import AddTaskDialog from "../tasks/AddTaskDialog";
 
 export default function NotificationSection() {
   return (
@@ -9,7 +8,6 @@ export default function NotificationSection() {
         <p className="text-lg font-semibold">Notify for this Project?</p>
         <Switch id="" />
       </div>
-      {/* <AddTaskDialog /> */}
     </div>
   );
 }

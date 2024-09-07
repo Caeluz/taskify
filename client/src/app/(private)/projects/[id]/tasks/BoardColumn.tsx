@@ -5,12 +5,13 @@ import { useDndContext, type UniqueIdentifier } from "@dnd-kit/core";
 import { cva } from "class-variance-authority";
 
 import { ComboBox } from "@/components/ui/combo-box";
-import AddTaskDialog from "./AddTaskDialog";
+import AddTaskDialog from "./AddTaskDialogContent";
 import { CSS } from "@dnd-kit/utilities";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -46,6 +47,7 @@ import { Ellipsis, GripVertical } from "lucide-react";
 
 import { EllipsisVertical } from "lucide-react";
 import { TaskStatus } from "./TaskCard";
+import AddTaskDialogContent from "./AddTaskDialogContent";
 
 // export interface Column {
 //   id: UniqueIdentifier;
@@ -76,6 +78,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
   const tasksIds = useMemo(() => {
     return tasks.map((task) => task.id);
   }, [tasks]);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
   const {
     setNodeRef,
@@ -146,15 +149,41 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setIsAddTaskOpen(true);
+                }}
+              >
                 Add Card
-                {/* <AddTaskDialog /> */}
               </DropdownMenuItem>
               <DropdownMenuItem>Billing</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <Dialog
+          open={isAddTaskOpen}
+          onOpenChange={(isOpen) => {
+            setIsAddTaskOpen(isOpen);
+          }}
+        >
+          <DialogContent>
+            {/* <DialogHeader>
+              <DialogTitle>Are you sure?</DialogTitle>
+              <DialogDescription>
+                Do you want to delete the entry? Deleting this entry cannot be
+                undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button>Delete</Button>
+            </DialogFooter> */}
+            <AddTaskDialogContent />
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <ScrollArea>
         <CardContent className="flex flex-grow flex-col gap-2 p-2">
