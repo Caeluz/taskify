@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -15,11 +17,34 @@ import { ComboBox } from "@/components/ui/combo-box";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 
-export default function AddTaskDialogContent() {
+import { useState } from "react";
+
+import { TaskStatus } from "./TaskCard";
+
+export default function AddTaskDialogContent({
+  taskStatus,
+}: {
+  taskStatus: TaskStatus;
+}) {
+  const [selectedValue, setSelectedValue] = useState<any>(
+    String(taskStatus.id)
+  );
   return (
     <>
       <DialogHeader>Create Task</DialogHeader>
       <Input placeholder="Task Name" />
+
+      <Label>Status:</Label>
+      <ComboBox
+        choices={[
+          { label: "ToDo", value: "1" },
+          { label: "In Progress", value: "2" },
+          { label: "Done", value: "3" },
+          { label: "Archived", value: "4" },
+        ]}
+        value={selectedValue}
+        onChange={setSelectedValue}
+      />
       <Label>Assign To:</Label>
       <ComboBox
         choices={[{ label: "test", value: "test" }]}

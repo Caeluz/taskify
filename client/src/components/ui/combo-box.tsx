@@ -75,7 +75,6 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
     const handleClear = () => {
       onChange(multiple ? [] : "");
     };
-
     const getDisplayValue = () => {
       if (multiple && Array.isArray(value)) {
         return value
@@ -85,6 +84,10 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
         return (
           choices.find((choice) => choice.value === value)?.label || "Select..."
         );
+      }
+      // Else if value has a value before the choices are loaded
+      else if (value) {
+        return value;
       }
       return "Select...";
     };

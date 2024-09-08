@@ -181,7 +181,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
               </DialogClose>
               <Button>Delete</Button>
             </DialogFooter> */}
-            <AddTaskDialogContent />
+            <AddTaskDialogContent taskStatus={column.taskStatus} />
           </DialogContent>
         </Dialog>
       </CardHeader>
