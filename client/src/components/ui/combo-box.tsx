@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/popover";
 import { X } from "lucide-react";
 
+// Update the Choice interface to allow value as number or string
 interface Choice {
-  value: string;
+  value: string | number;
   label: string;
 }
 
@@ -27,8 +28,10 @@ interface ComboBoxProps {
   choices: Choice[];
   className?: string;
   multiple?: boolean;
-  value: string | string[];
-  onChange: (value: string | string[]) => void;
+  value: string | number | undefined | (string | number | undefined)[];
+  onChange: (
+    value: string | number | undefined | (string | number | undefined)[]
+  ) => void;
 }
 
 const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
@@ -59,7 +62,7 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
       };
     }, []);
 
-    const handleSelect = (selectedValue: string) => {
+    const handleSelect = (selectedValue: string | number) => {
       if (multiple) {
         const newValue = Array.isArray(value) ? value : [];
         const updatedValue = newValue.includes(selectedValue)
@@ -73,21 +76,32 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
     };
 
     const handleClear = () => {
-      onChange(multiple ? [] : "");
+      // onChange(multiple ? [] : "");
+      // onChange(multiple ? [] : null);
+      onChange(undefined);
     };
+
     const getDisplayValue = () => {
       if (multiple && Array.isArray(value)) {
         return value
-          .map((v) => choices.find((choice) => choice.value === v)?.label)
+          .map(
+            (v) =>
+              choices.find((choice) => String(choice.value) === String(v))
+                ?.label
+          )
           .join(", ");
-      } else if (!multiple && typeof value === "string") {
+      } else if (
+        !multiple &&
+        (typeof value === "string" || typeof value === "number")
+      ) {
         return (
-          choices.find((choice) => choice.value === value)?.label || "Select..."
+          choices.find((choice) => String(choice.value) === String(value))
+            ?.label || "Select..."
         );
       }
       // Else if value has a value before the choices are loaded
       else if (value) {
-        return value;
+        return String(value);
       }
       return "Select...";
     };
@@ -105,7 +119,11 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
             >
               {getDisplayValue()}
               {value && (
-                <Button variant="ghost" onClick={handleClear} className="">
+                <Button
+                  variant="ghost"
+                  onClick={handleClear}
+                  className="ml-auto"
+                >
                   <X />
                 </Button>
               )}
