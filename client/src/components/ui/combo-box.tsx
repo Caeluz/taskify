@@ -76,33 +76,36 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
     };
 
     const handleClear = () => {
-      onChange(multiple ? [] : "");
+      onChange(multiple ? undefined : "");
     };
 
-    const getDisplayValue = () => {
-      if (multiple && Array.isArray(value)) {
-        return value
-          .map(
-            (v) =>
-              choices.find((choice) => String(choice.value) === String(v))
-                ?.label
-          )
-          .join(", ");
-      } else if (
-        !multiple &&
-        (typeof value === "string" || typeof value === "number")
-      ) {
-        return (
-          choices.find((choice) => String(choice.value) === String(value))
-            ?.label || "Select..."
-        );
-      }
-      // Else if value has a value before the choices are loaded
-      else if (value) {
-        return String(value);
-      }
-      return "Select...";
-    };
+
+   const getDisplayValue = () => {
+     if (multiple && Array.isArray(value)) {
+       if (value.length === 0) {
+         return "Select...";
+       }
+       return value
+         .map(
+           (v) =>
+             choices.find((choice) => String(choice.value) === String(v))?.label
+         )
+         .join(", ");
+     } else if (
+       !multiple &&
+       (typeof value === "string" || typeof value === "number")
+     ) {
+       return (
+         choices.find((choice) => String(choice.value) === String(value))
+           ?.label || "Select..."
+       );
+     }
+     // Else if value has a value before the choices are loaded
+     else if (value) {
+       return String(value);
+     }
+     return "Select...";
+   };
 
     return (
       <div className="w-full flex">
@@ -116,7 +119,7 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
               className={`w-full justify-between ${className}`}
             >
               {getDisplayValue()}
-              {value && (
+              {(multiple ? Array.isArray(value) && value.length > 0 : value) && (
                 <Button
                   variant="ghost"
                   onClick={(e) => {
