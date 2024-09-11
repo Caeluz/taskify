@@ -33,7 +33,8 @@ export async function POST(req: Request, res: NextApiResponse) {
     return new Response("Authentication successful", {
       status: 200,
       headers: {
-        "Set-Cookie": `token=${token}; HttpOnly; Path=/; Max-Age=3600; SameSite=Strict`,
+        // Max age set to 7 days
+        "Set-Cookie": `token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Strict`,
       },
     });
 
