@@ -58,29 +58,42 @@ export const createProjectTask = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    const task = await Task.query().create({
-      project_id: projectId,
-      name: name,
-      description: description,
-      priority: priority,
-      task_status_id: taskStatusId,
-      start_date: startDate,
-      due_date: dueDate,
-    });
+    await sutandoDB.transaction(async (trx) => {
+      // Check if there is a task with position 1
+      const existingTask = await Task.query(trx)
+        .where("project_id", projectId)
+        .where("position", 1)
+        .first();
 
-    for (const member of members) {
-      console.log(member);
-      await TaskMember.query().create({
-        task_id: task.id,
-        project_member_id: member.id,
+      if (existingTask) {
+        // Increment the position of all tasks by 1
+        await Task.query(trx)
+          .where("project_id", projectId)
+          .increment("position", 1);
+      }
+
+      const task = await Task.query(trx).create({
+        project_id: projectId,
+        name: name,
+        description: description,
+        priority: priority,
+        task_status_id: taskStatusId,
+        start_date: startDate,
+        due_date: dueDate,
+        position: 1,
       });
-    }
 
-    // Add members later
+      for (const member of members) {
+        await TaskMember.query(trx).create({
+          task_id: task.id,
+          project_member_id: member.id,
+        });
+      }
+    });
 
     return res
       .status(201)
-      .json({ message: "Successfully created project's task", data: task });
+      .json({ message: "Successfully created project's task" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "error" });
@@ -95,7 +108,7 @@ export const getProjectTask = async (req: Request, res: Response) => {
       .with(
         "projectMembers.user:id,username,email",
         "projectMembers:user_id,id,role",
-        "taskStatus:id,name as status"
+        "taskStatus:id,name,hex_color as hexColor"
       )
       .find(taskId);
 
@@ -107,8 +120,9 @@ export const getProjectTask = async (req: Request, res: Response) => {
       id: projectTask.id,
       name: projectTask.name,
       description: projectTask.description,
+      position: projectTask.position,
       priority: projectTask.priority,
-      status: projectTask.taskStatus,
+      taskStatus: projectTask.taskStatus,
       startDate: projectTask.start_date,
       dueDate: projectTask.due_date,
       members: projectTask.projectMembers.map((member) => ({

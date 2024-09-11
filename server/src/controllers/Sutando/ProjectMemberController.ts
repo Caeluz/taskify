@@ -19,6 +19,7 @@ export const getProjectMembers = async (req: Request, res: Response) => {
       return {
         id: projectMember.id,
         username: projectMember?.user.username,
+        role: projectMember?.role
       };
     });
 
