@@ -33,6 +33,13 @@ export interface Task {
   created_at: string;
   updated_at: string;
   taskStatus: TaskStatus;
+  members?: TaskMember[];
+}
+
+export interface TaskMember {
+  id: UniqueIdentifier;
+  avatar?: string;
+  username: string;
 }
 
 export interface TaskStatus {
@@ -154,7 +161,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         </Card>
       </DialogTrigger>
       <DialogContent className="max-w-[900px] max-h-[80vh] overflow-y-auto">
-        <TaskCardDialogContent />
+        <TaskCardDialogContent taskId={Number(task.id)} />
       </DialogContent>
     </Dialog>
   );

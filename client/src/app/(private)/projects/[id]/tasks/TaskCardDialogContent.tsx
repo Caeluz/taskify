@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,39 +20,56 @@ import {
   PlusIcon,
   Trash2,
 } from "lucide-react";
+import { Task } from "./TaskCard";
+import { fetchProjectTask } from "./api/tasks";
+import { useParams } from "next/navigation";
 
-export default function TaskCardDialogContent() {
+export default function TaskCardDialogContent({ taskId }: { taskId: number }) {
+  const [task, setTask] = useState<Task>();
+
+  let { id: projectId } = useParams<{ id: string }>();
+
+  async function fetchAndSetTask(projectId: string, taskId: number) {
+    try {
+      const data = await fetchProjectTask({ projectId, taskId });
+      setTask(data.data);
+    } catch (error) {
+      console.error("Error fetching task:", error);
+    }
+  }
+
+  useEffect(() => {
+    if (projectId && taskId) {
+      // Check if both projectId and taskId are valid
+      fetchAndSetTask(projectId, taskId);
+    }
+  }, [projectId, taskId]); // Only run when projectId or taskId changes
+
   return (
     <>
       <DialogHeader>
         <DialogTitle>
-          <Badge>Low</Badge>
-          <div className="mt-2">Implement User authentication</div>
+          <Badge>{task?.priority}</Badge>
+          <div className="mt-2">{task?.name}</div>
         </DialogTitle>
         <div className="flex items-center gap-2 text-muted-foreground">
-          <div className="flex items-center gap-1 mb-2">
-            <Calendar className="h-4 w-4" />
-            <span>Due July 15, 2024</span>
-          </div>
+          {task?.due_date && (
+            <div className="flex items-center gap-1 mb-2">
+              <Calendar className="h-4 w-4" />
+              <span>{task.due_date}</span>
+            </div>
+          )}
+
           {/* <div className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
             <span>4:00 PM</span>
           </div> */}
           <div className="flex items-center gap-1"></div>
         </div>
-        {/* <DialogDescription className="mt-5">
-          Implement user authentication using Auth0. This will allow users to
-          sign in and access the application. This will also allow us to track
-          user activity and provide a more personalized experience.
-        </DialogDescription> */}
+
         <div className="grid gap-2">
           <div className="text-muted-foreground">
-            <p>
-              The homepage needs a fresh new look to better showcase our
-              products and services. We want to highlight the key features and
-              benefits, and make it easier for users to navigate to other parts
-              of the site.
-            </p>
+            <p>{task?.description}</p>
           </div>
         </div>
       </DialogHeader>
@@ -60,14 +79,21 @@ export default function TaskCardDialogContent() {
         <div>
           <h4 className="text-lg font-medium">Assigned To</h4>
           <div className="mt-2 flex items-center gap-4">
-            <Avatar>
+            {/* <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>U</AvatarFallback>
             </Avatar>
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>U</AvatarFallback>
-            </Avatar>
+            </Avatar> */}
+            {/* Members using task.members */}
+            {task?.members?.map((member) => (
+              <Avatar key={member.id}>
+                <AvatarImage src={member.avatar} />
+                <AvatarFallback>{member.username[0]}</AvatarFallback>
+              </Avatar>
+            ))}
             <Button variant="ghost" size="icon">
               <PlusIcon className="h-4 w-4" />
               <span className="sr-only">Add person</span>

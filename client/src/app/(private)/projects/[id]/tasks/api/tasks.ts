@@ -33,6 +33,39 @@ export default async function fetchProjectTasks(projectId: number): Promise<{
   }
 }
 
+export async function fetchProjectTask({
+  projectId,
+  taskId,
+}: {
+  projectId: number | string;
+  taskId: number;
+}) {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    const response = await fetch(
+      `${apiUrl}/projects/${projectId}/tasks/${taskId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      }
+    );
+
+    if (!response) {
+      throw new Error(`Error fetching project's tasks`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(`Error fetching project task ${error.message}`);
+  }
+}
+
 export async function updateTaskStatus(
   projectId: number,
   taskId: number | string,
@@ -193,5 +226,43 @@ export async function createTask({
   } catch (error: any) {
     console.error("Error creating task:", error.message);
     throw new Error(`Error creating task: ${error.message}`);
+  }
+}
+
+export async function deleteTask({
+  projectId,
+  taskId,
+}: {
+  projectId: number;
+  taskId: number;
+}): Promise<{ message: string; data: any }> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    if (!token?.value) {
+      throw new Error("Unauthorized");
+    }
+
+    const response = await fetch(
+      `${apiUrl}/projects/${projectId}/tasks/${taskId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error deleting task");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("Error deleting task:", error.message);
+    throw new Error(`Error deleting task: ${error.message}`);
   }
 }

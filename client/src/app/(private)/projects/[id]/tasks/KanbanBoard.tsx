@@ -161,11 +161,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
-  console.log(tasks);
-
-  // How to use createContext for setTasks and tasks here? I would use it for the children addTaskDialogContent and TaskCard
-  // const TaskContext = createContext({ tasks, setTasks });
-
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -204,11 +199,6 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     //   coordinateGetter: coordinateGetter,
     // })
   );
-
-  // Sort columns by position before rendering
-  const sortedColumns = useMemo(() => {
-    return [...columns].sort((a, b) => a.position - b.position);
-  }, [columns]);
 
   return (
     <DndContext
