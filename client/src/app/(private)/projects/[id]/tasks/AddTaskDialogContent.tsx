@@ -17,9 +17,10 @@ import { ComboBox } from "@/components/ui/combo-box";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useRouter } from "next/navigation";
 
-import { TaskStatus } from "./TaskCard";
+import { Task, TaskStatus } from "./TaskCard";
 import {
   Form,
   FormControl,
@@ -32,42 +33,87 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
+import fetchProjectTasks, { createTask } from "./api/tasks";
+import { TaskContext } from "./KanbanBoard";
 
-const formSchema = z.object({
+const createTaskformSchema = z.object({
   // projectId: z.string().optional(),
   name: z.string().min(1),
   description: z.string().min(1),
   members: z.number().int().array().optional(),
-  priority: z.string(), // LOW, MEDIUM, HIGH
+  priority: z.string().min(1, {
+    message: "Please select a priority",
+  }), // LOW, MEDIUM, HIGH
   taskStatusId: z.number({ message: "Please select a status" }).int(),
-  startDate: z.date(),
+  // startDate: z.date(),
   // dueDate: z.date(),
+  dateRange: z.object({
+    from: z.date(),
+    to: z.date().optional(),
+  }),
 });
 
 export default function AddTaskDialogContent({
   taskStatus,
+  onClose,
 }: {
   taskStatus: TaskStatus;
+  onClose: () => void;
 }) {
+  const router = useRouter();
+  const taskContext = useContext(TaskContext);
+
+  if (!taskContext) {
+    throw new Error("TaskContext is not available");
+  }
+
+  const { tasks, setTasks } = taskContext;
+
+  console.log(tasks);
+
   const { id: projectId } = useParams<{ id: string }>();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof createTaskformSchema>>({
+    resolver: zodResolver(createTaskformSchema),
     defaultValues: {
-      // projectId: projectId || "",
       name: "tester",
       // members: [],
       description: "tester",
-      priority: "LOW",
+      priority: "low",
       taskStatusId: Number(taskStatus.id),
-      // startDate: new Date(),
-      // dueDate: new Date(),
+      dateRange: {
+        from: new Date(),
+        to: undefined,
+      },
     },
   });
-  // Get the project id from the URL
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof createTaskformSchema>) {
+    try {
+      const { data } = await createTask({
+        projectId: Number(projectId),
+        description: values.description,
+        members: values.members,
+        name: values.name,
+        priority: values.priority,
+        taskStatusId: values.taskStatusId,
+        dateRange: values.dateRange,
+      });
+      onClose();
+
+      // Update the tasks
+      const updatedTasks = await fetchProjectTasks(Number(projectId));
+      setTasks(updatedTasks.data);
+
+      console.log(updatedTasks);
+
+      // Refresh the page
+      // window.location.reload();
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
+
+    router.refresh();
   }
 
   return (
@@ -136,22 +182,23 @@ export default function AddTaskDialogContent({
               </FormItem>
             )}
           />
-
-          {/* <div className="flex flex-row items-center overflow-auto space-x-4 py-2">
-          <Label className="whitespace-nowrap">From:</Label>
-          <DatePicker dateToday={true} />
-          <Label className="whitespace-nowrap">To:</Label>
-          <DatePicker />
-        </div> */}
           <FormField
             control={form.control}
-            name="startDate"
+            name="dateRange"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date:</FormLabel>
                 <FormControl>
-                  <DatePickerWithRange dateToday={true} {...field}  />
+                  <DatePickerWithRange
+                    dateToday={true}
+                    {...field}
+                    dateValue={field.value}
+                    onDateSelect={({ from, to }) => {
+                      form.setValue("dateRange", { from, to });
+                    }}
+                  />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -165,9 +212,9 @@ export default function AddTaskDialogContent({
                 <FormControl>
                   <ComboBox
                     choices={[
-                      { label: "Low", value: "LOW" },
-                      { label: "Medium", value: "MEDIUM" },
-                      { label: "High", value: "HIGH" },
+                      { label: "Low", value: "low" },
+                      { label: "Medium", value: "medium" },
+                      { label: "High", value: "high" },
                     ]}
                     {...field}
                     value={field.value}
@@ -196,7 +243,9 @@ export default function AddTaskDialogContent({
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="mt-4">
+            Submit
+          </Button>
         </form>
       </Form>
     </>

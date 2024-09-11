@@ -1,5 +1,12 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useContext,
+  createContext,
+} from "react";
 import { createPortal } from "react-dom";
 
 import { BoardColumn, BoardContainer } from "./BoardColumn";
@@ -133,6 +140,12 @@ const initialTasks: Task[] = [
   },
 ];
 
+export const TaskContext = createContext<{
+  tasks: Task[];
+  // setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setTasks: (data: any) => void;
+} | null>(null);
+
 export function KanbanBoard({ params }: { params: { id: number } }) {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const pickedUpTaskColumn = useRef<ColumnId | null>(null);
@@ -146,31 +159,37 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
     [columns]
   );
 
-  console.log(columnsPosition);
-
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  console.log(tasks);
+
+  // How to use createContext for setTasks and tasks here? I would use it for the children addTaskDialogContent and TaskCard
+  // const TaskContext = createContext({ tasks, setTasks });
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
   const [activeTask, setActiveTask] = useState<Task | null>(null);
 
-  // Call the api to get the tasks for the project
-  useEffect(() => {
-    fetchProjectTasks(params.id)
+  // Define the function to fetch and set project tasks
+  const fetchAndSetProjectTasks = async (projectId: number) => {
+    fetchProjectTasks(projectId)
       .then((response) => {
-        console.log(response);
         setTasks(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  // Update the useEffect to use the new function
+  useEffect(() => {
+    fetchAndSetProjectTasks(params.id);
   }, [params.id]);
 
   // useEffect for fetching columns
   useEffect(() => {
     fetchColumns(params.id)
       .then((response) => {
-        console.log(response);
         setColumns(response.data);
       })
       .catch((error) => {
@@ -198,19 +217,21 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
     >
-      <BoardContainer>
-        <SortableContext items={columnsId}>
-          {columns.map((col) => (
-            <BoardColumn
-              key={col.position}
-              column={col}
-              tasks={tasks.filter(
-                (task) => task.taskStatus?.name === col.taskStatus.name
-              )}
-            />
-          ))}
-        </SortableContext>
-      </BoardContainer>
+      <TaskContext.Provider value={{ tasks, setTasks }}>
+        <BoardContainer>
+          <SortableContext items={columnsId}>
+            {columns.map((col) => (
+              <BoardColumn
+                key={col.position}
+                column={col}
+                tasks={tasks.filter(
+                  (task) => task.taskStatus?.name === col.taskStatus.name
+                )}
+              />
+            ))}
+          </SortableContext>
+        </BoardContainer>
+      </TaskContext.Provider>
 
       {typeof window !== "undefined" &&
         createPortal(

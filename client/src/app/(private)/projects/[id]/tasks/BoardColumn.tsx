@@ -181,7 +181,13 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
               </DialogClose>
               <Button>Delete</Button>
             </DialogFooter> */}
-            <AddTaskDialogContent taskStatus={column.taskStatus} />
+            <AddTaskDialogContent
+              taskStatus={column.taskStatus}
+              onClose={() => setIsAddTaskOpen(false)}
+            />
+            {/* <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose> */}
           </DialogContent>
         </Dialog>
       </CardHeader>
