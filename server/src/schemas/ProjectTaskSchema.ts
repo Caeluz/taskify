@@ -17,7 +17,7 @@ export const createProjectTaskSchema = {
     ),
     // .min(1, "At least one member is required"),
     startDate: dateStringToDate,
-    dueDate: dateStringToDate,
+    dueDate: dateStringToDate.optional(),
   }),
   params: z.object({
     projectId: z.string().regex(/^\d+$/).transform(Number),
@@ -32,7 +32,7 @@ export const updateProjectTaskSchema = {
     // status: z.string(),
     taskStatusId: z.number().int().positive(),
     startDate: dateStringToDate,
-    dueDate: dateStringToDate,
+    dueDate: dateStringToDate.optional(),
   }),
   params: z.object({
     projectId: z.string().regex(/^\d+$/).transform(Number),
@@ -41,7 +41,7 @@ export const updateProjectTaskSchema = {
 
 export const updateTaskStatusSchema = {
   body: z.object({
-    taskStatusId: z.number().int()
+    taskStatusId: z.number().int(),
   }),
   params: z.object({
     projectId: z.string().regex(/^\d+$/).transform(Number),

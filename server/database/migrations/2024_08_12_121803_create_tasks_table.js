@@ -27,7 +27,7 @@ module.exports = class extends Migration {
         .references("id")
         .inTable("task_statuses");
       table.dateTime("start_date");
-      table.dateTime("due_date");
+      table.dateTime("due_date").nullable();
       // table.dateTime("completed_at").nullable();
       table.integer("position");
       table.timestamps();
