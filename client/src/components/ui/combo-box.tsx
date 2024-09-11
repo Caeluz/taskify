@@ -76,9 +76,7 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
     };
 
     const handleClear = () => {
-      // onChange(multiple ? [] : "");
-      // onChange(multiple ? [] : null);
-      onChange(undefined);
+      onChange(multiple ? [] : "");
     };
 
     const getDisplayValue = () => {
@@ -121,7 +119,10 @@ const ComboBox = React.forwardRef<HTMLButtonElement, ComboBoxProps>(
               {value && (
                 <Button
                   variant="ghost"
-                  onClick={handleClear}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClear();
+                  }}
                   className="ml-auto"
                 >
                   <X />
