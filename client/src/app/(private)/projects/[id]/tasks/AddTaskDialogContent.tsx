@@ -17,7 +17,7 @@ import { ComboBox } from "@/components/ui/combo-box";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { Task, TaskStatus } from "./TaskCard";
@@ -35,6 +35,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import fetchProjectTasks, { createTask } from "./api/tasks";
 import { TaskContext } from "./KanbanBoard";
+import { fetchProjectMembers } from "./api/members";
 
 const createTaskformSchema = z.object({
   // projectId: z.string().optional(),
@@ -68,10 +69,27 @@ export default function AddTaskDialogContent({
   }
 
   const { tasks, setTasks } = taskContext;
-
-  console.log(tasks);
+  const [projectMembers, setProjectMembers] = useState([]);
 
   const { id: projectId } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    // Fetch project members
+    fetchProjectMembers(projectId)
+      .then((response) => {
+        // Map the response data to the desired format
+        const formattedMembers = response.data.map(
+          (member: { id: number; username: string }) => ({
+            label: member.username,
+            value: member.id,
+          })
+        );
+        setProjectMembers(formattedMembers);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [projectId]);
 
   const form = useForm<z.infer<typeof createTaskformSchema>>({
     resolver: zodResolver(createTaskformSchema),
@@ -104,8 +122,6 @@ export default function AddTaskDialogContent({
       // Update the tasks
       const updatedTasks = await fetchProjectTasks(Number(projectId));
       setTasks(updatedTasks.data);
-
-      console.log(updatedTasks);
 
       // Refresh the page
       // window.location.reload();
@@ -165,13 +181,7 @@ export default function AddTaskDialogContent({
                 <FormLabel>Assign To:</FormLabel>
                 <FormControl>
                   <ComboBox
-                    choices={[
-                      { label: "test", value: 1 },
-                      {
-                        label: "tester",
-                        value: 2,
-                      },
-                    ]}
+                    choices={projectMembers}
                     {...field}
                     value={field.value}
                     onChange={field.onChange}
