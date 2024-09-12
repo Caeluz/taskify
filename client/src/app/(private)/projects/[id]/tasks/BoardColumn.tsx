@@ -105,7 +105,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
 
   const variants = cva(
     // "h-[500px] max-h-[500px] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
-    "h-[calc(100vh-207px)] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
+    "min-h-[200px] h-full max-h-[calc(100vh-207px)] w-[350px] max-w-full bg-primary-foreground flex flex-col flex-shrink-0 snap-center",
     {
       variants: {
         dragging: {
@@ -125,7 +125,7 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
         dragging: isOverlay ? "overlay" : isDragging ? "over" : undefined,
       })}
     >
-      <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row justify-between items-center">
+      <CardHeader className="p-4 font-semibold border-b-2 text-left flex flex-row justify-between items-center flex-shrink-0">
         <div className="flex flex-row items-center">
           <Button
             variant={"ghost"}
@@ -191,8 +191,8 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
           </DialogContent>
         </Dialog>
       </CardHeader>
-      <ScrollArea>
-        <CardContent className="flex flex-grow flex-col gap-2 p-2">
+      <ScrollArea className="flex-grow overflow-y-auto" hideRadixScrollbar>
+        <CardContent className="flex flex-col gap-2 p-2">
           <SortableContext items={tasksIds}>
             {tasks.map((task) => (
               <TaskCard key={task.id} task={task} />
@@ -227,7 +227,7 @@ export function BoardContainer({ children }: { children: React.ReactNode }) {
       {/* {children} */}
       {/* </div> */}
 
-      <div className="flex gap-4 items-center flex-row justify-left">
+      <div className="flex gap-4 items-start flex-row justify-left">
         {children}
       </div>
       <ScrollBar orientation="horizontal" />
