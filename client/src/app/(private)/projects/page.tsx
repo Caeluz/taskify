@@ -71,7 +71,7 @@ export default function Project() {
         />
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="m-5" variant="blue">
+            <Button className="m-5" variant="customBlue">
               <Plus className="mr-3 w-5 h-5" />
               <div className="text-base">Create Project</div>
             </Button>
@@ -102,7 +102,7 @@ export default function Project() {
             </div>
             <DialogFooter>
               <Button
-                variant="blue"
+                variant="customBlue"
                 onClick={() => {
                   setProjectCount(projectCount + 1);
                 }}

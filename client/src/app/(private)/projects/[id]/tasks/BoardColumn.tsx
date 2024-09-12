@@ -43,7 +43,7 @@ import {
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
 import { Task, TaskCard } from "./TaskCard";
-import { Ellipsis, GripVertical } from "lucide-react";
+import { Ellipsis, GripVertical, Plus } from "lucide-react";
 
 import { EllipsisVertical } from "lucide-react";
 import { TaskStatus } from "./TaskCard";
@@ -200,6 +200,15 @@ export function BoardColumn({ column, tasks, isOverlay }: BoardColumnProps) {
           </SortableContext>
         </CardContent>
       </ScrollArea>
+      <Button
+        className="p-2 m-3 font-semibold rounded-lg"
+        variant="customBlue"
+        onClick={() => {
+          setIsAddTaskOpen(true);
+        }}
+      >
+        Add Card <Plus width={20} className="ml-2" />
+      </Button>
     </Card>
   );
 }

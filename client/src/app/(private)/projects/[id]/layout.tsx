@@ -49,7 +49,8 @@ export default function Layout({
     if (isCurrentPath("/tasks")) {
       return (
         <Button
-          className="bg-[#3b82f6] text-white"
+          className="font-semibold"
+          variant="customBlue"
           // onClick={() => setColumnCount(columnCount + 1)}
         >
           <CirclePlus className="w-4 mr-2" />
@@ -60,7 +61,7 @@ export default function Layout({
       // Replace this with whatever you want to render for "/members"
       return (
         <Button
-          className="bg-[#3b82f6] text-white"
+          variant="customBlue"
           // onClick={() => setColumnCount(columnCount + 1)}
         >
           <LucideUserPlus className="w-4 mr-2" />
@@ -91,20 +92,19 @@ export default function Layout({
 
   return (
     <div>
-      <div className="flex flex-row justify-between space-x-4 p-6 text-[#3b82f6] font-medium">
+      <div className="flex flex-row justify-between space-x-4 p-6  font-medium">
         <div className="flex flex-row space-x-4 items-center">
           {navLinks.map(({ path, icon: Icon, label }) => (
             <Link key={path} href={`/projects/${projectId}${path}`}>
-              <div
+              <Button
+                variant={isCurrentPath(path) ? "customBlue" : "ghost"}
                 className={`flex flex-row space-x-2 cursor-pointer ${
-                  isCurrentPath(path)
-                    ? "text-white bg-[#3b82f6] p-2 rounded-xl font-semibold"
-                    : ""
+                  isCurrentPath(path) ? "p-3 rounded-xl font-semibold" : ""
                 }`}
               >
                 <Icon />
                 <div>{label}</div>
-              </div>
+              </Button>
             </Link>
           ))}
         </div>

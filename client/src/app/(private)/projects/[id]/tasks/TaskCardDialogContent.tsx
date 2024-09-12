@@ -79,14 +79,6 @@ export default function TaskCardDialogContent({ taskId }: { taskId: number }) {
         <div>
           <h4 className="text-lg font-medium">Assigned To</h4>
           <div className="mt-2 flex items-center gap-4">
-            {/* <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar> */}
             {/* Members using task.members */}
             {task?.members?.map((member) => (
               <Avatar key={member.id}>
