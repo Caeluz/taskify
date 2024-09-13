@@ -77,8 +77,8 @@ const initialTasks: Task[] = [
     description: "Description 1",
     priority: "high",
     task_status_id: 1,
-    start_date: "2021-08-01",
-    due_date: "2021-08-10",
+    startDate: "2021-08-01",
+    dueDate: "2021-08-10",
     created_at: "2021-08-01",
     updated_at: "2021-08-01",
     taskStatus: {
@@ -94,8 +94,8 @@ const initialTasks: Task[] = [
     description: "Description 2",
     priority: "medium",
     task_status_id: 2,
-    start_date: "2021-08-01",
-    due_date: "2021-08-10",
+    startDate: "2021-08-01",
+    dueDate: "2021-08-10",
     created_at: "2021-08-01",
     updated_at: "2021-08-01",
     taskStatus: {
@@ -111,8 +111,8 @@ const initialTasks: Task[] = [
     description: "Description 3",
     priority: "low",
     task_status_id: 3,
-    start_date: "2021-08-01",
-    due_date: "2021-08-10",
+    startDate: "2021-08-01",
+    dueDate: "2021-08-10",
     created_at: "2021-08-01",
     updated_at: "2021-08-01",
     taskStatus: {
@@ -128,8 +128,8 @@ const initialTasks: Task[] = [
     description: "Description 4",
     priority: "high",
     task_status_id: 4,
-    start_date: "2021-08-01",
-    due_date: "2021-08-10",
+    startDate: "2021-08-01",
+    dueDate: "2021-08-10",
     created_at: "2021-08-01",
     updated_at: "2021-08-01",
     taskStatus: {

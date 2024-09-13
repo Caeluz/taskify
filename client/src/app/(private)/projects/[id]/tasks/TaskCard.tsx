@@ -29,8 +29,8 @@ export interface Task {
   description: string;
   priority: string;
   task_status_id: number;
-  start_date: string;
-  due_date: string;
+  startDate: string;
+  dueDate: string;
   created_at: string;
   updated_at: string;
   taskStatus: TaskStatus;

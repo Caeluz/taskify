@@ -24,10 +24,23 @@ import {
   Trash2,
 } from "lucide-react";
 import { Task, TaskMember } from "./TaskCard";
-import fetchProjectTasks, { deleteTask, fetchProjectTask } from "./api/tasks";
+import fetchProjectTasks, {
+  deleteTask,
+  fetchProjectTask,
+  updateTask,
+} from "./api/tasks";
 import { useParams } from "next/navigation";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { TaskContext } from "./KanbanBoard";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 
 const priorityColors: { [key in "low" | "medium" | "high"]: string } = {
   low: "bg-green-100 text-green-800",
@@ -88,59 +101,153 @@ export default function TaskCardDialogContent({
     }
   }
 
+  const [newComment, setNewComment] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState<Task>();
+
+  const handleEditTask = () => {
+    setIsEditing(true);
+    setEditedTask(task);
+  };
+
+  const handleSaveTask = () => {
+    setTask(editedTask);
+
+    console.log("Saving task", editedTask);
+
+    // updateTask({
+    //   projectId,
+    //   taskId,
+    //   name: editedTask?.name || "",
+    //   description: editedTask?.description || "",
+    //   // members: editedTask?.members?.map((member) => member.id) || [],
+    //   priority: editedTask?.priority || "low",
+    //   // taskStatusId: editedTask?.taskStatusId || 1,
+    //   startDate: editedTask?.start_date || "",
+    //   dueDate: editedTask?.due_date || "",
+    // });
+
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditedTask(task);
+  };
+
   return (
     <>
       <DialogHeader className="flex flex-row items-center justify-between">
         <div>
-          <DialogTitle className="flex items-center gap-2">
-            <Badge
-              className={`${
-                priorityColors[
-                  (task?.priority as "low" | "medium" | "high") || "low"
-                ]
-              }`}
-            >
-              {task?.priority}
-            </Badge>
-            <span className="text-2xl font-bold">{task?.name}</span>
-          </DialogTitle>
+          {isEditing ? (
+            <div className="flex items-center gap-2">
+              <Select
+                value={editedTask?.priority}
+                onValueChange={(value) =>
+                  setEditedTask({
+                    ...editedTask,
+                    priority: value as "low" | "medium" | "high",
+                  } as Task)
+                }
+              >
+                <SelectTrigger className="w-[100px]">
+                  <SelectValue placeholder="Priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+              <Input
+                value={editedTask?.name}
+                onChange={(e) =>
+                  setEditedTask({ ...editedTask, name: e.target.value } as Task)
+                }
+                className="text-2xl font-bold"
+              />
+            </div>
+          ) : (
+            <DialogTitle className="flex items-center gap-2">
+              <Badge>{task?.priority}</Badge>
+              <span className="text-2xl font-bold">{task?.name}</span>
+            </DialogTitle>
+          )}
           <div className="flex items-center gap-4 text-muted-foreground mt-2">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              <span>{task?.due_date}</span>
+              {isEditing ? (
+                <DatePickerWithRange
+                  // dateValue={}
+                  // onDateSelect={}
+                  // type="date"
+                  // value={editedTask?.due_date}
+                  // onChange={(e) =>
+                  //   setEditedTask({ ...editedTask, due_date: e.target.value })
+                  // }
+                  className="w-[150px]"
+                />
+              ) : (
+                <span>{`${task?.startDate} to ${task?.dueDate}`}</span>
+              )}
             </div>
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
               <span>4:00 PM</span>
-            </div>
+            </div> */}
           </div>
         </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="destructive" size="icon">
-              <Trash2 className="h-4 w-4" />
-              <span className="sr-only">Delete task</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                Are you sure you want to delete this task?
-              </DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete the
-                task and all associated data.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose>Cancel</DialogClose>
-              <Button onClick={handleDeleteTask}>Delete</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <div className="flex gap-2">
+          {isEditing ? (
+            <>
+              <Button variant="outline" onClick={handleCancelEdit}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveTask}>
+                {/* <Save className="h-4 w-4 mr-2" /> */}
+                Save
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" onClick={handleEditTask}>
+                {/* <Edit2 className="h-4 w-4 mr-2" /> */}
+                Edit
+              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" size="icon">
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Delete task</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      Are you sure you want to delete this task?
+                    </DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      the task and all associated data.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose>Cancel</DialogClose>
+                    <Button onClick={handleDeleteTask}>Delete</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </>
+          )}
+        </div>
       </DialogHeader>
       <div className="mt-4 space-y-6">
-        <DescriptionSection description={task?.description} />
+        <DescriptionSection
+          description={task?.description}
+          isEditing={isEditing}
+          editedTask={editedTask}
+          setEditedTask={setEditedTask}
+        />
         <AssignedToSection members={task?.members} />
         <AttachmentsSection />
         <CommentsSection />
@@ -149,11 +256,36 @@ export default function TaskCardDialogContent({
   );
 }
 
-function DescriptionSection({ description }: { description?: string }) {
+function DescriptionSection({
+  description,
+  isEditing,
+  editedTask,
+  setEditedTask,
+}: {
+  description?: string;
+  isEditing?: boolean;
+  editedTask: Task | undefined;
+  setEditedTask: (task: Task) => void;
+}) {
   return (
     <div>
       <h4 className="text-lg font-medium mb-2">Description</h4>
-      <p className="text-muted-foreground">{description}</p>
+      {isEditing ? (
+        <Textarea
+          value={editedTask?.description}
+          onChange={(e) =>
+            setEditedTask({
+              ...editedTask,
+              description: e.target.value,
+            } as Task)
+          }
+          className="min-h-[100px]"
+        />
+      ) : (
+        <p>{description}</p>
+      )}
+      {/* <Textarea placeholder="Add a description..." className="min-h-[100px]" /> */}
+      {/* <p className="text-muted-foreground">{description}</p> */}
     </div>
   );
 }

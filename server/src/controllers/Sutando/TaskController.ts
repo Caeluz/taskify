@@ -178,6 +178,9 @@ export const deleteProjectTask = async (req: Request, res: Response) => {
   const { projectId, taskId } = req.params;
 
   try {
+    // Delete also the task_members
+    await TaskMember.query().where("task_id", taskId).delete();
+
     const projectTask = await Task.query()
       .where("project_id", projectId)
       .where("id", taskId)
