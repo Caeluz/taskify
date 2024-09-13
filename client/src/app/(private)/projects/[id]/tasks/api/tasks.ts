@@ -1,7 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
 
-export default async function fetchProjectTasks(projectId: number): Promise<{
+export default async function fetchProjectTasks(
+  projectId: number | string
+): Promise<{
   message: string;
   data: any;
 }> {
@@ -233,7 +235,7 @@ export async function deleteTask({
   projectId,
   taskId,
 }: {
-  projectId: number;
+  projectId: number | string;
   taskId: number;
 }): Promise<{ message: string; data: any }> {
   try {

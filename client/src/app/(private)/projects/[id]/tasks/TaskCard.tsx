@@ -1,3 +1,5 @@
+"use client";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,7 +21,6 @@ import { GripVertical, MessageSquareMore, Paperclip } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import TaskCardDialogContent from "./TaskCardDialogContent";
-import { useEffect } from "react";
 
 export interface Task {
   id: UniqueIdentifier;
@@ -79,6 +80,8 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     },
   });
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const style = {
     transition,
     transform: CSS.Translate.toString(transform),
@@ -94,7 +97,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
   });
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
       <DialogTrigger asChild>
         <Card
           ref={setNodeRef}
@@ -161,7 +164,11 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
         </Card>
       </DialogTrigger>
       <DialogContent className="max-w-[900px] max-h-[80vh] overflow-y-auto">
-        <TaskCardDialogContent taskId={Number(task.id)} />
+        <TaskCardDialogContent
+          taskId={Number(task.id)}
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+        />
       </DialogContent>
     </Dialog>
   );
