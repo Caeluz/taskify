@@ -27,7 +27,11 @@ npm install
 Create a `.env` file in the root directory of the project. Add the following environment variables:
 
 ```env
-DATABASE_URL=postgres://user:password@localhost:5432/database
+<!-- DATABASE_URL=postgres://user:password@localhost:5432/database -->
+DB_HOST=localhost
+DB_NAME=taskify
+DB_USER=postgres
+DB_PASSWORD= 'your password'
 ```
 
 ## 4. Run the server

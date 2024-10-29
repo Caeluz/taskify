@@ -160,7 +160,7 @@ export const updateProjectTask = async (req: Request, res: Response) => {
       name,
       description,
       priority,
-      task_status_id: taskStatusId,
+      // task_status_id: taskStatusId,
       start_date: startDate,
       due_date: dueDate,
     });

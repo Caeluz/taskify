@@ -238,7 +238,7 @@ export async function updateTask({
   description,
   members,
   priority,
-  // taskStatusId,
+  taskStatusId,
   startDate,
   dueDate,
 }: {
@@ -248,10 +248,10 @@ export async function updateTask({
   description: string;
   members?: number[];
   priority: string;
-  // taskStatusId: number;
+  taskStatusId: number;
   // dateRange: { from: Date; to?: Date };
-  startDate: string;
-  dueDate: string;
+  startDate: string | Date | undefined;
+  dueDate: string | Date | undefined;
 }): Promise<{ message: string; data: any }> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -279,9 +279,9 @@ export async function updateTask({
           description,
           members: formattedMembers,
           priority,
-          // taskStatusId,
-          startDate: startDate,
-          dueDate: dueDate,
+          taskStatusId,
+          startDate,
+          dueDate,
         }),
       }
     );

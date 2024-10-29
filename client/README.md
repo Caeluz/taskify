@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, create a `.env` file in the client folder and add the following environment variable:
+
+```env
+NEXT_PUBLIC_BACKEND_API_URL=...
+```
+
+Second, run the development server:
 
 ```bash
 npm run dev
