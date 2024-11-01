@@ -132,9 +132,6 @@ export default function TaskCardDialogContent({
     name: z.string().min(2).optional(),
     description: z.string().min(1).optional(),
     priority: z.enum(["low", "medium", "high"]).optional(),
-    // members: z.array(z.number()),
-    // startDate: z.date(),
-    // dueDate: z.date(),
     dateRange: z
       .object({
         from: z.date(),
@@ -145,19 +142,18 @@ export default function TaskCardDialogContent({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: task?.name || "hello",
-      priority: task?.priority as "low" | "medium" | "high",
-      // dateRange: {
-      //   from: new Date(task?.startDate || ""),
-      //   to: task?.dueDate ? new Date(task.dueDate) : undefined,
-      // },
-    },
+    defaultValues: {},
   });
 
-  // useEffect(() => {
-  //   form.reset();
-  // }, [task, form]);
+  // Like a default value for editing task
+  useEffect(() => {
+    form.setValue("name", task?.name);
+    form.setValue("priority", task?.priority as "low" | "medium" | "high");
+    form.setValue("dateRange", {
+      from: new Date(task?.startDate || ""),
+      to: new Date(task?.dueDate || ""),
+    });
+  }, [task, form]);
 
   const handleEditTask = () => {
     setIsEditing(true);
@@ -170,36 +166,40 @@ export default function TaskCardDialogContent({
     // console.log();
     try {
       // Combine form values with other edited task data
-      const updatedTask = {
-        ...editedTask,
-        id: editedTask?.id || "", // Ensure id is not undefined
+      const updatedTask: Task = {
+        id: editedTask?.id || "",
         name: values.name || "",
         priority: values.priority || "low",
-        project_id: projectId,
+        project_id: Number(projectId),
         description: editedTask?.description || "",
-        // startDate: values.dateRange?.from,
-        // dueDate: values.dateRange?.to,
-        // startDate:
-        // task_status_id: editedTask?.task_status_id || 0,
-        startDate: editedTask?.startDate,
-        dueDate: editedTask?.dueDate,
-        task_status_id: editedTask?.taskStatus.id || 0,
-        members: editedTask?.members || [],
+        // Ensure startDate and dueDate are always strings
+        // startDate: editedTask?.startDate || new Date().toISOString(),
+        // dueDate: editedTask?.dueDate || new Date().toISOString(),
+        startDate: values.dateRange?.from || new Date().toISOString(),
+        dueDate: values.dateRange?.to || new Date().toISOString(),
+        task_status_id: Number(editedTask?.taskStatus?.id) || 0,
+        // members: editedTask?.members || [],
+        taskStatus: editedTask?.taskStatus || {
+          id: 0,
+          name: "",
+          hex_color: "",
+        },
       };
       console.table(editedTask);
       // return
       const response = await updateTask({
         projectId,
         taskId,
-        name: updatedTask.name || "",
-        description: updatedTask.description || "",
-        priority: updatedTask.priority || "",
+        name: updatedTask.name,
+        description: updatedTask.description,
+        priority: updatedTask.priority,
         // taskStatusId: updatedTask.task_status_id || 0,
-        taskStatusId: Number(updatedTask.task_status_id),
+        taskStatusId: updatedTask.task_status_id,
         // startDate: values.dateRange?.from,
         // dueDate: values.dateRange?.to,
-        startDate: new Date(editedTask?.startDate || ""),
-        dueDate: updatedTask?.dueDate
+        // Convert strings to Date objects for the API
+        startDate: new Date(updatedTask.startDate),
+        dueDate: updatedTask.dueDate
           ? new Date(updatedTask.dueDate)
           : undefined,
       });
@@ -241,18 +241,9 @@ export default function TaskCardDialogContent({
                           <FormItem>
                             <FormControl>
                               <Select
+                                {...field}
                                 onValueChange={field.onChange}
-                                defaultValue={editedTask?.priority}
-                                // value={editedTask?.priority}
-                                // onValueChange={(value) =>
-                                //   setEditedTask({
-                                //     ...editedTask,
-                                //     priority: value as
-                                //       | "low"
-                                //       | "medium"
-                                //       | "high",
-                                //   } as Task)
-                                // }
+                                // defaultValue={editedTask?.priority
                               >
                                 <SelectTrigger className="w-[100px]">
                                   <SelectValue placeholder="Priority" />

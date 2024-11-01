@@ -29,10 +29,10 @@ export interface Task {
   description: string;
   priority: string;
   task_status_id: number;
-  startDate: string;
-  dueDate: string;
-  created_at: string;
-  updated_at: string;
+  startDate: string | Date;
+  dueDate: string | Date | undefined;
+  created_at?: string;
+  updated_at?: string;
   taskStatus: TaskStatus;
   members?: TaskMember[];
 }
