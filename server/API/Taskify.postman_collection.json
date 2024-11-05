@@ -1,0 +1,1071 @@
+{
+	"info": {
+		"_postman_id": "805c1d43-b118-431a-8f60-33422845f540",
+		"name": "Taskify",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35042330"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Projects",
+					"item": [
+						{
+							"name": "Tasks",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"task 1\",\r\n    \"description\": \"test\",\r\n    \"priority\": \"low\",\r\n    \"taskStatusId\": 2,\r\n        \"members\": [\r\n            // {\"name\": \"test\"}\r\n            // {\"id\": 2},\r\n            {\"id\": 1}\r\n        ],\r\n    \"startDate\": \"2024-01-02T00:00:00\"\r\n    // \"dueDate\": \"2024-01-03\"\r\n\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Show",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/7",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"7"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\": \"testser\",\r\n    \"description\": \"\",\r\n    // \"status\": \"completed\",\r\n    \"taskStatusId\": 1,\r\n    \"priority\": \"low\",\r\n    \"startDate\": \"2024-02-01\",\r\n    \"dueDate\": \"2024-02-02\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/7",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"7"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/23",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"23"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Task Members",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"memberIds\": [5]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/1/members",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"1",
+												"members"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Task Status",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"taskStatusId\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/1/status",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"1",
+												"status"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Task Status and Position",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"taskStatusId\": 1,\r\n    \"position\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/tasks/5/status-position",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"tasks",
+												"5",
+												"status-position"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Members",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/members",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"members"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\": 1,\r\n    \"role\": \"tester\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/members",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"members"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Show",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"userId\": 1,\r\n    \"role\": \"tester\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/members/2",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"members",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"role\": \"testerss\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/members/1",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"members",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Copy",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/members/1",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"members",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Overview",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/overview",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"overview"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Calendar",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/overview/calendar?date=2024-08-16",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"overview",
+												"calendar"
+											],
+											"query": [
+												{
+													"key": "date",
+													"value": "2024-08-16"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Columns",
+							"item": [
+								{
+									"name": "Index",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/columns",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"columns"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"taskStatusId\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/columns",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"columns"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Status",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"taskStatusId\": 4\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/columns/1/status",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"columns",
+												"1",
+												"status"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Order",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    // \"taskStatusId\": \r\n    \"position\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/projects/1/columns/1/position",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"projects",
+												"1",
+												"columns",
+												"1",
+												"position"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Index",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/1/projects",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"1",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Index Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/1/projects/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"1",
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Lorem Ipsum\",\r\n    \"description\": \"Test\",\r\n    \"status\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/2/projects",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"2",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Lorem Ipsum\",\r\n    \"description\": \"Test\",\r\n    \"status\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/2/projects/7",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"2",
+										"projects",
+										"7"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ0ZXN0ZXIiLCJpYXQiOjE3MjMxNjk5OTQsImV4cCI6MTcyMzE3MzU5NH0.j_uFa4rDiZSOWKE67cwGSIsrAeL9y0pRYJrzXGIzPcg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",  \r\n    \"email\": \"test@7.com\",\r\n    \"password\": \"test123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"test123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "Index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/projects",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"projects"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response JSON\r",
+							"const responseJson = pm.response.json();\r",
+							"\r",
+							"// Extract the token from the response\r",
+							"const token = responseJson.token;\r",
+							"\r",
+							"// Set the token as an environment variable\r",
+							"if (token) {\r",
+							"    pm.environment.set('token', token);\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\", \r\n    // \"email\": \"test@gmail.com\",\r\n    \"password\": \"tester\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "test",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5YzU2OGQzNi1hOGJmLTQ3OTUtYTg0Ni0xODI4M2ZkYzhlZTIiLCJqdGkiOiJmMWQ3OTE3MTE5ZWQ0YjdmNGY3ODc2ODE4OGU3N2E4OTUxZDI4ZGFjY2U2MTQ0ZjBiYWJkMWRjOWZlNjJmNjBhZWI5ZjljMmQ2NzJlMDFhOCIsImlhdCI6MTcxODk1NjIxMS40NjY3ODgsIm5iZiI6MTcxODk1NjIxMS40NjY3OTEsImV4cCI6MTc1MDQ5MjIxMS40NTUxNSwic3ViIjoiMSIsInNjb3BlcyI6W119.xAxZoCKDkGWAwPhXYpJi6G3tF7HRnZTyJN5622OmuzWIoxPDx-rHjgLpcVRAvJcBbVk3zXPV53cy8oXygn_wztSspybxDD9o-_sKHWzeMjSuDLHpDN9Dmpovu8wcyOJN2FTFYp7GueIFy6CRcd6HkzsRBSn_-7ANgUb9au2no0glk9c4mLDJvAVp19ZtQjQ13K1m2OW4nP8z5tzeVo1w36pRi8Lh5z8fvwhdXRrPj14ASn82TnpmOmshZz7iF8s6FSJh5X5uyKqFY6eDcX9sRg-H3DHv_3VNv8pq18dRuJ2aTS2tFXAxGkGGbhnz9jY2LusEi57X1JKXAM-ELt0AsxgJjSgyoGLabfa8RL0qeMvGcjM_x_JokXDD5BUmKL8-krv4_YxuZALzw67VgpYoTigcEthOnMMtkJgq9scH8xFGHjXTWmqXeUaCX2v3__gB-0dK9Z6htJfXVSfvAFP0XVKWwNlkoCh5FESRFdX2E0ZAa7MhFhhMSGhFTYS6DjD1qoBLG9DIF6lor45rH9KWAtX0KedxbknJqtFCjsPdA768UfN6zKlOgi_yHYfeYuOTa6kXVGeRO5J5AuN-gBT2pLFVUgc4KCUl1K-fvm1wXdxZD1sb5KYEpiIFpt7dqCZ9Jz7AZC9MueEb7UXPpIM0_fsCf8M5oFz16N35xe6nQOw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"tester\", \r\n    // \"email\": \"test@gmail.com\",\r\n    \"password\": \"test123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
