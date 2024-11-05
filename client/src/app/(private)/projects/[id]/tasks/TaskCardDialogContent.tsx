@@ -22,6 +22,7 @@ import {
   PlusIcon,
   Send,
   Trash2,
+  X,
 } from "lucide-react";
 import { Task, TaskMember } from "./TaskCard";
 import fetchProjectTasks, {
@@ -54,6 +55,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { fetchProjectMembers } from "./api/members";
 
 const priorityColors: { [key in "low" | "medium" | "high"]: string } = {
   low: "bg-green-100 text-green-800",
@@ -81,6 +83,13 @@ export default function TaskCardDialogContent({
   setIsDialogOpen: (isDialogOpen: boolean) => void;
 }) {
   const [task, setTask] = useState<Task>();
+  const [newComment, setNewComment] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState<Task>();
+  const [newMember, setNewMember] = useState("");
+
+  // For putting the members from an api
+  const [projectMembers, setProjectMembers] = useState([]);
 
   let { id: projectId } = useParams<{ id: string }>();
   const taskContext = useContext(TaskContext);
@@ -94,6 +103,7 @@ export default function TaskCardDialogContent({
   useEffect(() => {
     if (projectId && taskId) {
       fetchAndSetTask(projectId, taskId);
+      fetchAndSetProjectMembers(projectId);
     }
   }, [projectId, taskId]);
 
@@ -103,6 +113,15 @@ export default function TaskCardDialogContent({
       setTask(data.data);
     } catch (error) {
       console.error("Error fetching task:", error);
+    }
+  }
+
+  async function fetchAndSetProjectMembers(projectId: string) {
+    try {
+      const data = await fetchProjectMembers(projectId);
+      setProjectMembers(data.data);
+    } catch (error) {
+      console.error("Error fetching project members:", error);
     }
   }
 
@@ -123,10 +142,6 @@ export default function TaskCardDialogContent({
       console.error("Error deleting task:", error);
     }
   }
-
-  const [newComment, setNewComment] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTask, setEditedTask] = useState<Task>();
 
   const formSchema = z.object({
     name: z.string().min(2).optional(),
@@ -162,6 +177,32 @@ export default function TaskCardDialogContent({
     console.table(task);
   };
 
+  const handleAddMember = () => {
+    if (newMember && editedTask) {
+      const newMemberObj: TaskMember = {
+        id: Date.now().toString(),
+        username: newMember,
+        avatar: ``,
+      };
+      setEditedTask({
+        ...editedTask,
+        members: [...(editedTask.members || []), newMemberObj],
+      });
+      setNewMember("");
+    }
+    console.log(newMember);
+  };
+
+  const handleRemoveMember = (memberId: string) => {
+    if (editedTask) {
+      setEditedTask({
+        ...editedTask,
+        members:
+          editedTask.members?.filter((member) => member.id !== memberId) || [],
+      });
+    }
+  };
+
   async function handleSaveTask(values: z.infer<typeof formSchema>) {
     // console.log();
     try {
@@ -178,7 +219,7 @@ export default function TaskCardDialogContent({
         startDate: values.dateRange?.from || new Date().toISOString(),
         dueDate: values.dateRange?.to || new Date().toISOString(),
         task_status_id: Number(editedTask?.taskStatus?.id) || 0,
-        // members: editedTask?.members || [],
+        members: editedTask?.members || [],
         taskStatus: editedTask?.taskStatus || {
           id: 0,
           name: "",
@@ -404,7 +445,15 @@ export default function TaskCardDialogContent({
       </DialogHeader>
 
       <div className="mt-4 space-y-6">
-        <AssignedToSection members={task?.members} />
+        <AssignedToSection
+          // members={editedTask?.members}
+          members={task?.members}
+          isEditing={isEditing}
+          newMember={newMember}
+          setNewMember={setNewMember}
+          onAddMember={handleAddMember}
+          onRemoveMember={handleRemoveMember}
+        />
         <AttachmentsSection />
         <CommentsSection />
       </div>
@@ -460,21 +509,64 @@ function DescriptionSection({
   );
 }
 
-function AssignedToSection({ members }: { members?: TaskMember[] }) {
+function AssignedToSection({
+  members,
+  isEditing,
+  newMember,
+  setNewMember,
+  onAddMember,
+  onRemoveMember,
+}: {
+  members?: TaskMember[];
+  isEditing: boolean;
+  newMember: string;
+  setNewMember: (value: string) => void;
+  onAddMember: () => void;
+  onRemoveMember: (memberId: string) => void;
+}) {
   return (
     <div>
       <h4 className="text-lg font-medium mb-2">Assigned To</h4>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {members?.map((member) => (
-          <Avatar key={member.id}>
-            <AvatarImage src={member.avatar} alt={member.username} />
-            <AvatarFallback>{member.username[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
+          <div key={member.id} className="flex items-center gap-1">
+            <Avatar>
+              <AvatarImage src={member.avatar} alt={member.username} />
+              <AvatarFallback>
+                {member.username[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            {isEditing && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onRemoveMember(member.id)}
+                className="rounded-full h-6 w-6"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         ))}
-        <Button variant="outline" size="icon" className="rounded-full">
-          <PlusIcon className="h-4 w-4" />
-          <span className="sr-only">Add person</span>
-        </Button>
+        {isEditing && (
+          <div className="flex items-center gap-2">
+            <Input
+              value={newMember}
+              onChange={(e) => setNewMember(e.target.value)}
+              placeholder="Add member..."
+              className="w-32"
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onAddMember}
+              className="rounded-full"
+            >
+              <PlusIcon className="h-4 w-4" />
+              <span className="sr-only">Add person</span>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

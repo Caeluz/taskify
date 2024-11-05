@@ -39,6 +39,12 @@ export const updateProjectTaskSchema = {
   }),
 };
 
+export const updateProjectTaskMembersSchema = {
+  body: z.object({
+    memberIds: z.array(z.number().int().positive()),
+  }),
+};
+
 export const updateTaskStatusSchema = {
   body: z.object({
     taskStatusId: z.number().int(),

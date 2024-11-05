@@ -34,7 +34,7 @@ export interface Task {
   created_at?: string;
   updated_at?: string;
   taskStatus: TaskStatus;
-  members?: TaskMember[];
+  members: TaskMember[];
 }
 
 export interface TaskMember {
@@ -118,7 +118,7 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
                 <GripVertical />
               </Button>
               <Badge variant={"outline"} className="ml-auto font-semibold">
-                Low
+                {task.priority}
               </Badge>
             </div>
             <CardTitle className="text-left text-sm">{task.name}</CardTitle>

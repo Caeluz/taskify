@@ -4,6 +4,7 @@ import * as taskController from "../controllers/Sutando/TaskController";
 import { validateData } from "../middleware/validatorMiddleware";
 import {
   createProjectTaskSchema,
+  updateProjectTaskMembersSchema,
   updateProjectTaskSchema,
   updateTaskStatusSchema,
 } from "../schemas/ProjectTaskSchema";
@@ -27,6 +28,11 @@ taskRouter
   .delete(
     "/projects/:projectId/tasks/:taskId",
     taskController.deleteProjectTask
+  )
+  .post(
+    "/projects/:projectId/tasks/:taskId/members",
+    validateData(updateProjectTaskMembersSchema),
+    taskController.updateProjectTaskMembers
   )
   // Update task status
   .put(

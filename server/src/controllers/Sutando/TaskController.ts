@@ -197,6 +197,44 @@ export const deleteProjectTask = async (req: Request, res: Response) => {
   }
 };
 
+export const updateProjectTaskMembers = async (req: Request, res: Response) => {
+  const { projectId, taskId } = req.params;
+  const { memberIds } = req.body;
+
+  try {
+    const task = await Task.query().where("project_id", projectId).find(taskId);
+    // const projectMembers = await ProjectMember.query()
+    //   .where("user_id", 2)
+    //   .where("project_id", projectId)
+    //   .get();
+    // Get the member ids, then loop then check if it's on the project's member
+    // Check if each memberId is part of the project
+    const invalidMemberIds: number[] = [];
+    for (const memberId of memberIds) {
+      const projectMember = await ProjectMember.query()
+        .where("user_id", memberId)
+        .where("project_id", projectId)
+        .first();
+
+      if (!projectMember) {
+        invalidMemberIds.push(memberId);
+      }
+    }
+
+    if (invalidMemberIds.length > 0) {
+      return res.status(400).json({
+        message: "Some member IDs are not part of the project",
+        invalidMemberIds,
+      });
+    }
+
+    return res.status(200).json({ message: 1 });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 export const updateTaskStatus = async (req: Request, res: Response) => {
   const { projectId, taskId } = req.params;
   const { taskStatusId } = req.body;
