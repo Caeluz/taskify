@@ -29,6 +29,7 @@ import fetchProjectTasks, {
   deleteTask,
   fetchProjectTask,
   updateTask,
+  updateTaskMembers,
 } from "./api/tasks";
 import { useParams } from "next/navigation";
 import { DialogTrigger } from "@radix-ui/react-dialog";
@@ -56,6 +57,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { fetchProjectMembers } from "./api/members";
+import AssignedToSection from "./components/TaskCardDialog/AssignedToSection";
 
 const priorityColors: { [key in "low" | "medium" | "high"]: string } = {
   low: "bg-green-100 text-green-800",
@@ -177,32 +179,6 @@ export default function TaskCardDialogContent({
     console.table(task);
   };
 
-  const handleAddMember = () => {
-    if (newMember && editedTask) {
-      const newMemberObj: TaskMember = {
-        id: Date.now().toString(),
-        username: newMember,
-        avatar: ``,
-      };
-      setEditedTask({
-        ...editedTask,
-        members: [...(editedTask.members || []), newMemberObj],
-      });
-      setNewMember("");
-    }
-    console.log(newMember);
-  };
-
-  const handleRemoveMember = (memberId: string) => {
-    if (editedTask) {
-      setEditedTask({
-        ...editedTask,
-        members:
-          editedTask.members?.filter((member) => member.id !== memberId) || [],
-      });
-    }
-  };
-
   async function handleSaveTask(values: z.infer<typeof formSchema>) {
     // console.log();
     try {
@@ -263,6 +239,32 @@ export default function TaskCardDialogContent({
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditedTask(task);
+  };
+
+  const handleUpdateMembers = async (newMembers: TaskMember[]) => {
+    try {
+      // Call your API to update task members
+      await updateTaskMembers({
+        projectId,
+        taskId,
+        memberIds: newMembers.map((m) => m.id),
+      });
+      // Update local state
+      setTask((prev) =>
+        prev
+          ? {
+              ...prev,
+              members: newMembers,
+            }
+          : undefined
+      );
+
+      // Optionally refresh task list
+      const updatedTasks = await fetchProjectTasks(projectId);
+      setTasks(updatedTasks.data);
+    } catch (error) {
+      console.error("Error updating task members:", error);
+    }
   };
 
   return (
@@ -445,7 +447,7 @@ export default function TaskCardDialogContent({
       </DialogHeader>
 
       <div className="mt-4 space-y-6">
-        <AssignedToSection
+        {/* <AssignedToSection
           // members={editedTask?.members}
           members={task?.members}
           isEditing={isEditing}
@@ -453,6 +455,11 @@ export default function TaskCardDialogContent({
           setNewMember={setNewMember}
           onAddMember={handleAddMember}
           onRemoveMember={handleRemoveMember}
+        /> */}
+        <AssignedToSection
+          members={task?.members}
+          projectMembers={projectMembers}
+          onUpdateMembers={handleUpdateMembers}
         />
         <AttachmentsSection />
         <CommentsSection />
@@ -505,69 +512,6 @@ function DescriptionSection({
       )}
       {/* <Textarea placeholder="Add a description..." className="min-h-[100px]" /> */}
       {/* <p className="text-muted-foreground">{description}</p> */}
-    </div>
-  );
-}
-
-function AssignedToSection({
-  members,
-  isEditing,
-  newMember,
-  setNewMember,
-  onAddMember,
-  onRemoveMember,
-}: {
-  members?: TaskMember[];
-  isEditing: boolean;
-  newMember: string;
-  setNewMember: (value: string) => void;
-  onAddMember: () => void;
-  onRemoveMember: (memberId: string) => void;
-}) {
-  return (
-    <div>
-      <h4 className="text-lg font-medium mb-2">Assigned To</h4>
-      <div className="flex flex-wrap items-center gap-2">
-        {members?.map((member) => (
-          <div key={member.id} className="flex items-center gap-1">
-            <Avatar>
-              <AvatarImage src={member.avatar} alt={member.username} />
-              <AvatarFallback>
-                {member.username[0].toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            {isEditing && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onRemoveMember(member.id)}
-                className="rounded-full h-6 w-6"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        ))}
-        {isEditing && (
-          <div className="flex items-center gap-2">
-            <Input
-              value={newMember}
-              onChange={(e) => setNewMember(e.target.value)}
-              placeholder="Add member..."
-              className="w-32"
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onAddMember}
-              className="rounded-full"
-            >
-              <PlusIcon className="h-4 w-4" />
-              <span className="sr-only">Add person</span>
-            </Button>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

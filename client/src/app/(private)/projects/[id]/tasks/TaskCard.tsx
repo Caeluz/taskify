@@ -38,7 +38,7 @@ export interface Task {
 }
 
 export interface TaskMember {
-  id: UniqueIdentifier;
+  id: string;
   avatar?: string;
   username: string;
 }

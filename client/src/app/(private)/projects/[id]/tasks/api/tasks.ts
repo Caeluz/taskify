@@ -1,4 +1,5 @@
 "use server";
+import { UniqueIdentifier } from "@dnd-kit/core";
 import { cookies } from "next/headers";
 
 export default async function fetchProjectTasks(
@@ -228,6 +229,64 @@ export async function createTask({
   } catch (error: any) {
     console.error("Error creating task:", error.message);
     throw new Error(`Error creating task: ${error.message}`);
+  }
+}
+
+export async function updateTaskMembers({
+  projectId,
+  taskId,
+  memberIds,
+}: {
+  projectId: number | string;
+  taskId: number | string;
+  memberIds: number[] | UniqueIdentifier[];
+}) {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    if (!token?.value) {
+      throw new Error("Unauthorized");
+    }
+
+    const response = await fetch(
+      `${apiUrl}/projects/${projectId}/tasks/${taskId}/members`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.value}`,
+        },
+        body: JSON.stringify({
+          memberIds,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      // Try to parse the error response if it's JSON
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (jsonError) {
+        // If the response isn't JSON, fall back to the status text
+        throw new Error(response.statusText);
+      }
+
+      // Use the backend's error message if available
+      const errorMessage =
+        errorData?.details
+          ?.map((detail: any) => `${detail.path}: ${detail.message}`)
+          .join(", ") || response.statusText;
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("Error updating task:", error.message);
+    throw new Error(`Error updating task: ${error.message}`);
   }
 }
 
