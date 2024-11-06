@@ -12,21 +12,40 @@ export const getProjectMembers = async (req: Request, res: Response) => {
   try {
     const projectMembers = await ProjectMember.query()
       .where("project_id", projectId)
-      .with(["user", "project"])
+      .with(["user", "project", "tasks", "tasks.taskStatus"])
+      .withCount("tasks as task_count")
       .get();
 
     const data = projectMembers.map((projectMember: any) => {
+      // Group tasks by status
+      const tasksByStatus = projectMember.tasks.reduce(
+        (acc: any, task: any) => {
+          const statusName = task.taskStatus.name;
+          if (!acc[statusName]) {
+            acc[statusName] = {
+              count: 0,
+              color: task.taskStatus.hex_color,
+            };
+          }
+          acc[statusName].count += 1;
+          return acc;
+        },
+        {}
+      );
+
       return {
         id: projectMember.id,
         username: projectMember?.user.username,
         avatar: projectMember?.user.avatar,
         role: projectMember?.role,
+        total_tasks: parseInt(projectMember.task_count),
+        tasks_by_status: tasksByStatus,
       };
     });
 
     return res.status(200).json({
       message: "Successfully retrieved project members",
-      data: data,
+      data,
     });
   } catch (error) {
     console.log(error);

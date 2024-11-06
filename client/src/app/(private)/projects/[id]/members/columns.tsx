@@ -15,15 +15,24 @@ import {
 
 export type Member = {
   id: string;
-  name: string;
-  position: string;
-  pendingTasks: number;
-  completedTasks: number;
+  username: string;
+  role: string;
+  total_tasks: number;
+  // pendingTasks?: number;
+  // completedTasks?: number;
+  tasks_by_status?: TasksByStatus;
+};
+
+export type TasksByStatus = {
+  [key: string]: {
+    count: number;
+    color: string;
+  };
 };
 
 export const columns: ColumnDef<Member>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "username",
     // header: "Name",
     header: ({ column }) => {
       return (
@@ -31,28 +40,30 @@ export const columns: ColumnDef<Member>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Username
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "position",
-    header: "Position",
+    accessorKey: "role",
+    header: "Role",
   },
   {
-    accessorKey: "pendingTasks",
+    // accessorKey: "pendingCount",
+    accessorFn: (row) => row.tasks_by_status?.InProgress?.count || 0,
     header: "Pending Tasks",
+    // cell: ({ row }) => <div>{row.getValue("pendingCount")}</div>,
   },
   {
-    accessorKey: "completedTasks",
+    // accessorKey: "completedTasks",
+    accessorFn: (row) => row.tasks_by_status?.Done?.count || 0,
     header: "Completed Tasks",
-    // header: () => <div className="text-center">Completed Tasks</div>,
-    // cell: ({ row }) => {
-    //   const completedTasks = row.original.completedTasks;
-    //   return <div className="text-center">{completedTasks}</div>;
-    // },
+  },
+  {
+    accessorKey: "total_tasks",
+    header: "Total Tasks",
   },
   {
     id: "actions",
