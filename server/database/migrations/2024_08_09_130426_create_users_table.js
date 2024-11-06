@@ -8,6 +8,7 @@ module.exports = class extends Migration {
     await schema.createTable("users", (table) => {
       table.increments("id").primary();
       table.string("username").unique();
+      table.string("avatar").nullable();
       table.string("email").unique();
       table.string("password");
       table.string("salt");

@@ -19,7 +19,8 @@ export const getProjectMembers = async (req: Request, res: Response) => {
       return {
         id: projectMember.id,
         username: projectMember?.user.username,
-        role: projectMember?.role
+        avatar: projectMember?.user.avatar,
+        role: projectMember?.role,
       };
     });
 
@@ -78,6 +79,7 @@ export const getProjectMember = async (req: Request, res: Response) => {
 
     const projectMemberData = {
       username: projectMember.user.username,
+      avatar: projectMember?.user.avatar,
       role: projectMember.role,
     };
 
