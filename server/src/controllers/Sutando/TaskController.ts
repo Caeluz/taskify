@@ -203,6 +203,11 @@ export const updateProjectTaskMembers = async (req: Request, res: Response) => {
 
   try {
     const task = await Task.query().where("project_id", projectId).find(taskId);
+
+    if (!task) {
+      return res.status(400).json({ message: "Task not found" });
+    }
+
     // const projectMembers = await ProjectMember.query()
     //   .where("user_id", 2)
     //   .where("project_id", projectId)
@@ -228,7 +233,29 @@ export const updateProjectTaskMembers = async (req: Request, res: Response) => {
       });
     }
 
-    return res.status(200).json({ message: 1 });
+    await task?.related("task_members").delete();
+
+    await task?.related("task_members").createMany(
+      memberIds.map((memberId: number) => ({
+        // task_id: taskId,
+        project_member_id: memberId,
+      }))
+    );
+
+    // await task?.save();
+
+    // Delete existing task members
+    // await TaskMember.query().where("task_id", taskId).delete();
+
+    // Insert new task members
+    // for (const memberId of memberIds) {
+    //   await TaskMember.query().insert({
+    //     task_id: taskId,
+    //     project_member_id: memberId,
+    //   });
+    // }
+
+    return res.status(200).json({ message: "Successfully updated members" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });

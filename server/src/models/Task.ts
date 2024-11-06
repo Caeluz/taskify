@@ -53,7 +53,7 @@ export class Task extends Model {
     );
   }
 
-  // relationTaskMembers() {
-  //   return this.hasMany(TaskMember);
-  // }
+  relationTaskMembers() {
+    return this.hasMany(TaskMember);
+  }
 }

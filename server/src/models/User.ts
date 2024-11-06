@@ -10,6 +10,7 @@ export class User extends Model {
 
   id!: number;
   username!: string;
+  avatar!: string;
   email!: string;
   password!: string;
   salt!: string;

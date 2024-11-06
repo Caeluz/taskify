@@ -15,6 +15,10 @@ export class TaskMember extends Model {
   //   return this.belongsToMany(Task, "task_members");
   // }
 
+  relationTask() {
+    return this.belongsTo(Task);
+  }
+
   // relationProjectMember() {
   //   return this.belongsTo(ProjectMember);
   // }
