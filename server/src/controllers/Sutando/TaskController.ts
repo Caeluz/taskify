@@ -217,7 +217,7 @@ export const updateProjectTaskMembers = async (req: Request, res: Response) => {
     const invalidMemberIds: number[] = [];
     for (const memberId of memberIds) {
       const projectMember = await ProjectMember.query()
-        .where("user_id", memberId)
+        .where("id", memberId)
         .where("project_id", projectId)
         .first();
 
