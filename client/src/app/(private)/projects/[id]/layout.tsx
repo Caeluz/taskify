@@ -14,6 +14,17 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { usePathname } from "next/navigation";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddMembersDialogContent from "./members/AddMembersDialogContent";
+
 export default function Layout({
   children,
   params,
@@ -60,13 +71,18 @@ export default function Layout({
     } else if (isCurrentPath("/members")) {
       // Replace this with whatever you want to render for "/members"
       return (
-        <Button
-          variant="customBlue"
-          // onClick={() => setColumnCount(columnCount + 1)}
-        >
-          <LucideUserPlus className="w-4 mr-2" />
-          Add Members
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="customBlue"
+              // onClick={() => setColumnCount(columnCount + 1)}
+            >
+              <LucideUserPlus className="w-4 mr-2" />
+              Add Members
+            </Button>
+          </DialogTrigger>
+          <AddMembersDialogContent />
+        </Dialog>
       );
     } else if (isCurrentPath("/settings")) {
       // Replace this with whatever you want to render for "/settings"
