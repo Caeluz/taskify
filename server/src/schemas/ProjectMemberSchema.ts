@@ -13,6 +13,22 @@ export const createProjectMemberSchema = {
   //   }),
 };
 
+export const addMultipleProjectMembersSchema = {
+  body: z.object({
+    // userIds: z.array(z.number().min(1)),
+    // role: z.string(),
+    members: z
+      .object({
+        userId: z.number().min(1),
+        role: z.string(),
+      })
+      .array(),
+  }),
+  params: z.object({
+    projectId: z.string().regex(/^\d+$/).transform(Number),
+  }),
+};
+
 export const updateProjectMemberSchema = {
   body: z.object({
     // userId: z.number().min(1),

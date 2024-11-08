@@ -1,4 +1,5 @@
 import {
+  addMultipleProjectMembersSchema,
   createProjectMemberSchema,
   updateProjectMemberSchema,
 } from "./../schemas/ProjectMemberSchema";
@@ -23,6 +24,11 @@ projectMemberRouter
     "/projects/:projectId/members",
     validateData(createProjectMemberSchema),
     projectMemberController.createProjectMember
+  )
+  .post(
+    "/projects/:projectId/members/add-multiple",
+    validateData(addMultipleProjectMembersSchema),
+    projectMemberController.addMultipleProjectMembers
   )
   .get(
     "/projects/:projectId/members/:memberId",

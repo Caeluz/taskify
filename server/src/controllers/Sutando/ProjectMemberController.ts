@@ -84,6 +84,50 @@ export const createProjectMember = async (req: Request, res: Response) => {
   }
 };
 
+export const addMultipleProjectMembers = async (
+  req: Request,
+  res: Response
+) => {
+  const { projectId } = req.params;
+  const { members } = req.body;
+  try {
+    // Check if the user is already a member of the project
+    const existingMembers = await ProjectMember.query()
+      .where("project_id", projectId)
+      .whereIn(
+        "user_id",
+        members.map((member: any) => member.userId)
+      )
+      .get();
+
+    if (existingMembers.count() > 0) {
+      return res
+        .status(400)
+        .json({
+          error: "One or more users are already members of this project",
+        });
+    }
+
+    // Create the new project members
+    const projectMembers = await ProjectMember.query().insert(
+      members.map((member: any) => ({
+        project_id: projectId,
+        user_id: member.userId,
+        role: member.role,
+        created_at: new Date(),
+        updated_at: new Date(),
+      }))
+    );
+
+    return res.status(201).json({
+      message: "Successfully created project members",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getProjectMember = async (req: Request, res: Response) => {
   const { projectId, memberId } = req.params;
   try {
