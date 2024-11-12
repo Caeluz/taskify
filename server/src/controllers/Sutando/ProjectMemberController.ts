@@ -101,11 +101,18 @@ export const addMultipleProjectMembers = async (
       .get();
 
     if (existingMembers.count() > 0) {
-      return res
-        .status(400)
-        .json({
-          error: "One or more users are already members of this project",
-        });
+      return res.status(400).json({
+        error: "One or more users are already members of this project",
+      });
+    }
+
+    // Check if the users exist
+    const userIds = members.map((member: any) => member.userId);
+
+    const users = await User.query().whereIn("id", userIds).get();
+
+    if (users.count() !== userIds.length) {
+      return res.status(400).json({ error: "One or more users do not exist" });
     }
 
     // Create the new project members
@@ -120,7 +127,7 @@ export const addMultipleProjectMembers = async (
     );
 
     return res.status(201).json({
-      message: "Successfully created project members",
+      message: "Successfully added project members",
     });
   } catch (error) {
     console.log(error);
