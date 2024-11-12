@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DialogContent,
   DialogDescription,
@@ -27,6 +27,8 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { set, z } from "zod";
+import { useParams } from "next/navigation";
+import { fetchUsers } from "./api/users";
 
 interface ProjectMember {
   id: string;
@@ -35,26 +37,63 @@ interface ProjectMember {
 }
 
 const formSchema = z.object({
-  username: z.string(),
+  username: z.number(),
   // email: z.string().email(),
   role: z.string(),
+  memberIds: z.array(z.number()),
 });
 
 export default function AddMembersDialogContent() {
-  const [projectMembers, setProjectMembers] = useState<ProjectMember[]>([]);
+  // For api
+  const [users, setUsers] = useState<{ value: number; label: string }[]>([]);
+  // For form
+  const [formUser, setFormUser] = useState<{ value: number; label: string }>();
   const [currentProjectMembers, setCurrentProjectMembers] = useState<
     ProjectMember[]
   >([]);
+  let { id: projectId } = useParams<{ id: string }>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    fetchAndSetUsers();
+  }, []);
+
+  async function fetchAndSetUsers() {
+    try {
+      // const data = await fetchProjectMembers(projectId);
+      const response = await fetchUsers();
+      const data = response.data.map(
+        (user: { id: number; username: string }) => ({
+          value: user.id,
+          label: user.username,
+        })
+      );
+      setUsers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  console.log(users);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
   }
+
+  // Filter out users who are already selected
+  const availableUsers = users.filter(
+    // (user) => !currentProjectMembers.includes(user.value)
+    (user) =>
+      !currentProjectMembers.some((member) => member.username === user.value.toString())
+  );
+
+  console.log("current", currentProjectMembers);
+  console.log("formUser", formUser);
 
   return (
     <DialogContent className="sm:max-w-[700px]">
@@ -79,7 +118,23 @@ export default function AddMembersDialogContent() {
                     <FormItem className="space-y-2">
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="username" {...field} />
+                        {/* <Input placeholder="username" {...field} /> */}
+                        <ComboBox
+                          choices={availableUsers}
+                          {...field}
+                          value={field.value}
+                          // onChange={field.onChange}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            const selectedUser = users.find(
+                              (user) => user.value === value
+                            );
+                            console.log("selectedUser", value);
+                            setFormUser(selectedUser);
+                          }}
+
+                          // multiple
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -133,8 +188,10 @@ export default function AddMembersDialogContent() {
                   setCurrentProjectMembers([
                     ...currentProjectMembers,
                     {
-                      id: "2",
-                      username: form.getValues("username"),
+                      // id: form.getValues("username.label"),
+                      id: formUser?.value?.toString() || "",
+                      username: formUser?.label || "",
+                      // username: form.getValues("username"),
                       // email: form.getValues("email"),
                     },
                   ]);
