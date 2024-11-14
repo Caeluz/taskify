@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { set, z } from "zod";
 import { useParams } from "next/navigation";
-import { fetchUsers } from "./api/users";
+import { fetchUsersforDropdown } from "./api/dropdown";
 
 interface ProjectMember {
   id: string;
@@ -58,26 +58,19 @@ export default function AddMembersDialogContent() {
   });
 
   useEffect(() => {
-    fetchAndSetUsers();
+    fetchAndSetUsersforDropdown();
   }, []);
 
-  async function fetchAndSetUsers() {
+  async function fetchAndSetUsersforDropdown() {
     try {
       // const data = await fetchProjectMembers(projectId);
-      const response = await fetchUsers();
-      const data = response.data.map(
-        (user: { id: number; username: string }) => ({
-          value: user.id,
-          label: user.username,
-        })
-      );
+      const response = await fetchUsersforDropdown(projectId);
+      const data = response.data;
       setUsers(data);
     } catch (error) {
       console.error(error);
     }
   }
-
-  console.log(users);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -89,7 +82,9 @@ export default function AddMembersDialogContent() {
   const availableUsers = users.filter(
     // (user) => !currentProjectMembers.includes(user.value)
     (user) =>
-      !currentProjectMembers.some((member) => member.username === user.value.toString())
+      !currentProjectMembers.some(
+        (member) => member.id === user.value.toString()
+      )
   );
 
   console.log("current", currentProjectMembers);
@@ -247,7 +242,14 @@ export default function AddMembersDialogContent() {
       </div>
       <div className="mt-6 flex justify-end">
         {/* <Button onClick={handleSubmit} disabled={members.length === 0}> */}
-        <Button>
+        <Button
+          onClick={() => {
+            console.log(
+              "currentProjectMembers",
+              currentProjectMembers.map((member) => member.id)
+            );
+          }}
+        >
           Add {currentProjectMembers.length} Member
           {currentProjectMembers.length !== 1 ? "s" : ""} to Project
         </Button>
