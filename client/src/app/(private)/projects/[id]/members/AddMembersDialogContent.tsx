@@ -29,25 +29,32 @@ import { useForm } from "react-hook-form";
 import { set, z } from "zod";
 import { useParams } from "next/navigation";
 import { fetchUsersforDropdown } from "./api/dropdown";
+import { addMultipleProjectMembers } from "./api/members";
 
-interface ProjectMember {
+export interface ProjectMember {
   id: string;
   username: string;
   email?: string;
+  role?: string;
 }
 
 const formSchema = z.object({
   username: z.number(),
+  // username: z.string(),
   // email: z.string().email(),
   role: z.string(),
-  memberIds: z.array(z.number()),
+  // memberIds: z.array(z.number()),
 });
 
 export default function AddMembersDialogContent() {
   // For api
   const [users, setUsers] = useState<{ value: number; label: string }[]>([]);
   // For form
-  const [formUser, setFormUser] = useState<{ value: number; label: string }>();
+  const [formUser, setFormUser] = useState<{
+    value: number | undefined;
+    label: string | undefined;
+    role: string | undefined;
+  }>();
   const [currentProjectMembers, setCurrentProjectMembers] = useState<
     ProjectMember[]
   >([]);
@@ -55,6 +62,10 @@ export default function AddMembersDialogContent() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      // username: "test",
+      // role: "tester",
+    },
   });
 
   useEffect(() => {
@@ -72,10 +83,36 @@ export default function AddMembersDialogContent() {
     }
   }
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  function onAddMembers(values: z.infer<typeof formSchema>) {
+    // onClick={() => {
+    //   setCurrentProjectMembers([
+    //     ...currentProjectMembers,
+    //     {
+    //       id: formUser?.value?.toString() || "",
+    //       username: formUser?.label || "",
+    //     },
+    //   ]);
+    // }}
+    setCurrentProjectMembers([
+      ...currentProjectMembers,
+      {
+        id: formUser?.value?.toString() || "",
+        username: formUser?.label || "",
+        role: formUser?.role,
+      },
+    ]);
     console.log(values);
+  }
+
+  async function onSubmit() {
+    console.log("submit", currentProjectMembers);
+    const data = await addMultipleProjectMembers(
+      projectId,
+      currentProjectMembers
+    );
+    console.log(data);
+
+    // Update the members index
   }
 
   // Filter out users who are already selected
@@ -88,7 +125,7 @@ export default function AddMembersDialogContent() {
   );
 
   console.log("current", currentProjectMembers);
-  console.log("formUser", formUser);
+  // console.log("formUser", formUser);
 
   return (
     <DialogContent className="sm:max-w-[700px]">
@@ -104,8 +141,21 @@ export default function AddMembersDialogContent() {
         <div className="flex-1">
           <h3 className="mb-4 text-sm font-medium">New Member Details</h3>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onAddMembers)}>
               <div className="space-y-4">
+                {/* Test */}
+                {/* <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="test" {...field} type="number" />
+                      </FormControl>
+                      <FormMessage></FormMessage>
+                    </FormItem>
+                  )}
+                /> */}
                 <FormField
                   control={form.control}
                   name="username"
@@ -125,7 +175,11 @@ export default function AddMembersDialogContent() {
                               (user) => user.value === value
                             );
                             console.log("selectedUser", value);
-                            setFormUser(selectedUser);
+                            setFormUser({
+                              label: selectedUser?.label,
+                              value: selectedUser?.value,
+                              role: formUser?.role,
+                            });
                           }}
 
                           // multiple
@@ -135,6 +189,7 @@ export default function AddMembersDialogContent() {
                     </FormItem>
                   )}
                 />
+
                 {/* <FormField
                   control={form.control}
                   name="email"
@@ -166,7 +221,15 @@ export default function AddMembersDialogContent() {
                             ]}
                             {...field}
                             value={field.value}
-                            onChange={field.onChange}
+                            onChange={(value) => {
+                              field.onChange(value);
+                              setFormUser({
+                                // ...formUser,
+                                label: formUser?.label,
+                                value: formUser?.value,
+                                role: String(value),
+                              });
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -179,18 +242,15 @@ export default function AddMembersDialogContent() {
               <Button
                 type="submit"
                 className="w-full mt-6"
-                onClick={() => {
-                  setCurrentProjectMembers([
-                    ...currentProjectMembers,
-                    {
-                      // id: form.getValues("username.label"),
-                      id: formUser?.value?.toString() || "",
-                      username: formUser?.label || "",
-                      // username: form.getValues("username"),
-                      // email: form.getValues("email"),
-                    },
-                  ]);
-                }}
+                // onClick={() => {
+                //   setCurrentProjectMembers([
+                //     ...currentProjectMembers,
+                //     {
+                //       id: formUser?.value?.toString() || "",
+                //       username: formUser?.label || "",
+                //     },
+                //   ]);
+                // }}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add to List
@@ -215,6 +275,7 @@ export default function AddMembersDialogContent() {
                         {currentProjectMember.username}
                       </p>
                       <p className="text-xs text-muted-foreground">
+                        {currentProjectMember.role}
                         {/* {projectMember.email} */}
                       </p>
                     </div>
@@ -243,11 +304,13 @@ export default function AddMembersDialogContent() {
       <div className="mt-6 flex justify-end">
         {/* <Button onClick={handleSubmit} disabled={members.length === 0}> */}
         <Button
+          type="submit"
           onClick={() => {
             console.log(
               "currentProjectMembers",
               currentProjectMembers.map((member) => member.id)
             );
+            onSubmit();
           }}
         >
           Add {currentProjectMembers.length} Member
