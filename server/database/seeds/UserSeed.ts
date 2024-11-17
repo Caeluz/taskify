@@ -10,6 +10,24 @@ const userData = [
     email: "admin@gmail.com",
     password: "tester",
   },
+  {
+    username: "tester1",
+    avatar: "https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_1.png",
+    email: "tester@gmail.com",
+    password: "tester",
+  },
+  {
+    username: "tester2",
+    avatar: "https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_2.png",
+    email: "tester@gmail.com",
+    password: "tester",
+  },
+  {
+    username: "tester3",
+    avatar: "https://cdn.jsdelivr.net/gh/alohe/avatars/png/vibrent_4.png",
+    email: "tester@gmail.com",
+    password: "tester",
+  },
 ];
 
 const UserSeed = async () => {

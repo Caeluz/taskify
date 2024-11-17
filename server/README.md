@@ -34,8 +34,20 @@ DB_USER=postgres
 DB_PASSWORD= 'your password'
 ```
 
-## 4. Run the server
+## 4. Run the migrations
+
+To set up the database, run the following commands:
 
 ```bash
-npm start
+# For adding the migration table
+npx sutando migrate:run
+
+# For seeding the database
+npm run migrate:fresh-seed
+```
+
+## 5. Run the server
+
+```bash
+npm run dev
 ```
