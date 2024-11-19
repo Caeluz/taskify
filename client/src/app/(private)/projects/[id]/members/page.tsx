@@ -6,18 +6,19 @@ import { DataTable } from "@/components/ui/data-table";
 import { columns, Member } from "./columns";
 import { fetchProjectMembers } from "./api/members";
 
+// Zustand
+import { useProjectMembersStore } from "@/store/projectMembersStore";
+
 // export default function Members({ id }: { id: string }) {
 export default function Members() {
   let { id: projectId } = useParams<{ id: string }>();
 
-  const [projectMembers, setProjectMembers] = useState([
-    { name: "John Doe", position: "Back-end", completedTasks: 20 },
-    { name: "Test", position: "Admin", completedTasks: 20 },
-    { name: "Test 2", position: "Project Lead", completedTasks: 20 },
-  ]);
+  // const [projectMembers, setProjectMembers] = useState([]);
 
   // const pathname = usePathname();
   // const projectId = pathname.split("/")[2];
+
+  const { projectMembers, setProjectMembers } = useProjectMembersStore();
 
   useEffect(() => {
     fetchAndSetProjectMembers(projectId);
@@ -32,12 +33,10 @@ export default function Members() {
     }
   }
 
-  console.log(projectMembers);
-
   return (
     <div className="p-4">
       <DataTable
-        columns={columns}
+        columns={columns(projectId, projectMembers, setProjectMembers)}
         // data={[
         //   {
         //     id: "1",

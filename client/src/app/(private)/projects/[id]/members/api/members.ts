@@ -67,3 +67,29 @@ export async function addMultipleProjectMembers(
     throw new Error(`Error adding multiple project members ${error.message}`);
   }
 }
+
+export async function deleteProjectMember(
+  projectId: number | string,
+  memberId: number | string
+): Promise<any> {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    const response = await fetch(
+      `${apiUrl}/projects/${projectId}/members/${memberId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token?.value}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error("Error adding multiple project members");
+    }
+  } catch (error) {}
+}

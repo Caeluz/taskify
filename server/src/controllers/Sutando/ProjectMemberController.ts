@@ -196,7 +196,9 @@ export const deleteProjectMember = async (req: Request, res: Response) => {
       .find(memberId);
 
     projectMember?.delete();
-    return res.status(200).json({ message: "Successfully deleted" });
+    return res
+      .status(200)
+      .json({ message: "Successfully removed project members" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });

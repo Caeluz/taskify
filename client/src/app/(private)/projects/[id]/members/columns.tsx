@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { useParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,12 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteProjectMember, fetchProjectMembers } from "./api/members";
+import { useProjectMembersStore } from "@/store/projectMembersStore";
+import { ProjectMember } from "./AddMembersDialogContent";
 
 export type Member = {
   id: string;
   username: string;
   role: string;
-  total_tasks: number;
+  total_tasks?: number;
   // pendingTasks?: number;
   // completedTasks?: number;
   tasks_by_status?: TasksByStatus;
@@ -30,7 +34,12 @@ export type TasksByStatus = {
   };
 };
 
-export const columns: ColumnDef<Member>[] = [
+// export const columns: ColumnDef<Member>[] = []
+export const columns = (
+  projectId: string,
+  projectMembers: ProjectMember[],
+  setProjectMembers: (members: ProjectMember[]) => void
+): ColumnDef<Member>[] => [
   {
     accessorKey: "username",
     // header: "Name",
@@ -70,6 +79,17 @@ export const columns: ColumnDef<Member>[] = [
     cell: ({ row }) => {
       const member = row.original;
 
+      const handleDelete = async () => {
+        try {
+          await deleteProjectMember(projectId, member.id);
+          // const updatedProjectMembers = await fetchProjectMembers(projectId);
+          // setProjectMembers(updatedProjectMembers.data);
+          setProjectMembers(projectMembers.filter((m) => m.id !== member.id));
+        } catch (error) {
+          console.error("Error removing project member:", error);
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -87,7 +107,10 @@ export const columns: ColumnDef<Member>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Change position</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500">
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={() => handleDelete()}
+            >
               Remove member
             </DropdownMenuItem>
           </DropdownMenuContent>

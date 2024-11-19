@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -46,6 +46,8 @@ export default function Layout({
     [pathname, projectId]
   );
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   function renderContent() {
     // if (isCurrentPath("/overview")) {
     //   return (
@@ -71,7 +73,7 @@ export default function Layout({
     } else if (isCurrentPath("/members")) {
       // Replace this with whatever you want to render for "/members"
       return (
-        <Dialog>
+        <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
           <DialogTrigger asChild>
             <Button
               variant="customBlue"
@@ -81,7 +83,7 @@ export default function Layout({
               Add Members
             </Button>
           </DialogTrigger>
-          <AddMembersDialogContent />
+          <AddMembersDialogContent setIsDialogOpen={setIsDialogOpen} />
         </Dialog>
       );
     } else if (isCurrentPath("/settings")) {

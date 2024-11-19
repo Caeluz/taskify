@@ -29,7 +29,10 @@ import { useForm } from "react-hook-form";
 import { set, z } from "zod";
 import { useParams } from "next/navigation";
 import { fetchUsersforDropdown } from "./api/dropdown";
-import { addMultipleProjectMembers } from "./api/members";
+import { addMultipleProjectMembers, fetchProjectMembers } from "./api/members";
+
+// Zustand
+import { useProjectMembersStore } from "@/store/projectMembersStore";
 
 export interface ProjectMember {
   id: string;
@@ -46,7 +49,11 @@ const formSchema = z.object({
   // memberIds: z.array(z.number()),
 });
 
-export default function AddMembersDialogContent() {
+export default function AddMembersDialogContent({
+  setIsDialogOpen,
+}: {
+  setIsDialogOpen: (isDialogOpen: boolean) => void;
+}) {
   // For api
   const [users, setUsers] = useState<{ value: number; label: string }[]>([]);
   // For form
@@ -58,6 +65,7 @@ export default function AddMembersDialogContent() {
   const [currentProjectMembers, setCurrentProjectMembers] = useState<
     ProjectMember[]
   >([]);
+  const { setProjectMembers } = useProjectMembersStore();
   let { id: projectId } = useParams<{ id: string }>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -112,7 +120,11 @@ export default function AddMembersDialogContent() {
     );
     console.log(data);
 
+    setIsDialogOpen(false);
+
     // Update the members index
+    const updatedProjectMembers = await fetchProjectMembers(projectId);
+    setProjectMembers(updatedProjectMembers.data);
   }
 
   // Filter out users who are already selected
