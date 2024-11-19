@@ -96,6 +96,8 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
     },
   });
 
+  console.log("taskMembers: ", task.members);
+
   return (
     <Dialog onOpenChange={setIsDialogOpen} open={isDialogOpen}>
       <DialogTrigger asChild>
@@ -138,6 +140,12 @@ export function TaskCard({ task, isOverlay }: TaskCardProps) {
               <Paperclip className="w-5" strokeWidth={1} />
             </div>
             <div className="flex flex-row space-x-[-12px] ">
+              {/* {task.members.map((member) => (
+                <Avatar key={member.username}>
+                  <AvatarImage src={member.avatar} alt={member.username} />
+                  <AvatarFallback></AvatarFallback>
+                </Avatar>
+              ))} */}
               <Avatar className="whitespace-nowrap w-6 h-6">
                 <AvatarImage
                   src="https://github.com/shadcn.png"

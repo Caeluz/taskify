@@ -17,24 +17,30 @@ export const getProjectTasks = async (req: Request, res: Response) => {
       .where("project_id", projectId)
       .orderBy("task_status_id", "asc")
       .orderBy("position", "asc")
-      .with("taskStatus")
+      .with("taskStatus", "projectMembers.user")
       .get();
 
-    // const data = projectTasks.map((task: any) => {
-    //   return {
-    //     id: task.id,
-    //     content: task.name,
-    //     description: task.description,
-    //     priority: task.priority,
-    //     columnId: task.status,
-    //     startDate: task.start_date,
-    //     dueDate: task.due_date,
-    //   };
-    // });
+    const data = projectTasks.map((task: any) => {
+      return {
+        id: task.id,
+        name: task.name,
+        description: task.description,
+        priority: task.priority,
+        // columnId: task.status,
+        startDate: task.start_date,
+        dueDate: task.due_date,
+        position: task.position,
+        taskStatus: task.taskStatus,
+        members: task.projectMembers.map((projectMember: any) => ({
+          username: projectMember.user.username,
+          avatar: projectMember.user.avatar,
+        })),
+      };
+    });
 
     return res.status(200).json({
       message: "Successfully retrieved project's tasks",
-      data: projectTasks,
+      data: data,
     });
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
@@ -128,6 +134,7 @@ export const getProjectTask = async (req: Request, res: Response) => {
       members: projectTask.projectMembers.map((member) => ({
         id: member.user.id,
         username: member.user.username,
+        avatar: member.user.avatar,
         role: member.role,
       })),
     };
