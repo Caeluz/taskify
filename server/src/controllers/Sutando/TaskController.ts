@@ -112,7 +112,7 @@ export const getProjectTask = async (req: Request, res: Response) => {
     const projectTask = await Task.query()
       .where("project_id", projectId)
       .with(
-        "projectMembers.user:id,username,email",
+        "projectMembers.user:id,username,email,avatar",
         "projectMembers:user_id,id,role",
         "taskStatus:id,name,hex_color as hexColor"
       )

@@ -38,6 +38,8 @@ export default function AssignedToSection({
   const [selectedMembers, setSelectedMembers] = useState<TaskMember[]>(members);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // console.log("members", members);
+
   useEffect(() => {
     if (isManagingMembers) {
       setSelectedMembers(members);
@@ -47,10 +49,8 @@ export default function AssignedToSection({
   // Filter out already selected members from available members
   const availableMembers =
     projectMembers?.filter(
-      (pm) => !selectedMembers.some((sm) => sm.id === pm.id)
+      (pm) => !selectedMembers.some((sm) => sm.username === pm.username)
     ) || [];
-
-  console.log("available", availableMembers);
 
   const handleAddMember = (memberId: string) => {
     const memberToAdd = projectMembers?.find((m) => m.id === memberId);
