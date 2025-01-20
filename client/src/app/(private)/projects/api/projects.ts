@@ -39,3 +39,26 @@ export default async function fetchProjects(): Promise<{
     throw new Error("Error fetching projects");
   }
 }
+
+export async function createProject(userId: number | string) {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    if (!token?.value) {
+      throw new Error("Unauthorized");
+    }
+
+    const response = await fetch(`${apiUrl}/users/${userId}/projects`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+      // body: JSON.stringify({});
+    });
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(`Error creating project: ${error.message}`);
+  }
+}

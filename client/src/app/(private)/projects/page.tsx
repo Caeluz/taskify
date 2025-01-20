@@ -35,6 +35,7 @@ import { Plus, Ellipsis } from "lucide-react";
 import Link from "next/link";
 import { set } from "date-fns";
 import fetchProjects from "./api/projects";
+import AddProjectDialogContent from "./components/AddProjectDialogContent";
 
 export interface Project {
   id: number;
@@ -51,6 +52,7 @@ export default function Project() {
   const [projects, setProjects] = useState<Project[]>([]);
 
   // console log the type of projects
+  console.log(projects);
 
   useEffect(() => {
     fetchProjects().then((response) => {
@@ -62,7 +64,7 @@ export default function Project() {
   return (
     <div>
       <div className="flex flex-row justify-between">
-        {/* <h1 className="p-6">6 Projects</h1> */}
+        <h1 className="p-6">6 Projects</h1>
         <Input
           placeholder="Search projects"
           value={searchTerm}
@@ -77,39 +79,7 @@ export default function Project() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create Project</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-5 py-4">
-              <Label htmlFor="project-name">Project Name</Label>
-              <Input
-                id="project-name"
-                placeholder="Enter project name"
-                className="w-full"
-              />
-              <Label htmlFor="members">Members</Label>
-              <Input
-                id="members"
-                placeholder="Add members to project"
-                className="w-full"
-              />
-              <Label htmlFor="project-description">Description</Label>
-              <Textarea
-                id="project-description"
-                placeholder="Enter project description"
-                className="w-full"
-              />
-            </div>
-            <DialogFooter>
-              <Button
-                variant="customBlue"
-                onClick={() => {
-                  setProjectCount(projectCount + 1);
-                }}
-              >
-                Create Project
-              </Button>
-            </DialogFooter>
+            <AddProjectDialogContent userId={1} />
           </DialogContent>
         </Dialog>
       </div>
