@@ -266,7 +266,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
 
     const activeId = active.id;
     const overId = over.id;
-    const overData = over.data.current;
+    const overData: any = over.data.current;
 
     if (!hasDraggableData(active)) return;
     const activeData = active.data.current;
@@ -279,8 +279,8 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
         params.id,
         over.id,
         // over?.data?.current?.task?.id,
-        overData?.task?.taskStatus.id,
-        overData?.sortable?.index + 1
+        overData.task?.taskStatus.id,
+        overData.sortable?.index + 1
       ).catch((error) => console.error("Error updating task status:", error));
     }
 
@@ -288,6 +288,7 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       return;
     }
 
+    // On drag end, update the position of column in the backend
     setColumns((columns) => {
       const activeColumnIndex = columns.findIndex(
         (col) => col.taskStatus.name === activeId
@@ -296,8 +297,11 @@ export function KanbanBoard({ params }: { params: { id: number } }) {
       const overColumnIndex = columns.findIndex(
         (col) => col.taskStatus.name === overId
       );
-
-      updateColumnPosition(params.id, overData?.column.id, overColumnIndex + 1);
+      updateColumnPosition(
+        params.id,
+        active.data.current?.column.id,
+        overColumnIndex + 1
+      );
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
   }
