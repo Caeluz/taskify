@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useTheme } from "next-themes";
-
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Popover,
@@ -21,10 +21,12 @@ import { IoIosSettings } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Moon, Sun } from "lucide-react";
 import { useSidebarStore } from "@/store/sidebar";
+import { logout } from "@/app/(public)/auth/logout/api/logout";
 
 const Navbar: React.FC = () => {
   const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
   const { setTheme } = useTheme();
+  const router = useRouter();
 
   return (
     <div className="flex justify-between items-center border w-full">
@@ -47,7 +49,20 @@ const Navbar: React.FC = () => {
                 <AvatarFallback>U</AvatarFallback>
               </Avatar>
             </PopoverTrigger>
-            <PopoverContent>Place content for the popover here.</PopoverContent>
+            <PopoverContent className="flex flex-col">
+              <Button
+                onClick={() => {
+                  // Remove cookie token
+                  logout();
+
+                  setTimeout(() => {
+                    router.push("/auth/login");
+                  }, 2000);
+                }}
+              >
+                Logout
+              </Button>
+            </PopoverContent>
           </Popover>
         </div>
         {/* Name and Email */}
