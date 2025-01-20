@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { cookies } from "next/headers";
 
 import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -27,6 +28,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormData } from "@/components/utility/FormDataContext";
+import { useStore } from "zustand";
+import { useUserStore } from "@/store/userStore";
+import { login } from "./api/login";
 
 const loginSchema = z.object({
   usernameOrEmail: z.union([
@@ -53,49 +57,63 @@ export default function LoginContainer() {
     },
   });
 
+  const { setUser, user } = useUserStore();
+
   // Api Call
-async function onSubmit(data: z.infer<typeof loginSchema>) {
-  setDisableButton(true); // Disable the button when the login process starts
+  async function onSubmit(data: z.infer<typeof loginSchema>) {
+    setDisableButton(false); // Disable the button when the login process starts
 
-  const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-  const response = await fetch(`/api/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: data.usernameOrEmail,
-      password: data.password,
-    }),
-  });
+    const response = await login(data.usernameOrEmail, data.password);
 
-  console.log(response.ok);
+    // const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    // const response = await fetch(`${apiUrl}/auth/login`, {
+    //   method: "POST",
+    //   headers: {
+    //     // Authorization: `Bearer ${token?.value}`,
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     username: data.usernameOrEmail,
+    //     password: data.password,
+    //   }),
+    // });
 
-  if (response.ok) {
-    // Toast
-    toast({
-      title: "Login successful",
-      description: "You have successfully logged in",
-    });
+    // console.log(response.ok);
 
-    setTimeout(() => {
-      router.push("/projects");
-    }, 2000);
+    // const user = await response;
+    // console.log(user);
 
-    const user = await response.json();
-    console.log("Login successful:", user);
-  } else {
-    const error = await response.json();
-    setBackendError(error.message || "Login failed");
-    form.setError("backend", {
-      type: "manual",
-      message: error.message || "Login failed",
-    });
-    console.log(error);
+    if (response) {
+      // Put the user data in zustand
+      setUser(response.data);
+      // Toast
+      toast({
+        title: "Login successful",
+        description: "You have successfully logged in",
+      });
+
+      console.log(response);
+
+      // Put the token in cookie client
+
+      setTimeout(() => {
+        router.push("/projects");
+      }, 2000);
+
+      // console.log(user);
+      console.log(user);
+    } else {
+      const error = await response.json();
+      setBackendError(error.message || "Login failed");
+      form.setError("backend", {
+        type: "manual",
+        message: error.message || "Login failed",
+      });
+      console.log(error);
+    }
+
+    setDisableButton(false); // Re-enable the button after the login process completes
   }
-
-  setDisableButton(false); // Re-enable the button after the login process completes
-}
 
   return (
     <Card>

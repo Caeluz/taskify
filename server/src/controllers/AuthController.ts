@@ -38,9 +38,12 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: "7d" }
     );
 
-    res.json({ message: "Login successful", token });
+    res.status(200).json({ message: "Login successful", token, data: user });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// Logout
+

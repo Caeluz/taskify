@@ -28,9 +28,14 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token");
+  // const token = request.cookies.get("token");
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
+
+  console.log(token);
 
   // if (!token && request.nextUrl.pathname.startsWith("/projects")) {
   if (!token && request.nextUrl.pathname !== "/auth/login") {
