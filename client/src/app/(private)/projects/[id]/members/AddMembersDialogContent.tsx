@@ -32,7 +32,7 @@ import { fetchUsersforDropdown } from "./api/dropdown";
 import { addMultipleProjectMembers, fetchProjectMembers } from "./api/members";
 
 // Zustand
-import { useProjectMembersStore } from "@/store/projectMembersStore";
+import { useProjectMembersStore } from "@/store/zustand/projectMembersStore";
 
 export interface ProjectMember {
   id: string;

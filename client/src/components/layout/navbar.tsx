@@ -16,17 +16,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUserStore } from "@/store/zustand/userStore";
 
 import { IoIosSettings } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Moon, Sun } from "lucide-react";
-import { useSidebarStore } from "@/store/sidebar";
+import { useSidebarStore } from "@/store/zustand/sidebar";
 import { logout } from "@/app/(public)/auth/logout/api/logout";
 
 const Navbar: React.FC = () => {
   const toggleSidebar = useSidebarStore((state) => state.toggleSidebar);
   const { setTheme } = useTheme();
   const router = useRouter();
+
+  const { clearUser } = useUserStore();
 
   return (
     <div className="flex justify-between items-center border w-full">
@@ -52,8 +55,12 @@ const Navbar: React.FC = () => {
             <PopoverContent className="flex flex-col">
               <Button
                 onClick={() => {
+                  // Temporary methods
                   // Remove cookie token
                   logout();
+
+                  // Remove user persisted data
+                  clearUser();
 
                   setTimeout(() => {
                     router.push("/auth/login");

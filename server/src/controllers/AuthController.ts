@@ -38,7 +38,17 @@ export const login = async (req: Request, res: Response) => {
       { expiresIn: "7d" }
     );
 
-    res.status(200).json({ message: "Login successful", token, data: user });
+    // Return specified data
+    const userResponse = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      avatar: user.avatar,
+    };
+
+    res
+      .status(200)
+      .json({ message: "Login successful", token, data: userResponse });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -46,4 +56,3 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // Logout
-

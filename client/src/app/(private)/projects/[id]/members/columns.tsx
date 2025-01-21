@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { deleteProjectMember, fetchProjectMembers } from "./api/members";
-import { useProjectMembersStore } from "@/store/projectMembersStore";
+import { useProjectMembersStore } from "@/store/zustand/projectMembersStore";
 import { ProjectMember } from "./AddMembersDialogContent";
 
 export type Member = {

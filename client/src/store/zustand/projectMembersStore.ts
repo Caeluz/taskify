@@ -1,4 +1,4 @@
-import { ProjectMember } from "./../app/(private)/projects/[id]/members/AddMembersDialogContent";
+import { ProjectMember } from "../../app/(private)/projects/[id]/members/AddMembersDialogContent";
 import { create } from "zustand";
 
 interface ProjectMembersState {

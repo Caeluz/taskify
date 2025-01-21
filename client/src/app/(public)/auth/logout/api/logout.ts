@@ -2,13 +2,13 @@
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
-export async function logout(request: NextRequest) {
+export async function logout() {
   try {
     const cookieStore = await cookies();
     // Remove token
     cookieStore.delete("token");
 
-    const token = request.cookies.get("token");
+    // const token = request.cookies.get("token");
 
     return "Logged out";
   } catch (error) {

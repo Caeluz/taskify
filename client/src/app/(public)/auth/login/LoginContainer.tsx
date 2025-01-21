@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormData } from "@/components/utility/FormDataContext";
 import { useStore } from "zustand";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/zustand/userStore";
 import { login } from "./api/login";
 
 const loginSchema = z.object({
@@ -58,6 +58,9 @@ export default function LoginContainer() {
   });
 
   const { setUser, user } = useUserStore();
+  // const state = useUserStore();
+
+  // const setUser = useUserStore((state) => state.setUser);
 
   // Api Call
   async function onSubmit(data: z.infer<typeof loginSchema>) {
@@ -65,45 +68,21 @@ export default function LoginContainer() {
 
     const response = await login(data.usernameOrEmail, data.password);
 
-    // const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-    // const response = await fetch(`${apiUrl}/auth/login`, {
-    //   method: "POST",
-    //   headers: {
-    //     // Authorization: `Bearer ${token?.value}`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     username: data.usernameOrEmail,
-    //     password: data.password,
-    //   }),
-    // });
-
-    // console.log(response.ok);
-
-    // const user = await response;
-    // console.log(user);
-
-    if (response) {
+    if (response.ok) {
       // Put the user data in zustand
-      setUser(response.data);
+      await setUser(response.data);
+
       // Toast
       toast({
         title: "Login successful",
         description: "You have successfully logged in",
       });
 
-      console.log(response);
-
-      // Put the token in cookie client
-
       setTimeout(() => {
         router.push("/projects");
       }, 2000);
-
-      // console.log(user);
-      console.log(user);
     } else {
-      const error = await response.json();
+      const error = await response;
       setBackendError(error.message || "Login failed");
       form.setError("backend", {
         type: "manual",

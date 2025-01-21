@@ -12,7 +12,7 @@ import { RxDashboard, RxListBullet, RxChatBubble } from "react-icons/rx";
 
 import { Button } from "../ui/button";
 
-import { useSidebarStore } from "@/store/sidebar";
+import { useSidebarStore } from "@/store/zustand/sidebar";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 interface MenuItemProps {

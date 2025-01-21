@@ -10,6 +10,7 @@ export async function login(
   message: string;
   token: string;
   data: any;
+  ok: boolean;
 }> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -21,53 +22,22 @@ export async function login(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // username: data.usernameOrEmail,
-        // password: data.password,
         username: usernameOrEmail,
         password: password,
       }),
     });
 
-    console.log(response);
-
     const cookieStore = await cookies();
 
     console.log(response.ok);
     const data = await response.json();
-    console.log(data);
 
     if (response.ok) {
       // Put the token in cookie
       cookieStore.set("token", data.token);
     }
 
-    return data;
-
-    // if (response.ok) {
-    //   // Toast
-    //   toast({
-    //     title: "Login successful",
-    //     description: "You have successfully logged in",
-    //   });
-
-    //   // setTimeout(() => {
-    //   //   router.push("/projects");
-    //   // }, 2000);
-
-    //   const user = await response.json();
-    //   console.log("Login successful:", user);
-
-    //   // Put the user data in zustand
-    //   setUser(user.data);
-    // } else {
-    //   const error = await response.json();
-    //   setBackendError(error.message || "Login failed");
-    //   form.setError("backend", {
-    //     type: "manual",
-    //     message: error.message || "Login failed",
-    //   });
-    //   console.log(error);
-    // }
+    return { ...data, ok: response.ok };
   } catch (error: any) {
     throw new Error(`Error logging in ${error.message}`);
   }

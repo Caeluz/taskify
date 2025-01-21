@@ -7,7 +7,7 @@ import { columns, Member } from "./columns";
 import { fetchProjectMembers } from "./api/members";
 
 // Zustand
-import { useProjectMembersStore } from "@/store/projectMembersStore";
+import { useProjectMembersStore } from "@/store/zustand/projectMembersStore";
 
 // export default function Members({ id }: { id: string }) {
 export default function Members() {

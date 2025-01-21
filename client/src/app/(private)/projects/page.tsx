@@ -36,6 +36,7 @@ import Link from "next/link";
 import { set } from "date-fns";
 import fetchProjects from "./api/projects";
 import AddProjectDialogContent from "./components/AddProjectDialogContent";
+import { useUserStore } from "@/store/zustand/userStore";
 
 export interface Project {
   id: number;
@@ -60,6 +61,8 @@ export default function Project() {
       setProjects(response.data);
     });
   }, []);
+  const { setUser, user } = useUserStore();
+  console.log(user);
 
   return (
     <div>

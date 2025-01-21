@@ -25,7 +25,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/store/zustand/userStore";
 
 const createProjectFormSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -39,22 +39,15 @@ export default function AddProjectDialogContent({
 }) {
   const form = useForm<z.infer<typeof createProjectFormSchema>>({
     resolver: zodResolver(createProjectFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
   });
-
-  //   const { id: UserId } = useParams<{ id: string }>();
 
   async function onSubmit(values: z.infer<typeof createProjectFormSchema>) {
     console.log(values);
   }
-
-  //   console.log
-  // const user = useUserStore((state: any) => state.user);
-
-  const user = useUserStore();
-
-  // const { user } = useUserStore()
-
-  console.log(user);
 
   return (
     <>
