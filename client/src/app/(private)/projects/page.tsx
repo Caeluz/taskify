@@ -35,8 +35,10 @@ import { Plus, Ellipsis } from "lucide-react";
 import Link from "next/link";
 import { set } from "date-fns";
 import fetchProjects from "./api/projects";
+import fetchUserProjects from "./api/userProjects";
 import AddProjectDialogContent from "./components/AddProjectDialogContent";
 import { useUserStore } from "@/store/zustand/userStore";
+import { useUserProjectsStore } from "@/store/zustand/userProject";
 
 export interface Project {
   id: number;
@@ -50,18 +52,22 @@ export interface Project {
 export default function Project() {
   const [projectCount, setProjectCount] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
-  const [projects, setProjects] = useState<Project[]>([]);
+  // const [userProjects, setUserProjects] = useState<Project[]>([]);
 
-  // console log the type of projects
-  console.log(projects);
+  const { setUser, user } = useUserStore();
+
+  const { setUserProjects, userProjects } = useUserProjectsStore();
 
   useEffect(() => {
-    fetchProjects().then((response) => {
+    fetchUserProjects(user.id).then((response) => {
       console.log(response);
-      setProjects(response.data);
+      setUserProjects(response.data);
     });
   }, []);
-  const { setUser, user } = useUserStore();
+
+  // console log the type of projects
+  console.log(userProjects);
+
   console.log(user);
 
   return (
@@ -82,25 +88,28 @@ export default function Project() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <AddProjectDialogContent userId={1} />
+            <AddProjectDialogContent userId={user.id} />
           </DialogContent>
         </Dialog>
       </div>
 
       <div className="grid grid-rows-3 grid-cols-4 gap-4 p-7">
-        {projects
-          .filter((project) => {
+        {userProjects
+          .filter((userProject) => {
             return (
               searchTerm === "" ||
-              project.name.toLowerCase().includes(searchTerm.toLowerCase())
+              userProject.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
           })
-          .map((project) => (
-            <Link href={`/projects/${project.id}/overview`} key={project.id}>
+          .map((userProject) => (
+            <Link
+              href={`/projects/${userProject.id}/overview`}
+              key={userProject.id}
+            >
               <Card className="hover:bg-[#3b82f6] hover:text-white">
                 <CardHeader>
                   <div className="flex flex-row justify-between">
-                    <CardTitle>{project.name}</CardTitle>
+                    <CardTitle>{userProject.name}</CardTitle>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
                         <Ellipsis />
@@ -127,7 +136,7 @@ export default function Project() {
                         >
                           Delete
                         </DropdownMenuItem>
-                        <Link href={`/projects/${project.id}/members`}>
+                        <Link href={`/projects/${userProject.id}/members`}>
                           <DropdownMenuItem
                             onClick={(e) => {
                               // console.log("Team clicked");
@@ -146,10 +155,10 @@ export default function Project() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <CardDescription>{project.description}</CardDescription>
+                  <CardDescription>{userProject.description}</CardDescription>
                 </CardHeader>
                 <CardFooter className="flex flex-row space-x-4">
-                  <Progress className="" value={project.progress} />
+                  <Progress className="" value={userProject.progress} />
                   {/* <div className="whitespace-nowrap">
                   {project.members.length} members
                 </div> */}

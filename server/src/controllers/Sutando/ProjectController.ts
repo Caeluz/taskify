@@ -36,7 +36,12 @@ export const getUserProjects = async (req: Request, res: Response) => {
   try {
     const userProjects = await Project.query().where("user_id", userId).get();
 
-    return res.status(200).json({ data: userProjects });
+    return res
+      .status(200)
+      .json({
+        message: "Successfully fetched user projects",
+        data: userProjects,
+      });
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -57,7 +62,6 @@ export const getUserProject = async (req: Request, res: Response) => {
     const userProjectData = {
       id: userProject.id,
       name: userProject.name,
-      
     };
 
     return res.status(200).json({ message: "Success", data: userProjectData });

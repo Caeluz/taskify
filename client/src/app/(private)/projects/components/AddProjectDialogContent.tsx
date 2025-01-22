@@ -24,12 +24,15 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/zustand/userStore";
+import fetchUserProjects, { createUserProject } from "../api/userProjects";
+import { useUserProjectsStore } from "@/store/zustand/userProject";
 
 const createProjectFormSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   description: z.string().min(1, "Description is required"),
+  // status: z.string().min(1),
 });
 
 export default function AddProjectDialogContent({
@@ -42,11 +45,29 @@ export default function AddProjectDialogContent({
     defaultValues: {
       name: "",
       description: "",
+      // status: "",
     },
   });
+  const router = useRouter();
+
+  const { userProjects, setUserProjects } = useUserProjectsStore();
 
   async function onSubmit(values: z.infer<typeof createProjectFormSchema>) {
-    console.log(values);
+    const response = await createUserProject(
+      userId,
+      values.name,
+      values.description,
+      // values.status
+      "test"
+    );
+
+    console.log(userProjects);
+
+    const updatedProjectMembers = await fetchUserProjects(1);
+
+    setUserProjects(updatedProjectMembers.data);
+
+    console.log(response);
   }
 
   return (
