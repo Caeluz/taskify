@@ -41,7 +41,9 @@ const Navbar: React.FC = () => {
       >
         <GiHamburgerMenu className="text-[#3b82f6]" />
       </Button>
-      <h2 className="text-3xl pl-5 font-semibold mb-4 text-[#3b82f6]">Test</h2>
+      <h2 className="text-3xl pl-5 font-semibold mb-4 text-[#3b82f6]">
+        E-commerce Web Development
+      </h2>
       <div className="flex items-center p-4 pr-8 border-gray-300 rounded-lg ml-auto">
         <div className="relative">
           <Popover>
