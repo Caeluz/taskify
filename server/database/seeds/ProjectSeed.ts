@@ -2,7 +2,7 @@ import { Project } from "../../src/models/Project";
 
 const projectData = [
   {
-    name: "Test",
+    name: "E-commerce Web Development",
     user_id: 1,
     status: "Ongoing",
     description: "For testing purposes",
@@ -22,6 +22,5 @@ const ProjectSeed = async () => {
   }
   console.log("Project seeding completed.");
 };
-
 
 export default ProjectSeed;

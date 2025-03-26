@@ -9,10 +9,10 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 2,
-    name: "Web APIs",
-    description: "Simple web Crud functionality",
+    name: "API Development",
+    description:
+      "Develop RESTful APIs for user authentication and data management.",
     priority: "low",
-    // status: "ongoing",
     task_status_id: 2, // Id from task_statuses
     position: 1,
     start_date: date.toISOString(),
@@ -21,8 +21,8 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 3,
-    name: "React",
-    description: "React CRUD functionality",
+    name: "Frontend Integration",
+    description: "Integrate React frontend with backend APIs.",
     priority: "high",
     task_status_id: 3,
     position: 1,
@@ -32,8 +32,8 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 1,
-    name: "Database",
-    description: "Database setup",
+    name: "Database Design",
+    description: "Design and implement the database schema for the project.",
     priority: "medium",
     task_status_id: 1,
     position: 1,
@@ -43,8 +43,8 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 2,
-    name: "Web APIs",
-    description: "Simple web Crud functionality 2",
+    name: "API Testing",
+    description: "Write unit and integration tests for the APIs.",
     priority: "low",
     task_status_id: 2,
     position: 2,
@@ -54,8 +54,8 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 3,
-    name: "React",
-    description: "React CRUD functionality 2",
+    name: "UI Enhancements",
+    description: "Improve the user interface for better user experience.",
     priority: "high",
     task_status_id: 3,
     position: 2,
@@ -65,8 +65,8 @@ const taskData = [
   {
     project_id: 1,
     project_column_id: 1,
-    name: "Database",
-    description: "Database setup 2",
+    name: "Database Optimization",
+    description: "Optimize database queries for better performance.",
     priority: "medium",
     task_status_id: 1,
     position: 2,
