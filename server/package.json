@@ -9,7 +9,8 @@
     "start": "node server",
     "dev": "nodemon server",
     "dev-test": "node server --watch",
-    "test": "jest",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
     "migrate:fresh": "sutando migrate:rollback && sutando migrate:run",
     "seed": "ts-node database/seeds/DatabaseSeed.ts",
     "migrate:fresh-seed": "sutando migrate:rollback && sutando migrate:run && ts-node database/seeds/DatabaseSeed.ts"
@@ -41,6 +42,7 @@
     "knex": "^3.1.0",
     "nodemon": "^3.1.0",
     "ts-jest": "^29.2.4",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vitest": "^3.1.1"
   }
 }

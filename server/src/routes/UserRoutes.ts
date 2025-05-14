@@ -1,19 +1,20 @@
 import { validateData } from "../middleware/validatorMiddleware";
 import { authenticateToken } from "../middleware/authMiddleware";
 import { createUserSchema, updateUserSchema } from "../schemas/UserSchema";
+import express from "express";
+import * as userController from "../controllers/Sutando/UserController";
 
-const express = require("express");
-const router = express.Router();
-const controller = require("./../controllers/UserController");
+const userRouter = express.Router();
+// const controller = require("./../controllers/UserController");
 
-const sutandoController = require("./../controllers/Sutando/UserController");
+// const sutandoController = require("./../controllers/Sutando/UserController");
 
-router
+userRouter
   // .get("/", authenticateToken, controller.getUsers)
-  .get("/", sutandoController.getUsers)
-  .post("/", validateData(createUserSchema), sutandoController.createUser)
-  .get("/:id", sutandoController.getUserById)
-  .put("/:id", validateData(updateUserSchema), sutandoController.updateUser)
-  .delete("/:id", sutandoController.deleteUser);
+  .get("/", userController.getUsers)
+  .post("/", validateData(createUserSchema), userController.createUser)
+  .get("/:id", userController.getUserById)
+  .put("/:id", validateData(updateUserSchema), userController.updateUser)
+  .delete("/:id", userController.deleteUser);
 
-module.exports = router;
+export default userRouter;

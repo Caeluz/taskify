@@ -22,8 +22,10 @@ app.use(express.json());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 100 }));
 
 // Import and use routes
-const usersRouter = require("./src/routes/UserRoutes");
-const authRouter = require("./src/routes/AuthRoutes");
+// const usersRouter = require("./src/routes/UserRoutes");
+import usersRouter from "./src/routes/UserRoutes";
+import authRouter from "./src/routes/AuthRoutes";
+// const authRouter = require("./src/routes/AuthRoutes");
 // const projectRouter = require("./src/routes/ProjectRoutes");
 import projectRouter from "./src/routes/ProjectRoutes";
 import taskRouter from "./src/routes/TaskRouter";
