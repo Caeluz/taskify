@@ -20,12 +20,11 @@ function ButtonIcon({ icon, onClick }: ButtonIconProps) {
 
 export default function Settings() {
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col p-4 max-h-[calc(100vh-170px)] overflow-y-auto">
       <ProjectInformationSection ButtonIcon={ButtonIcon} />
       <Separator className="my-4" />
 
       {/* Public or private */}
-
 
       <NotificationSection />
 
@@ -43,7 +42,7 @@ export default function Settings() {
             value="https://example.com/invite"
             readOnly
           />
-          <Button variant="blue">Copy</Button>
+          <Button variant="customBlue">Copy</Button>
         </div>
       </div>
 
