@@ -2,9 +2,11 @@ import { create } from "zustand";
 
 interface UserProject {
   id: string | number;
+  user_id: string | number;
   name: string;
   description: string;
   status: string;
+  progress: number;
 }
 
 interface UserProjectsState {

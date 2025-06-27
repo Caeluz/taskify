@@ -94,3 +94,26 @@ export async function createUserProject(
     throw new Error(`Error creating project: ${error.message}`);
   }
 }
+
+export async function deleteUserProject(userId: number | string, projectId: number | string) {
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+    const response = await fetch(`${apiUrl}/users/${userId}/projects/${projectId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.value}`
+      }
+    })
+
+    if (!token?.value) {
+      throw new Error("Unauthorized");
+    }
+    
+  } catch (error: any) {
+      throw new Error(`Error creating projects: ${error.message}`)
+  }
+}

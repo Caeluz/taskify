@@ -37,8 +37,12 @@ const createProjectFormSchema = z.object({
 
 export default function AddProjectDialogContent({
   userId,
+  dialogOpen,
+  setDialogOpen,
 }: {
   userId: number | string;
+  dialogOpen: boolean;
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const form = useForm<z.infer<typeof createProjectFormSchema>>({
     resolver: zodResolver(createProjectFormSchema),
@@ -63,7 +67,10 @@ export default function AddProjectDialogContent({
 
     console.log(userProjects);
 
-    const updatedProjectMembers = await fetchUserProjects(1);
+    const updatedProjectMembers = await fetchUserProjects(userId);
+
+    // Set dialog close
+    setDialogOpen(false);
 
     setUserProjects(updatedProjectMembers.data);
 

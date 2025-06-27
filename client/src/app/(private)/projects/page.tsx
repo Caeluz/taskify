@@ -39,9 +39,12 @@ import fetchUserProjects from "./api/userProjects";
 import AddProjectDialogContent from "./components/AddProjectDialogContent";
 import { useUserStore } from "@/store/zustand/userStore";
 import { useUserProjectsStore } from "@/store/zustand/userProject";
+import DeleteProjectDialog from "./components/DeleteProjectDialogContent";
+import DeleteProjectDialogContent from "./components/DeleteProjectDialogContent";
 
 export interface Project {
   id: number;
+  user_id: number | string;
   name: string;
   progress: number;
   status: string;
@@ -52,6 +55,7 @@ export interface Project {
 export default function Project() {
   const [projectCount, setProjectCount] = useState(6);
   const [searchTerm, setSearchTerm] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
   // const [userProjects, setUserProjects] = useState<Project[]>([]);
 
   const { setUser, user } = useUserStore();
@@ -59,8 +63,7 @@ export default function Project() {
   const { setUserProjects, userProjects } = useUserProjectsStore();
 
   useEffect(() => {
-    fetchUserProjects(user.id).then((response) => {
-      console.log(response);
+    fetchUserProjects(user.id).then((response: any) => {
       setUserProjects(response.data);
     });
   }, []);
@@ -80,7 +83,8 @@ export default function Project() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="m-5 w-96"
         />
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          {/* <Dialog> */}
           <DialogTrigger asChild>
             <Button className="m-5" variant="customBlue">
               <Plus className="mr-3 w-5 h-5" />
@@ -88,7 +92,11 @@ export default function Project() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <AddProjectDialogContent userId={user.id} />
+            <AddProjectDialogContent
+              userId={user.id}
+              dialogOpen={dialogOpen}
+              setDialogOpen={setDialogOpen}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -102,69 +110,92 @@ export default function Project() {
             );
           })
           .map((userProject) => (
-            <Link
-              href={`/projects/${userProject.id}/overview`}
-              key={userProject.id}
-            >
-              <Card className="hover:bg-[#3b82f6] hover:text-white">
-                <CardHeader>
-                  <div className="flex flex-row justify-between">
-                    <CardTitle>{userProject.name}</CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <Ellipsis />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
+            <Dialog key={userProject.id}>
+              <Link
+                href={`/projects/${userProject.id}/overview`}
+                // key={userProject.id}
+              >
+                <Card className="hover:bg-[#3b82f6] hover:text-white">
+                  <CardHeader>
+                    <div className="flex flex-row justify-between">
+                      <CardTitle>{userProject.name}</CardTitle>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
                           onClick={(e) => {
-                            console.log(e);
+                            e.stopPropagation();
                           }}
                         >
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            setProjectCount(projectCount - 1);
+                          <Ellipsis />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          onClick={(e) => {
+                            e.stopPropagation();
                           }}
-                          className="text-red-600"
                         >
-                          Delete
-                        </DropdownMenuItem>
-                        <Link href={`/projects/${userProject.id}/members`}>
+                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
                           <DropdownMenuItem
                             onClick={(e) => {
-                              // console.log("Team clicked");
+                              console.log(e);
                             }}
                           >
-                            Members
+                            Edit
                           </DropdownMenuItem>
-                        </Link>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            console.log("Subscription clicked");
-                          }}
-                        >
-                          Subscription
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  <CardDescription>{userProject.description}</CardDescription>
-                </CardHeader>
-                <CardFooter className="flex flex-row space-x-4">
-                  <Progress className="" value={userProject.progress} />
-                  {/* <div className="whitespace-nowrap">
+                          <DialogTrigger
+                            asChild
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              className="text-red-600"
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DialogTrigger>
+                          <Link href={`/projects/${userProject.id}/members`}>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                // console.log("Team clicked");
+                              }}
+                            >
+                              Members
+                            </DropdownMenuItem>
+                          </Link>
+                          <DialogTrigger>
+                            <DropdownMenuItem
+                              onClick={(e) => {
+                                console.log("Subscription clicked");
+                              }}
+                            >
+                              Subscription
+                            </DropdownMenuItem>
+                          </DialogTrigger>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      {/* DialogContent */}
+                    </div>
+                    <CardDescription>{userProject.description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter className="flex flex-row space-x-4">
+                    <Progress className="" value={userProject.progress} />
+                    {/* <div className="whitespace-nowrap">
                   {project.members.length} members
                 </div> */}
-                </CardFooter>
-              </Card>
-            </Link>
+                  </CardFooter>
+                </Card>
+              </Link>
+              {/* DialogContent -  I put the dialog content outside link, so that when the dialog got clicked, it won't go to the link*/}
+              <DeleteProjectDialogContent
+                userId={userProject.user_id}
+                projectId={userProject.id}
+              />
+            </Dialog>
           ))}
       </div>
     </div>
