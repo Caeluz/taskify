@@ -6,6 +6,11 @@ const projectMemberData = [
     project_id: 1,
     role: "admin",
   },
+  {
+    user_id: 2,
+    project_id: 1,
+    role: "member"
+  }
 ];
 
 const ProjectMemberSeed = async () => {

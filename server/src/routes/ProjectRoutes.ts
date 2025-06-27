@@ -1,7 +1,7 @@
 import { authenticateToken } from "./../middleware/authMiddleware";
 import express from "express";
 import { validateData } from "../middleware/validatorMiddleware";
-import { createUserProjectSchema } from "../schemas/UserProjectSchema";
+import { createUserProjectSchema, updateUserProjectSchema } from "../schemas/UserProjectSchema";
 import * as projectController from "../controllers/Sutando/ProjectController";
 
 const projectRouter = express.Router();
@@ -18,7 +18,7 @@ projectRouter
     "/users/:userId/projects",
     validateData(createUserProjectSchema),
     projectController.createUserProject
-  )
+  ).put("/users/:userId/projects/:projectId", validateData(updateUserProjectSchema), projectController.updateUserProject)
   .delete(
     "/users/:userId/projects/:projectId",
     projectController.deleteUserProject

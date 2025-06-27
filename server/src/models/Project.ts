@@ -32,7 +32,8 @@ export class Project extends Model {
   }
 
   relationProjectMembers() {
-    return this.hasMany(ProjectMember, "project_member_id", "id");
+    // return this.hasMany(ProjectMember, "project_member_id", "id");
+    return this.hasMany(ProjectMember)
   }
 
   relationTasks() {

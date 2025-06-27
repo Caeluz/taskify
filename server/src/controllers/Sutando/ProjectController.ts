@@ -6,6 +6,7 @@ import { Project } from "../../models/Project";
 import { sutandoConnection } from "../../../database/SutandoPGDatabase";
 sutandoConnection;
 
+// Get all projects
 export const getProjects = async (req: Request, res: Response) => {
   try {
     const Projects = await Project.query().all();
@@ -13,6 +14,32 @@ export const getProjects = async (req: Request, res: Response) => {
     res.json({ message: "Success", data: Projects });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// Get User's Projects
+// Other team members can also look at the projects
+export const getUserProjects = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try {
+    // Show user projects, also other members can look at the project
+    const userProjects = await Project.query()
+      .where("user_id", userId)
+      .orWhereHas("project_members", (query: any) => {
+      query.where("user_id", userId);
+      })
+      .all();
+
+    // const userProjects = await Project.query().where("user_id", userId).get();
+
+    return res
+      .status(200)
+      .json({
+        message: "Successfully fetched user projects",
+        data: userProjects,
+      });
+  } catch (error) {
+    return res.status(500).json({ error: error });
   }
 };
 
@@ -30,29 +57,18 @@ export const createProject = async (req: Request, res: Response) => {
   }
 };
 
-// User's Projects
-export const getUserProjects = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  try {
-    const userProjects = await Project.query().where("user_id", userId).get();
-
-    return res
-      .status(200)
-      .json({
-        message: "Successfully fetched user projects",
-        data: userProjects,
-      });
-  } catch (error) {
-    return res.status(500).json({ error: error });
-  }
-};
-
+// Get User's Project
+// Other team members can also look at the project 
 export const getUserProject = async (req: Request, res: Response) => {
   const { userId, projectId } = req.params;
 
   try {
+    // Show user project, also other members can look at the project
     const userProject = await Project.query()
       .where("user_id", userId)
+      .orWhereHas("project_members", (query: any) => {
+        query.where("user_id", userId);
+        })
       .find(projectId);
 
     if (!userProject) {
@@ -62,6 +78,9 @@ export const getUserProject = async (req: Request, res: Response) => {
     const userProjectData = {
       id: userProject.id,
       name: userProject.name,
+      description: userProject.description,
+      status: userProject.status,
+      progress: userProject.progress,
     };
 
     return res.status(200).json({ message: "Success", data: userProjectData });
@@ -70,6 +89,7 @@ export const getUserProject = async (req: Request, res: Response) => {
   }
 };
 
+// Create user's project
 export const createUserProject = async (req: Request, res: Response) => {
   const userId = parseInt(req.params.userId, 10);
   console.log(req.user);
@@ -110,6 +130,49 @@ export const createUserProject = async (req: Request, res: Response) => {
   }
 };
 
+// Update some details in user's project
+export const updateUserProject = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId, 10);
+  const projectId = parseInt(req.params.projectId, 10);
+
+  const {
+    name,
+    description,
+    status,
+  }: {
+    name: string;
+    description: string;
+    status: string;
+  } = req.body;
+
+  try {
+    const [user, project] = await Promise.all([
+      User.query().find(userId),
+      Project.query().find(projectId)
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found for this user"})
+    }
+
+    const update = await project.update({
+      name: name,
+      description: description,
+      status: status
+    });
+
+    return res.status(200).json({ message: "Success", data: project });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({});
+  }
+}
+
+// Delete user's project
 export const deleteUserProject = async (req: Request, res: Response) => {
   const { projectId } = req.params;
   const userId = parseInt(req.params.userId, 10);
