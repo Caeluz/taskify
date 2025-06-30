@@ -32,6 +32,7 @@ import taskRouter from "./src/routes/TaskRouter";
 import projectMemberRouter from "./src/routes/ProjectMemberRoutes";
 import projectColumnRouter from "./src/routes/ProjectColumnRoutes";
 import dropdownDataRouter from "./src/routes/DropdownDataRoutes";
+import projectSettingsRouter from "./src/routes/ProjectSettingsRoutes";
 
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
@@ -41,6 +42,7 @@ app.use("/api", projectMemberRouter);
 app.use("/api", projectDashboardRouter);
 app.use("/api", projectColumnRouter);
 app.use("/api", dropdownDataRouter);
+app.use("/api", projectSettingsRouter);
 
 sutando.addConnection({
   client: "pg",
