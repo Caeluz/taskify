@@ -6,7 +6,10 @@ import { ButtonIconProps } from "./page";
 import { Label } from "@/components/ui/label";
 import { DatePickerWithRange } from "@/components/ui/date-picker-range";
 import { ComboBox } from "@/components/ui/combo-box";
-import ComboBoxMultiSelect from "@/components/ui/combo-box-multi-select";
+import { useProjectSettingsStore } from "@/store/zustand/projectSettingsStore";
+import { updateProjectDetails } from "./api/projectSettings";
+import { useToast } from "@/components/ui/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface ProjectInformationSectionProps {
   ButtonIcon: React.ComponentType<ButtonIconProps>;
@@ -30,6 +33,34 @@ const status = [
 export default function ProjectInformationSection({
   ButtonIcon,
 }: ProjectInformationSectionProps) {
+  const { projectSettings, setProjectSettings } = useProjectSettingsStore();
+  const [loading, setLoading] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState(status[0].value); // default to "active"
+  const { toast } = useToast();
+
+  const saveName = async () => {
+    if (!projectSettings?.name.trim()) {
+      toast({ description: "Project name cannot be empty" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Change this to dynamic later
+      const response = await updateProjectDetails(1, 1, projectSettings?.name);
+      console.log(response);
+      toast({
+        title: "Project name updated",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to update project name",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="">
       <h1 className="text-xl my-2 mb-7">Project Information</h1>
@@ -42,15 +73,24 @@ export default function ProjectInformationSection({
             <Input
               id="projectTitle"
               placeholder="Project Title"
+              value={projectSettings?.name}
+              disabled={loading}
+              onChange={(e) =>
+                setProjectSettings({
+                  ...projectSettings,
+                  name: e.target.value,
+                })
+              }
               // className={editTitle ? "" : ""}
               // disabled={!editTitle}
             />
           </span>
           <div>
             <ButtonIcon
-              icon={<Save />}
+              icon={loading ? <ReloadIcon /> : <Save />}
               onClick={() => {
                 console.log("title saved...");
+                saveName();
               }}
             />
           </div>
@@ -66,7 +106,11 @@ export default function ProjectInformationSection({
             <ComboBox
               choices={status}
               className="w-60 items-center"
-              multiple={true}
+              multiple={false}
+              value={selectedStatus}
+              onChange={(value) => {
+                if (typeof value === "string") setSelectedStatus(value);
+              }}
             />
           </span>
         </div>

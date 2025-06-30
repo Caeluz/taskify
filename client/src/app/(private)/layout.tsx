@@ -3,6 +3,7 @@ import "../styles.css";
 import Sidebar from "@/components/layout/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   title: "test",
@@ -30,6 +31,7 @@ export default function RootLayout({
               <div className="flex flex-col w-full md:w-full pa-0">
                 {children}
               </div>
+              <Toaster />
             </div>
           </div>
         </ThemeProvider>

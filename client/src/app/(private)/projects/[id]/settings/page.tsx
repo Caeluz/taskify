@@ -4,10 +4,22 @@ import { Separator } from "@/components/ui/separator";
 import ProjectInformationSection from "./ProjectInformationSection";
 import { Input } from "@/components/ui/input";
 import NotificationSection from "./NotificationSection";
+import { useEffect, useState } from "react";
+import { fetchProjectSettings } from "./api/projectSettings";
+import { useUserProjectsStore } from "@/store/zustand/userProject";
+import { useParams } from "next/navigation";
+import { useProjectSettingsStore } from "@/store/zustand/projectSettingsStore";
 
 export interface ButtonIconProps {
   icon: JSX.Element;
   onClick: () => void;
+}
+
+export interface Settings {
+  name: string;
+  status: string;
+  projected_finish_date: Date;
+  link: string;
 }
 
 function ButtonIcon({ icon, onClick }: ButtonIconProps) {
@@ -19,6 +31,19 @@ function ButtonIcon({ icon, onClick }: ButtonIconProps) {
 }
 
 export default function Settings() {
+  // const [settingsData, setSettingsData] = useState<Settings>();
+  const { projectSettings, setProjectSettings } = useProjectSettingsStore();
+  const projectParams = useParams<{ id: string }>();
+
+  useEffect(() => {
+    fetchProjectSettings(projectParams.id).then((response: any) => {
+      // setSettingsData(response.data);
+      setProjectSettings(response.data);
+    });
+  }, []);
+
+  console.log(projectSettings);
+
   return (
     <div className="flex flex-col p-4 max-h-[calc(100vh-170px)] overflow-y-auto">
       <ProjectInformationSection ButtonIcon={ButtonIcon} />
