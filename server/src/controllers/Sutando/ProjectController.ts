@@ -24,20 +24,18 @@ export const getUserProjects = async (req: Request, res: Response) => {
   try {
     // Show user projects, also other members can look at the project
     const userProjects = await Project.query()
-      .where("user_id", userId)
-      .orWhereHas("project_members", (query: any) => {
-      query.where("user_id", userId);
+      // .where("user_id", userId)
+      .WhereHas("project_members", (query: any) => {
+        query.where("user_id", userId);
       })
       .all();
 
     // const userProjects = await Project.query().where("user_id", userId).get();
 
-    return res
-      .status(200)
-      .json({
-        message: "Successfully fetched user projects",
-        data: userProjects,
-      });
+    return res.status(200).json({
+      message: "Successfully fetched user projects",
+      data: userProjects,
+    });
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -58,17 +56,17 @@ export const createProject = async (req: Request, res: Response) => {
 };
 
 // Get User's Project
-// Other team members can also look at the project 
+// Other team members can also look at the project
 export const getUserProject = async (req: Request, res: Response) => {
   const { userId, projectId } = req.params;
 
   try {
     // Show user project, also other members can look at the project
     const userProject = await Project.query()
-      .where("user_id", userId)
-      .orWhereHas("project_members", (query: any) => {
+      // .orWhere("user_id", userId)
+      .WhereHas("project_members", (query: any) => {
         query.where("user_id", userId);
-        })
+      })
       .find(projectId);
 
     if (!userProject) {
@@ -83,7 +81,9 @@ export const getUserProject = async (req: Request, res: Response) => {
       progress: userProject.progress,
     };
 
-    return res.status(200).json({ message: "Success", data: userProjectData });
+    return res
+      .status(200)
+      .json({ message: "Success get", data: userProjectData });
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -117,13 +117,20 @@ export const createUserProject = async (req: Request, res: Response) => {
       return;
     }
 
-    const create = await Project.query().create({
+    const project = await Project.query().create({
       name,
       description,
       status,
       user_id: userId,
     });
-    return res.status(201).json({ message: "Success", data: create });
+
+    // Add the admin role for the creator of the project
+    project.relationProjectMembers().create({
+      user_id: userId,
+      role: "admin",
+    });
+
+    return res.status(201).json({ message: "Success", data: project });
   } catch (error) {
     console.log(error);
     return res.status(500).json({});
@@ -148,21 +155,23 @@ export const updateUserProject = async (req: Request, res: Response) => {
   try {
     const [user, project] = await Promise.all([
       User.query().find(userId),
-      Project.query().find(projectId)
+      Project.query().find(projectId),
     ]);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" })
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (!project) {
-      return res.status(404).json({ message: "Project not found for this user"})
+      return res
+        .status(404)
+        .json({ message: "Project not found for this user" });
     }
 
     const update = await project.update({
       name: name,
       description: description,
-      status: status
+      status: status,
     });
 
     return res.status(200).json({ message: "Success", data: project });
@@ -170,7 +179,51 @@ export const updateUserProject = async (req: Request, res: Response) => {
     console.log(error);
     return res.status(500).json({});
   }
-}
+};
+
+// Used for http://localhost:8080/projects/:id/settings
+// PATCH: Partially update user's project
+export const patchUserProject = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId, 10);
+  const projectId = parseInt(req.params.projectId, 10);
+
+  // Only pick allowed fields from req.body
+  const { name, description, status } = req.body;
+
+  try {
+    const [user, project] = await Promise.all([
+      User.query().find(userId),
+      Project.query().find(projectId),
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!project) {
+      return res
+        .status(404)
+        .json({ message: "Project not found for this user" });
+    }
+
+    // Only update fields that are provided
+    const updateData: Partial<{
+      name: string;
+      description: string;
+      status: string;
+    }> = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (status !== undefined) updateData.status = status;
+
+    await project.update(updateData);
+
+    return res.status(200).json({ message: "Success", data: project });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({});
+  }
+};
 
 // Delete user's project
 export const deleteUserProject = async (req: Request, res: Response) => {
@@ -192,10 +245,12 @@ export const deleteUserProject = async (req: Request, res: Response) => {
 
     // To not delete project that's not user
 
+    // Only owner can delete
     const userProject = await Project.query()
       .where("user_id", userId)
       .where("id", projectId)
       .firstOrFail();
+      
 
     await userProject.delete();
 
@@ -212,3 +267,4 @@ export const deleteUserProject = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal Error" });
   }
 };
+
