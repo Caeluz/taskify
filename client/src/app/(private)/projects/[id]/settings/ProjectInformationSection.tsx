@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Pencil, X, Check, Save } from "lucide-react";
 import { ButtonIconProps } from "./page";
@@ -21,8 +21,8 @@ const status = [
     label: "Active",
   },
   {
-    value: "onHold",
-    label: "On Hold",
+    value: "archived",
+    label: "Archived",
   },
   {
     value: "completed",
@@ -47,7 +47,12 @@ export default function ProjectInformationSection({
     setLoading(true);
     try {
       // Change this to dynamic later
-      const response = await updateProjectDetails(1, 1, projectSettings?.name);
+      const response = await updateProjectDetails(
+        1,
+        1,
+        projectSettings?.name,
+        null
+      );
       console.log(response);
       toast({
         title: "Project name updated",
@@ -56,6 +61,24 @@ export default function ProjectInformationSection({
       toast({
         title: "Failed to update project name",
       });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveStatus = async (newStatus: string) => {
+    const statusToSave = newStatus ?? projectSettings?.status;
+    if (!projectSettings?.name.trim()) {
+      toast({ description: "Project status cannot be empty" });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await updateProjectDetails(1, 1, null, statusToSave);
+      toast({ title: "Project status updated" });
+    } catch (error) {
+      toast({ title: "Failed to update project status" });
     } finally {
       setLoading(false);
     }
@@ -97,19 +120,22 @@ export default function ProjectInformationSection({
         </div>
         <div>
           <span className="space-y-2">
-            <Label
-              htmlFor="projectedFinish"
-              className="text-base font-semibold"
-            >
+            <Label htmlFor="status" className="text-base font-semibold">
               Status
             </Label>
             <ComboBox
               choices={status}
               className="w-60 items-center"
               multiple={false}
-              value={selectedStatus}
+              value={projectSettings?.status ?? selectedStatus}
               onChange={(value) => {
-                if (typeof value === "string") setSelectedStatus(value);
+                if (typeof value === "string") {
+                  setProjectSettings({
+                    ...projectSettings,
+                    status: value,
+                  });
+                  saveStatus(value);
+                }
               }}
             />
           </span>

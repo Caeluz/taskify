@@ -34,12 +34,17 @@ export async function fetchProjectSettings(
 export async function updateProjectDetails(
   userId: string | number,
   projectId: string | number,
-  name: string
+  name: string | null,
+  status: string | null
 ) {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
   const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
   try {
+    const payload: Record<string, any> = {};
+    if (name !== null) payload.name = name;
+    if (status !== null) payload.status = status;
+
     const response = await fetch(
       `${apiUrl}/users/${userId}/projects/${projectId}`,
       {
@@ -48,7 +53,7 @@ export async function updateProjectDetails(
           "Content-Type": "application/json",
         },
         method: "PATCH",
-        body: JSON.stringify({ name }),
+        body: JSON.stringify(payload),
       }
     );
 
