@@ -32,17 +32,21 @@ export default async function fetchUserProjects(
     );
 
     if (!response.ok) {
-      throw new Error("Error fetching projects");
+      // Try to parse backend error message
+      let errorMsg = "Error fetching projects";
+      try {
+        const errorData = await response.json();
+        errorMsg = errorData.message || errorData.error || errorMsg;
+      } catch {
+        // Ignore JSON parse errors, use default message
+      }
+      throw new Error(errorMsg);
     }
 
     const data = await response.json();
-
-    // res.status(200).json(data);
-    // return data;
     return data;
-  } catch (error) {
-    // res.status(500).json({ message: "Error fetching projects" });
-    throw new Error("Error fetching projects");
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching projects");
   }
 }
 
@@ -95,25 +99,30 @@ export async function createUserProject(
   }
 }
 
-export async function deleteUserProject(userId: number | string, projectId: number | string) {
+export async function deleteUserProject(
+  userId: number | string,
+  projectId: number | string
+) {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
     const cookieStore = cookies();
     const token = cookieStore.get("token");
 
-    const response = await fetch(`${apiUrl}/users/${userId}/projects/${projectId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token?.value}`
+    const response = await fetch(
+      `${apiUrl}/users/${userId}/projects/${projectId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.value}`,
+        },
       }
-    })
+    );
 
     if (!token?.value) {
       throw new Error("Unauthorized");
     }
-    
   } catch (error: any) {
-      throw new Error(`Error creating projects: ${error.message}`)
+    throw new Error(`Error creating projects: ${error.message}`);
   }
 }
