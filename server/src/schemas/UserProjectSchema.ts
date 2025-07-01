@@ -4,7 +4,7 @@ export const createUserProjectSchema = {
   body: z.object({
     name: z.string(),
     description: z.string(),
-    status: z.string(),
+    // status: z.string(),
   }),
   params: z.object({
     userId: z.string().regex(/^\d+$/).transform(Number),

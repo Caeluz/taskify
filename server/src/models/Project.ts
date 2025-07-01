@@ -14,6 +14,7 @@ export class Project extends Model {
   status!: string;
   progress!: number;
   description!: string;
+  estimated_finish_date!: string;
   created_at!: string;
   updated_at!: string;
 
@@ -22,6 +23,10 @@ export class Project extends Model {
 
   // Relation
   tasks!: Task[];
+
+  casts = {
+    estimated_finish_date: "datetime:MMM DD YYYY",
+  };
 
   relationUser() {
     return this.belongsTo(User, "user_id", "id");
@@ -33,7 +38,7 @@ export class Project extends Model {
 
   relationProjectMembers() {
     // return this.hasMany(ProjectMember, "project_member_id", "id");
-    return this.hasMany(ProjectMember)
+    return this.hasMany(ProjectMember);
   }
 
   relationTasks() {

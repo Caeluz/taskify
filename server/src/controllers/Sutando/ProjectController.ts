@@ -25,7 +25,7 @@ export const getUserProjects = async (req: Request, res: Response) => {
     // Show user projects, also other members can look at the project
     const userProjects = await Project.query()
       // .where("user_id", userId)
-      .WhereHas("project_members", (query: any) => {
+      .whereHas("project_members", (query: any) => {
         query.where("user_id", userId);
       })
       .all();
@@ -36,8 +36,10 @@ export const getUserProjects = async (req: Request, res: Response) => {
       message: "Successfully fetched user projects",
       data: userProjects,
     });
-  } catch (error) {
-    return res.status(500).json({ error: error });
+  } catch (error: unknown) {
+    return res.status(500).json({
+      error: error instanceof Error ? error.message : "Internal server error",
+    });
   }
 };
 
@@ -64,7 +66,7 @@ export const getUserProject = async (req: Request, res: Response) => {
     // Show user project, also other members can look at the project
     const userProject = await Project.query()
       // .orWhere("user_id", userId)
-      .WhereHas("project_members", (query: any) => {
+      .whereHas("project_members", (query: any) => {
         query.where("user_id", userId);
       })
       .find(projectId);
@@ -117,10 +119,11 @@ export const createUserProject = async (req: Request, res: Response) => {
       return;
     }
 
+    // At creation of the project, default status would be active for now
     const project = await Project.query().create({
       name,
       description,
-      status,
+      status: "active",
       user_id: userId,
     });
 
@@ -250,7 +253,9 @@ export const deleteUserProject = async (req: Request, res: Response) => {
       .where("user_id", userId)
       .where("id", projectId)
       .firstOrFail();
-      
+
+    // Find the members related to the project and delete them
+    await userProject.relationProjectMembers().delete();
 
     await userProject.delete();
 
@@ -267,4 +272,3 @@ export const deleteUserProject = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Internal Error" });
   }
 };
-
